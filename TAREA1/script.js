@@ -1,4 +1,6 @@
-// Datos de los proyectos
+// ==========================================
+// 1. DATOS DE LOS PROYECTOS Y MODAL (REQUISITO 4)
+// ==========================================
 const projectsData = {
   "1": {
     title: "Sistema ERP de Inventarios",
@@ -23,14 +25,14 @@ const projectsData = {
   }
 };
 
-// Elementos del DOM
+// Elementos del DOM para el Modal
 const modal = document.getElementById('project-modal');
 const modalTitle = document.getElementById('modal-title');
 const modalBody = document.getElementById('modal-body');
 const openButtons = document.querySelectorAll('.btn-more');
 const closeElements = document.querySelectorAll('[data-close]');
 
-// Abrir Modal
+// Función para abrir Modal
 function openModal(projectId) {
   const project = projectsData[projectId];
   if (!project) return;
@@ -56,13 +58,13 @@ function openModal(projectId) {
   modal.setAttribute('aria-hidden', 'false');
 }
 
-// Cerrar Modal
+// Función para cerrar Modal
 function closeModal() {
   modal.classList.remove('is-active');
   modal.setAttribute('aria-hidden', 'true');
 }
 
-// Event Listeners
+// Event Listeners para el Modal
 openButtons.forEach(button => {
   button.addEventListener('click', () => {
     const projectId = button.getAttribute('data-project');
@@ -79,3 +81,32 @@ document.addEventListener('keydown', (e) => {
     closeModal();
   }
 });
+
+
+// ==========================================
+// 2. FORMULARIO DE CONTACTO (REQUISITO 5)
+// ==========================================
+const contactForm = document.getElementById('contact-form');
+const contactResponse = document.getElementById('contact-response');
+
+if (contactForm) {
+  contactForm.addEventListener('submit', (e) => {
+    e.preventDefault(); // Previene la recarga de la página
+
+    // Obtener el nombre del remitente
+    const nameInput = document.getElementById('name').value;
+
+    // Mostrar mensaje dinámico de éxito
+    contactResponse.textContent = `¡Gracias por tu mensaje, ${nameInput}! Tu consulta ha sido registrada correctamente.`;
+    contactResponse.className = 'contact-response success';
+
+    // Limpiar los campos del formulario
+    contactForm.reset();
+
+    // Ocultar el aviso después de 5 segundos
+    setTimeout(() => {
+      contactResponse.className = 'contact-response';
+      contactResponse.textContent = '';
+    }, 5000);
+  });
+}

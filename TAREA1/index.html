@@ -118,6 +118,34 @@
       </div>
     </section>
 
+    <!-- REQUISITO 5: CONTACTO -->
+    <section class="section contact-section">
+      <h2 class="section-title">Contacto</h2>
+      <p class="contact-subtitle">¿Tienes alguna consulta o propuesta de colaboración? Puedes enviarme un mensaje directamente desde este formulario.</p>
+
+      <form id="contact-form" class="contact-form">
+        <div class="form-group">
+          <label for="name" class="form-label">Nombre</label>
+          <input type="text" id="name" name="name" class="form-input" placeholder="Tu nombre completo" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email" class="form-label">Correo electrónico</label>
+          <input type="email" id="email" name="email" class="form-input" placeholder="ejemplo@correo.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="message" class="form-label">Mensaje</label>
+          <textarea id="message" name="message" class="form-input form-textarea" rows="4" placeholder="Escribe tu mensaje aquí..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit">Enviar Mensaje</button>
+      </form>
+
+      <!-- Mensaje de confirmación dinámico -->
+      <div id="contact-response" class="contact-response" aria-live="polite"></div>
+    </section>
+
   </main>
 
   <!-- MODAL / CUADRO DESPLEGABLE DE INFORMACIÓN -->
