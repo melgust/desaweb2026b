@@ -1,5 +1,38 @@
 // ==========================================
-// 1. DATOS DE LOS PROYECTOS Y MODAL (REQUISITO 4)
+// 1. CAMBIO DE TEMA (MODO CLARO / OSCURO)
+// ==========================================
+const themeToggleBtn = document.getElementById('theme-toggle');
+const themeIcon = document.getElementById('theme-icon');
+
+// Cargar preferencia guardada en localStorage o usar tema claro por defecto
+const currentTheme = localStorage.getItem('theme') || 'light';
+
+if (currentTheme === 'dark') {
+  document.documentElement.setAttribute('data-theme', 'dark');
+  themeIcon.textContent = '☀️';
+} else {
+  document.documentElement.setAttribute('data-theme', 'light');
+  themeIcon.textContent = '🌙';
+}
+
+// Evento click para alternar modo
+themeToggleBtn.addEventListener('click', () => {
+  let theme = document.documentElement.getAttribute('data-theme');
+
+  if (theme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.setItem('theme', 'light');
+    themeIcon.textContent = '🌙';
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('theme', 'dark');
+    themeIcon.textContent = '☀️';
+  }
+});
+
+
+// ==========================================
+// 2. DATOS DE LOS PROYECTOS Y MODAL (REQUISITO 4)
 // ==========================================
 const projectsData = {
   "1": {
@@ -84,26 +117,22 @@ document.addEventListener('keydown', (e) => {
 
 
 // ==========================================
-// 2. FORMULARIO DE CONTACTO (REQUISITO 5)
+// 3. FORMULARIO DE CONTACTO (REQUISITO 5)
 // ==========================================
 const contactForm = document.getElementById('contact-form');
 const contactResponse = document.getElementById('contact-response');
 
 if (contactForm) {
   contactForm.addEventListener('submit', (e) => {
-    e.preventDefault(); // Previene la recarga de la página
+    e.preventDefault();
 
-    // Obtener el nombre del remitente
     const nameInput = document.getElementById('name').value;
 
-    // Mostrar mensaje dinámico de éxito
     contactResponse.textContent = `¡Gracias por tu mensaje, ${nameInput}! Tu consulta ha sido registrada correctamente.`;
     contactResponse.className = 'contact-response success';
 
-    // Limpiar los campos del formulario
     contactForm.reset();
 
-    // Ocultar el aviso después de 5 segundos
     setTimeout(() => {
       contactResponse.className = 'contact-response';
       contactResponse.textContent = '';
