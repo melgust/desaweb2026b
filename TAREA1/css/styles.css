@@ -7,7 +7,6 @@
   box-sizing: border-box;
 }
 
-/* Variables para Modo Claro (por defecto) */
 :root {
   --bg-primary: #0f172a;       /* Azul oscuro */
   --bg-secondary: #1e293b;     /* Azul secundario */
@@ -24,7 +23,6 @@
   --input-bg: #f8fafc;
 }
 
-/* Variables para Modo Oscuro */
 [data-theme="dark"] {
   --bg-primary: #020617;
   --bg-secondary: #0f172a;
@@ -142,7 +140,6 @@ body {
   margin-bottom: 0.2rem;
 }
 
-/* FECHA Y HORA EN EL HEADER */
 .datetime-display {
   font-size: 0.85rem;
   font-weight: 500;
@@ -150,7 +147,6 @@ body {
   margin-bottom: 0.2rem;
 }
 
-/* ESTILO DEL CONTADOR DE VISITAS */
 .visit-counter {
   display: inline-flex;
   align-items: center;
@@ -398,6 +394,7 @@ body {
   color: var(--text-muted);
   cursor: pointer;
   line-height: 1;
+  transition: color 0.2s ease;
 }
 
 .modal-close:hover {
@@ -512,7 +509,6 @@ body {
   transform: translateY(-2px);
 }
 
-/* MENSAJES DE RESPUESTA Y VALIDACIÓN DEL FORMULARIO */
 .contact-response {
   margin-top: 1.25rem;
   padding: 1rem;
@@ -537,7 +533,7 @@ body {
 }
 
 /* ==========================================
-   6. RESPONSIVE
+   6. RESPONSIVE (MEDIA QUERIES)
    ========================================== */
 @media (min-width: 640px) {
   .profile-container {
