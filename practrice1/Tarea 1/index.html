@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perfil Profesional – Alex Mora</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+</head>
+<body class="light">
+
+  <!-- THEME TOGGLE -->
+  <button class="theme-btn" id="themeToggle" aria-label="Cambiar tema">
+    <span class="theme-icon">☀</span>
+  </button>
+
+  <!-- HEADER -->
+  <header class="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-content">
+      <div class="hero-left">
+        <div class="avatar-ring">
+          <img
+            src="./img/photo.jpg"
+            alt="Foto de Alex Mora"
+            class="avatar"
+          />
+        </div>
+        <div class="visit-chip">
+          <span class="mono">visitas: </span><strong id="visitCount">0</strong>
+        </div>
+      </div>
+      <div class="hero-right">
+        <p class="eyebrow mono">Perfil Profesional</p>
+        <h1 class="hero-name">Mahuerk <span class="accent">Yoc Vasquez</span></h1>
+        <p class="hero-career">Ingeniería en Sistemas</p>
+        <p class="hero-university">Universidad Mariano Galvez de Guatemala</p>
+        <blockquote class="hero-quote">"El código es poesía que las máquinas entienden."</blockquote>
+        <p class="datetime mono" id="datetime">—</p>
+      </div>
+    </div>
+    <div class="hero-line"></div>
+  </header>
+
+  <main>
+
+    <!-- SOBRE MÍ -->
+    <section class="section" id="about">
+      <div class="section-label mono">01 / sobre mí</div>
+      <div class="about-grid">
+        <div class="about-text">
+          <h2>Construyo cosas <span class="accent">que importan.</span></h2>
+          <p>
+            Soy estudiante de Ingeniería en Sistemas con pasión por el desarrollo de software, la inteligencia
+            artificial y la experiencia de usuario. Me interesa resolver problemas reales a través de soluciones
+            elegantes y bien estructuradas.
+          </p>
+          <p>
+            Mis habilidades abarcan desde el desarrollo web full-stack hasta la programación de videojuegos en Unity.
+            Disfruto trabajar en equipo, aprender tecnologías nuevas y entregar productos que realmente funcionen.
+          </p>
+          <p>
+            Mi objetivo profesional es unirme a un equipo de producto donde pueda contribuir al desarrollo de
+            aplicaciones escalables y centradas en el usuario, mientras sigo creciendo como ingeniero.
+          </p>
+        </div>
+        <div class="about-tags">
+          <span class="tag">Resolución de problemas</span>
+          <span class="tag">Trabajo en equipo</span>
+          <span class="tag">Aprendizaje continuo</span>
+          <span class="tag">Diseño centrado en el usuario</span>
+          <span class="tag">Pensamiento sistémico</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- HABILIDADES -->
+    <section class="section" id="skills">
+      <div class="section-label mono">02 / habilidades</div>
+      <h2>Lo que <span class="accent">domino.</span></h2>
+      <div class="skills-grid">
+        <div class="skill-bar-card">
+          <div class="skill-info">
+            <span class="skill-name">JavaScript / TypeScript</span>
+            <span class="skill-pct mono">88%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" data-width="88"></div></div>
+        </div>
+        <div class="skill-bar-card">
+          <div class="skill-info">
+            <span class="skill-name">C# / Unity</span>
+            <span class="skill-pct mono">80%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" data-width="80"></div></div>
+        </div>
+        <div class="skill-bar-card">
+          <div class="skill-info">
+            <span class="skill-name">Python</span>
+            <span class="skill-pct mono">75%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" data-width="75"></div></div>
+        </div>
+        <div class="skill-bar-card">
+          <div class="skill-info">
+            <span class="skill-name">React / Next.js</span>
+            <span class="skill-pct mono">70%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" data-width="70"></div></div>
+        </div>
+        <div class="skill-bar-card">
+          <div class="skill-info">
+            <span class="skill-name">SQL / PostgreSQL</span>
+            <span class="skill-pct mono">65%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" data-width="65"></div></div>
+        </div>
+        <div class="skill-bar-card">
+          <div class="skill-info">
+            <span class="skill-name">Git / DevOps</span>
+            <span class="skill-pct mono">72%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" data-width="72"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROYECTOS -->
+    <section class="section" id="projects">
+      <div class="section-label mono">03 / proyectos</div>
+      <h2>Lo que he <span class="accent">creado.</span></h2>
+      <div class="projects-grid">
+
+        <article class="project-card">
+          <div class="project-tag mono">Web App</div>
+          <h3>TaskFlow</h3>
+          <p>Gestor de tareas colaborativo con tableros Kanban, etiquetas y notificaciones en tiempo real.</p>
+          <button class="btn-more" onclick="openModal(0)">Ver más →</button>
+        </article>
+
+        <article class="project-card">
+          <div class="project-tag mono">Videojuego</div>
+          <h3>Dungeon Escape</h3>
+          <p>Juego de aventura 2D desarrollado en Unity con mecánicas de puzzles procedurales y sistema de cámara dinámica.</p>
+          <button class="btn-more" onclick="openModal(1)">Ver más →</button>
+        </article>
+
+        <article class="project-card">
+          <div class="project-tag mono">IA / ML</div>
+          <h3>SentimentBot</h3>
+          <p>Modelo de análisis de sentimientos entrenado con reseñas de productos, con API REST para integración externa.</p>
+          <button class="btn-more" onclick="openModal(2)">Ver más →</button>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section class="section" id="contact">
+      <div class="section-label mono">04 / contacto</div>
+      <h2>Hablemos.</h2>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <p>¿Tienes un proyecto en mente o quieres colaborar? Escríbeme, estoy siempre abierto a nuevas ideas.</p>
+          <ul class="contact-links">
+            <li><span class="mono accent">→</span> myocv@miumg.edu.gt</li>
+            <!-- <li><span class="mono accent">→</span> github.com/alexmora</li>
+            <li><span class="mono accent">→</span> linkedin.com/in/alexmora</li> -->
+          </ul>
+        </div>
+        <form class="contact-form" id="contactForm" novalidate>
+          <div class="field">
+            <label for="name">Nombre</label>
+            <input type="text" id="name" placeholder="Tu nombre completo" autocomplete="name"/>
+            <span class="field-error" id="nameError"></span>
+          </div>
+          <div class="field">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" placeholder="correo@ejemplo.com" autocomplete="email"/>
+            <span class="field-error" id="emailError"></span>
+          </div>
+          <div class="field">
+            <label for="message">Mensaje</label>
+            <textarea id="message" rows="4" placeholder="Cuéntame sobre tu proyecto..."></textarea>
+            <span class="field-error" id="messageError"></span>
+          </div>
+          <button type="submit" class="btn-submit">Enviar mensaje</button>
+          <p class="form-success" id="formSuccess"></p>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p class="mono">© 2025 Alex Mora · Hecho con mucho café</p>
+  </footer>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+    <div class="modal" id="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script src="./js/script.js"></script>
+</body>
+</html>
