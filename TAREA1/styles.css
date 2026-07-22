@@ -139,7 +139,31 @@ body {
 .university {
   font-size: 0.95rem;
   color: var(--text-secondary);
+  margin-bottom: 0.2rem;
+}
+
+/* FECHA Y HORA EN EL HEADER */
+.datetime-display {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 0.2rem;
+}
+
+/* ESTILO DEL CONTADOR DE VISITAS */
+.visit-counter {
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-color);
+  background-color: rgba(255, 255, 255, 0.08);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
   margin-bottom: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .quote {
@@ -421,7 +445,7 @@ body {
 }
 
 /* ==========================================
-   5. SECCIÓN DE CONTACTO
+   5. SECCIÓN DE CONTACTO Y VALIDACIÓN
    ========================================== */
 .contact-subtitle {
   color: var(--text-muted);
@@ -488,6 +512,7 @@ body {
   transform: translateY(-2px);
 }
 
+/* MENSAJES DE RESPUESTA Y VALIDACIÓN DEL FORMULARIO */
 .contact-response {
   margin-top: 1.25rem;
   padding: 1rem;
@@ -504,6 +529,13 @@ body {
   border: 1px solid #bbf7d0;
 }
 
+.contact-response.error {
+  display: block;
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
 /* ==========================================
    6. RESPONSIVE
    ========================================== */
@@ -515,6 +547,10 @@ body {
 
   .profile-info {
     align-items: flex-start;
+  }
+
+  .visit-counter {
+    align-self: flex-start;
   }
 
   .quote {
