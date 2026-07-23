@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Perfil profesional">
+    <title>Perfil profesional</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/script.js" defer></script>
+</head>
+
+<body>
+    <header class="encabezado" id="inicio">
+        <nav class="navegacion contenedor" aria-label="Navegación principal">
+
+            <div class="nav-enlaces">
+                <a href="#sobre-mi">Sobre mí</a>
+                <a href="#habilidades">Habilidades</a>
+                <a href="#proyectos">Proyectos</a>
+                <a href="#contacto">Contacto</a>
+            </div>
+
+            <button
+                class="boton boton-secundario"
+                id="botonTema"
+                type="button"
+                aria-label="Cambiar a modo oscuro"
+                title="Cambiar tema"
+            >
+                <span id="iconoTema" aria-hidden="true">Cambiar</span>
+            </button>
+        </nav>
+
+        <div class="hero contenedor">
+            <div class="hero-contenido">
+                <p class="saludo">¡Hola! Mi nombre es</p>
+                <h1>Maryori Elizabeth<br>Acifuina Juárez</h1>
+
+                <p class="carrera">
+                    Estudiante de Ingeniería en Sistemas de la Información
+                    y Ciencias de la Computación
+                </p>
+
+                <p class="universidad">
+                    Universidad Mariano Gálvez de Guatemala
+                </p>
+
+                <cita>
+                    “Es una locura no ser lo que se es
+                    con la mayor plenitud posible”
+                </cita>
+
+                <div class="hero-botones">
+                    <a class="boton boton-primario" href="#proyectos">
+                        Ver proyectos
+                    </a>
+                    <a class="boton boton-secundario" href="#contacto">
+                        Contactarme
+                    </a>
+                </div>
+
+                <div class="datos-dinamicos">
+                    <p>
+                        <span id="fechaHora">Cargando fecha y hora...</span>
+                    </p>
+                    <p>
+                        Visitas en este navegador:
+                        <strong id="contadorVisitas">0</strong>
+                    </p>
+                </div>
+            </div>
+
+            <div class="hero-imagen">
+                <div class="marco-foto">
+                    <img
+                        src="img/foto.jpg"
+                    >
+                </div>
+                <span class="decoracion decoracion-uno" aria-hidden="true"></span>
+                <span class="decoracion decoracion-dos" aria-hidden="true"></span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="seccion sobre-mi" id="sobre-mi">
+            <div class="contenedor">
+                <div class="titulo-seccion">
+                    <h2>Sobre mí</h2>
+                </div>
+
+                <div class="sobre-mi-grid">
+                    <article class="tarjeta-presentacion">
+                        <h3>Mi perfil</h3>
+                        <p>
+                            Soy estudiante de Ingeniería en Sistemas, interesada
+                            especialmente en el desarrollo web, las bases de datos,
+                            el análisis de información y la creación de herramientas
+                            que faciliten procesos reales.
+                        </p>
+                        <p>
+                            Me caracterizo por ser responsable, curiosa y perseverante.
+                            Disfruto aprender nuevas tecnologías, organizar información
+                            y convertir necesidades complejas en soluciones claras,
+                            funcionales y fáciles de utilizar.
+                        </p>
+                    </article>
+
+                    <div class="objetivos">
+                        <article class="objetivo-item">
+                            <div>
+                                <h3>Intereses</h3>
+                                <p>
+                                    Desarrollo backend, aplicaciones web, bases de
+                                    datos, automatización y análisis de datos.
+                                </p>
+                            </div>
+                        </article>
+
+                        <article class="objetivo-item">
+                            <div>
+                                <h3>Habilidades</h3>
+                                <p>
+                                    Resolución de problemas, organización, pensamiento
+                                    lógico, trabajo responsable y aprendizaje continuo.
+                                </p>
+                            </div>
+                        </article>
+
+                        <article class="objetivo-item">
+                            <div>
+                                <h3>Objetivo profesional</h3>
+                                <p>
+                                    Desarrollar sistemas seguros y mantenibles que
+                                    ayuden a mejorar procesos institucionales y sociales.
+                                </p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="seccion seccion-alternativa" id="habilidades">
+            <div class="contenedor">
+                <div class="titulo-seccion">
+                    <p class="subtitulo">Lo que sé hacer</p>
+                    <h2>Habilidades</h2>
+                </div>
+
+                <div class="habilidades-grid">
+                    <article class="habilidad">
+                        <div class="habilidad-encabezado">
+                            <span>HTML5 y CSS3</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="barra">
+                            <span style="--nivel: 85%"></span>
+                        </div>
+                    </article>
+
+                    <article class="habilidad">
+                        <div class="habilidad-encabezado">
+                            <span>JavaScript</span>
+                            <span>75%</span>
+                        </div>
+                        <div class="barra">
+                            <span style="--nivel: 75%"></span>
+                        </div>
+                    </article>
+
+                    <article class="habilidad">
+                        <div class="habilidad-encabezado">
+                            <span>Bases de datos</span>
+                            <span>82%</span>
+                        </div>
+                        <div class="barra">
+                            <span style="--nivel: 82%"></span>
+                        </div>
+                    </article>
+
+                    <article class="habilidad">
+                        <div class="habilidad-encabezado">
+                            <span>Google Apps Script</span>
+                            <span>88%</span>
+                        </div>
+                        <div class="barra">
+                            <span style="--nivel: 88%"></span>
+                        </div>
+                    </article>
+
+                    <article class="habilidad">
+                        <div class="habilidad-encabezado">
+                            <span>Git y GitHub</span>
+                            <span>70%</span>
+                        </div>
+                        <div class="barra">
+                            <span style="--nivel: 70%"></span>
+                        </div>
+                    </article>
+
+                    <article class="habilidad">
+                        <div class="habilidad-encabezado">
+                            <span>Análisis de datos</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="barra">
+                            <span style="--nivel: 80%"></span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="seccion" id="proyectos">
+            <div class="contenedor">
+                <div class="titulo-seccion">
+                    <p class="subtitulo">Experiencia práctica</p>
+                    <h2>Proyectos</h2>
+                </div>
+
+                <div class="proyectos-grid">
+                    <article class="tarjeta-proyecto">
+                        <h3>Seguimiento de Audiencias</h3>
+                        <p>
+                            Herramienta web para consultar y organizar información
+                            relacionada con audiencias institucionales.
+                        </p>
+                        <button
+                            class="boton-ver-mas"
+                            type="button"
+                            data-proyecto="audiencias"
+                        >
+                            Ver más
+                        </button>
+                    </article>
+
+                    <article class="tarjeta-proyecto">
+                        <h3>Censo NNA</h3>
+                        <p>
+                            Sistema para registrar y consolidar información de niños,
+                            niñas y adolescentes institucionalizados.
+                        </p>
+                        <button
+                            class="boton-ver-mas"
+                            type="button"
+                            data-proyecto="censo"
+                        >
+                            Ver más
+                        </button>
+                    </article>
+
+                    <article class="tarjeta-proyecto">
+                        <h3>Portal Estadístico</h3>
+                        <p>
+                            Portal de consulta para visualizar denuncias, rescates,
+                            derechos vulnerados y datos consolidados.
+                        </p>
+                        <button
+                            class="boton-ver-mas"
+                            type="button"
+                            data-proyecto="portal"
+                        >
+                            Ver más
+                        </button>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="seccion seccion-alternativa" id="contacto">
+            <div class="contenedor contacto-grid">
+                <div class="contacto-info">
+                    <div class="titulo-seccion titulo-izquierda">
+                        <p class="subtitulo">Hablemos</p>
+                        <h2>Contacto</h2>
+                    </div>
+
+                    <div class="contacto-detalle">
+                        <div>
+                            <strong>Correo</strong>
+                            <p>macifuinaj@miumg.edu.gt</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="formulario" id="formularioContacto" novalidate>
+                    <div class="campo">
+                        <label for="nombre">Nombre</label>
+                        <input
+                            id="nombre"
+                            name="nombre"
+                            type="text"
+                            autocomplete="name"
+                            placeholder="Escribe tu nombre"
+                        >
+                        <small class="mensaje-error" id="errorNombre"></small>
+                    </div>
+
+                    <div class="campo">
+                        <label for="correo">Correo electrónico</label>
+                        <input
+                            id="correo"
+                            name="correo"
+                            type="email"
+                            autocomplete="email"
+                            placeholder="nombre@correo.com"
+                        >
+                        <small class="mensaje-error" id="errorCorreo"></small>
+                    </div>
+
+                    <div class="campo">
+                        <label for="mensaje">Mensaje</label>
+                        <textarea
+                            id="mensaje"
+                            name="mensaje"
+                            rows="5"
+                            placeholder="Escribe tu mensaje"
+                        ></textarea>
+                        <small class="mensaje-error" id="errorMensaje"></small>
+                    </div>
+
+                    <button class="boton boton-primario boton-enviar" type="submit">
+                        Enviar mensaje
+                    </button>
+
+                    <p class="mensaje-exito" id="mensajeExito" role="status"></p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="contenedor footer-contenido">
+            <p>
+                &copy; <span id="anioActual"></span>
+                Maryori Elizabeth Acifuina Juárez
+            </p>
+            <a href="#inicio">Volver al inicio</a>
+        </div>
+    </footer>
+
+    <div class="modal" id="modalProyecto" aria-hidden="true">
+        <div class="modal-fondo" data-cerrar-modal></div>
+
+        <section
+            class="modal-contenido"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modalTitulo"
+        >
+            <button
+                class="modal-cerrar"
+                type="button"
+                data-cerrar-modal
+                aria-label="Cerrar ventana"
+            >
+                &times;
+            </button>
+
+            <p class="subtitulo">Detalle del proyecto</p>
+            <h2 id="modalTitulo"></h2>
+            <p id="modalDescripcion"></p>
+
+            <div class="modal-tecnologias">
+                <strong>Tecnologías y características</strong>
+                <ul id="modalTecnologias"></ul>
+            </div>
+        </section>
+    </div>
+</body>
+</html> 
