@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil Profesional | Steve Alvizures</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <nav class="navegacion" aria-label="Navegación principal">
+            <ul class="menu">
+                <li><a href="#sobre-mi">Sobre mí</a></li>
+                <li><a href="#habilidades">Habilidades</a></li>
+                <li><a href="#proyectos">Proyectos</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+
+        <div class="presentacion">
+            <img
+                src="img/foto-perfil.jpg"
+                alt="Fotografía de perfil de Emersson Steve Alvizures Palma"
+                class="foto-perfil"
+            >
+            <h1>Emersson Steve Alvizures Palma</h1>
+            <p class="carrera">Ingeniería en Sistemas de Información y Ciencias de la Computación</p>
+            <p class="universidad">Universidad Mariano Gálvez de Guatemala</p>
+            <p class="frase-personal">
+                Aprender algo nuevo y poder aplicarlo es lo que más disfruto de la tecnología.
+            </p>
+            <button type="button" id="boton-tema" aria-pressed="false">Modo oscuro</button>
+            <p id="fecha-hora"></p>
+            <p>Visitas en este navegador: <span id="contador-visitas">0</span></p>
+        </div>
+    </header>
+
+    <main>
+        <section id="sobre-mi">
+            <h2>Sobre mí</h2>
+            <p>
+                Soy estudiante de Ingeniería en Sistemas de Información y Ciencias de la
+                Computación. Me interesa aprender sobre programación, desarrollo web, bases de
+                datos y sistemas operativos. Durante mi carrera he trabajado en distintos
+                proyectos académicos que me han permitido fortalecer mis habilidades técnicas y
+                aprender a resolver problemas de forma ordenada. Mi objetivo es seguir mejorando
+                como desarrollador y crear soluciones útiles, claras y fáciles de utilizar.
+            </p>
+        </section>
+
+        <section id="habilidades">
+            <h2>Habilidades</h2>
+            <ul class="lista-habilidades">
+                <li class="habilidad">HTML5</li>
+                <li class="habilidad">CSS3</li>
+                <li class="habilidad">JavaScript</li>
+                <li class="habilidad">Java</li>
+                <li class="habilidad">Bases de datos</li>
+                <li class="habilidad">Git y GitHub</li>
+            </ul>
+        </section>
+
+        <section id="proyectos">
+            <h2>Proyectos</h2>
+            <div class="contenedor-proyectos">
+                <article class="tarjeta-proyecto">
+                    <h3>Sistema de órdenes de compra</h3>
+                    <p>Diseño de un sistema para administrar productos, pedidos, pagos y envíos.</p>
+                    <button
+                        type="button"
+                        class="boton-ver-mas"
+                        data-titulo="Sistema de órdenes de compra"
+                        data-descripcion="El proyecto incluye análisis de requisitos y diagramas UML de casos de uso, clases, secuencia y actividades."
+                    >
+                        Ver más
+                    </button>
+                </article>
+
+                <article class="tarjeta-proyecto">
+                    <h3>Conversor de temperatura</h3>
+                    <p>Aplicación para convertir temperaturas entre grados Celsius y Fahrenheit.</p>
+                    <button
+                        type="button"
+                        class="boton-ver-mas"
+                        data-titulo="Conversor de temperatura"
+                        data-descripcion="El proyecto fue desarrollado separando la interfaz de usuario y la lógica de conversión."
+                    >
+                        Ver más
+                    </button>
+                </article>
+
+                <article class="tarjeta-proyecto">
+                    <h3>Sistema de proximidad en Linux</h3>
+                    <p>Proyecto que utiliza un sensor ultrasónico para detectar objetos cercanos.</p>
+                    <button
+                        type="button"
+                        class="boton-ver-mas"
+                        data-titulo="Sistema de proximidad en Linux"
+                        data-descripcion="Se trabajó con Linux, una Raspberry Pi Pico, un sensor HC-SR04 y un buzzer."
+                    >
+                        Ver más
+                    </button>
+                </article>
+            </div>
+        </section>
+
+        <section id="contacto">
+            <h2>Contacto</h2>
+            <form id="formulario-contacto" action="#">
+                <div class="grupo-formulario">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" autocomplete="name">
+                    <span id="error-nombre" class="mensaje-error" aria-live="polite"></span>
+                </div>
+
+                <div class="grupo-formulario">
+                    <label for="correo">Correo electrónico</label>
+                    <input type="email" id="correo" name="correo" autocomplete="email">
+                    <span id="error-correo" class="mensaje-error" aria-live="polite"></span>
+                </div>
+
+                <div class="grupo-formulario">
+                    <label for="mensaje">Mensaje</label>
+                    <textarea id="mensaje" name="mensaje" rows="5"></textarea>
+                    <span id="error-mensaje" class="mensaje-error" aria-live="polite"></span>
+                </div>
+
+                <button type="submit">Enviar mensaje</button>
+                <p id="mensaje-formulario" aria-live="polite"></p>
+            </form>
+        </section>
+    </main>
+
+    <div
+        id="modal-proyecto"
+        class="modal"
+        hidden
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-titulo"
+    >
+        <div class="contenido-modal">
+            <h2 id="modal-titulo"></h2>
+            <p id="modal-descripcion"></p>
+            <button
+                type="button"
+                id="cerrar-modal"
+                aria-label="Cerrar información del proyecto"
+            >
+                Cerrar
+            </button>
+        </div>
+    </div>
+
+    <footer>
+        <p>
+            &copy; <span id="anio-actual"></span> Emersson Steve Alvizures Palma. Todos los
+            derechos reservados.
+        </p>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
