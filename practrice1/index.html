@@ -3,20 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Perfil Profesional Interactivo - Práctica 1 Desarrollo Web UMG">
-    <title>Perfil Profesional | Desarrollo Web UMG</title>
-    <!-- Google Fonts -->
+    <title>Perfil Profesional | UMG</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Estilos Externos -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-    <!-- Navegación Superior -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a href="#" class="logo">
@@ -29,32 +24,28 @@
                 <li><a href="#contact"><i class="fa-solid fa-envelope"></i> Contacto</a></li>
             </ul>
             <div class="nav-actions">
-                <!-- Botón Cambio de Tema -->
-                <button id="theme-toggle" class="btn-icon" aria-label="Cambiar Tema" title="Alternar Modo Oscuro/Claro">
+                <button id="theme-toggle" class="btn-icon" aria-label="Cambiar Tema">
                     <i class="fa-solid fa-sun" id="theme-icon"></i>
                 </button>
             </div>
         </div>
     </nav>
 
-    <!-- Encabezado / Hero Section -->
     <header class="hero-header">
         <div class="hero-container">
             <div class="hero-badge-bar">
-                <!-- Contador de Visitas -->
                 <div class="visit-counter" id="visit-counter-badge">
                     <i class="fa-solid fa-eye"></i> Visitas: <span id="visit-count">1</span>
                 </div>
-                <!-- Fecha y Hora Actuales -->
                 <div class="datetime-display" id="datetime-badge">
-                    <i class="fa-regular fa-clock"></i> <span id="live-datetime">Cargando fecha...</span>
+                    <i class="fa-regular fa-clock"></i> <span id="live-datetime">...</span>
                 </div>
             </div>
 
             <div class="hero-content">
                 <div class="profile-img-wrapper">
-                    <img src="img/profile.png?v=2" alt="Fotografía de Perfil" class="profile-img" id="profile-img">
-                    <div class="status-indicator" title="Disponible para proyectos"></div>
+                    <img src="img/profile.png?v=2" alt="Perfil" class="profile-img" id="profile-img">
+                    <div class="status-indicator"></div>
                 </div>
 
                 <div class="profile-info">
@@ -68,7 +59,7 @@
                     </h3>
                     <p class="profile-quote">
                         <i class="fa-solid fa-quote-left"></i>
-                        Transformando ideas complejas en soluciones digitales elegantes, escalables y orientadas al usuario.
+                        Transformando ideas complejas en soluciones digitales elegantes y eficientes.
                         <i class="fa-solid fa-quote-right"></i>
                     </p>
                     <div class="hero-cta">
@@ -82,52 +73,49 @@
 
     <main class="main-content">
 
-        <!-- Sección 2: Sobre Mí -->
         <section id="about" class="section section-about">
             <div class="container">
                 <div class="section-title">
                     <h2><i class="fa-solid fa-user-gear"></i> Sobre Mí</h2>
-                    <p>Conoce mi trasfondo, pasión por la tecnología y visión profesional</p>
+                    <p>Conoce mi trasfondo y visión profesional</p>
                 </div>
 
                 <div class="about-grid">
                     <div class="about-card">
                         <div class="card-icon"><i class="fa-solid fa-heart"></i></div>
                         <h3>Intereses</h3>
-                        <p>Desarrollo web moderno, arquitectura de software, inteligencia artificial aplicada, interfaces interactivas y ciberseguridad.</p>
+                        <p>Desarrollo web moderno, arquitectura de software, inteligencia artificial y ciberseguridad.</p>
                     </div>
 
                     <div class="about-card">
                         <div class="card-icon"><i class="fa-solid fa-brain"></i></div>
                         <h3>Habilidades</h3>
-                        <p>Resolución analítica de problemas, diseño de algoritmos, trabajo en equipo bajo metodología Git, pensamiento crítico y rápida adaptación.</p>
+                        <p>Resolución de problemas, lógica de programación, Git y trabajo en equipo.</p>
                     </div>
 
                     <div class="about-card">
                         <div class="card-icon"><i class="fa-solid fa-bullseye"></i></div>
-                        <h3>Objetivos Profesionales</h3>
-                        <p>Crear plataformas web innovadoras de alto impacto, especializarme en desarrollo Full-Stack e impulsar la transformación digital empresarial.</p>
+                        <h3>Objetivos</h3>
+                        <p>Crear plataformas web eficientes y especializarme en desarrollo Full-Stack.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Sección 3: Habilidades Tecnológicas -->
         <section id="skills" class="section section-skills">
             <div class="container">
                 <div class="section-title">
                     <h2><i class="fa-solid fa-code"></i> Habilidades Tecnológicas</h2>
-                    <p>Dominio técnico y herramientas de desarrollo</p>
+                    <p>Dominio técnico</p>
                 </div>
 
                 <div class="skills-grid">
-                    <!-- Habilidad 1 -->
                     <div class="skill-card">
                         <div class="skill-header">
                             <div class="skill-icon"><i class="fa-brands fa-html5"></i></div>
                             <div class="skill-info">
                                 <h3>HTML5 & CSS3</h3>
-                                <span>Semántica, Flexbox & Grid</span>
+                                <span>Flexbox & Grid</span>
                             </div>
                             <span class="skill-percentage">95%</span>
                         </div>
@@ -136,13 +124,12 @@
                         </div>
                     </div>
 
-                    <!-- Habilidad 2 -->
                     <div class="skill-card">
                         <div class="skill-header">
                             <div class="skill-icon"><i class="fa-brands fa-js"></i></div>
                             <div class="skill-info">
-                                <h3>JavaScript Nativo (ES6+)</h3>
-                                <span>DOM, Eventos, Async/Fetch</span>
+                                <h3>JavaScript Nativo</h3>
+                                <span>ES6+, DOM</span>
                             </div>
                             <span class="skill-percentage">90%</span>
                         </div>
@@ -151,13 +138,12 @@
                         </div>
                     </div>
 
-                    <!-- Habilidad 3 -->
                     <div class="skill-card">
                         <div class="skill-header">
                             <div class="skill-icon"><i class="fa-brands fa-git-alt"></i></div>
                             <div class="skill-info">
-                                <h3>Git & Control de Versiones</h3>
-                                <span>Ramas, Commits, GitHub</span>
+                                <h3>Git & GitHub</h3>
+                                <span>Control de versiones</span>
                             </div>
                             <span class="skill-percentage">88%</span>
                         </div>
@@ -166,13 +152,12 @@
                         </div>
                     </div>
 
-                    <!-- Habilidad 4 -->
                     <div class="skill-card">
                         <div class="skill-header">
                             <div class="skill-icon"><i class="fa-solid fa-database"></i></div>
                             <div class="skill-info">
-                                <h3>Bases de Datos & SQL</h3>
-                                <span>Diseño relacional y consultas</span>
+                                <h3>Bases de Datos</h3>
+                                <span>SQL</span>
                             </div>
                             <span class="skill-percentage">82%</span>
                         </div>
@@ -181,13 +166,12 @@
                         </div>
                     </div>
 
-                    <!-- Habilidad 5 -->
                     <div class="skill-card">
                         <div class="skill-header">
                             <div class="skill-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
                             <div class="skill-info">
-                                <h3>Diseño Adaptable (Responsive)</h3>
-                                <span>Mobile-first & Accesibilidad</span>
+                                <h3>Diseño Responsive</h3>
+                                <span>Mobile First</span>
                             </div>
                             <span class="skill-percentage">92%</span>
                         </div>
@@ -199,16 +183,14 @@
             </div>
         </section>
 
-        <!-- Sección 4: Proyectos -->
         <section id="projects" class="section section-projects">
             <div class="container">
                 <div class="section-title">
-                    <h2><i class="fa-solid fa-diagram-project"></i> Mis Proyectos</h2>
-                    <p>Muestra de desarrollos recientes e interacciones</p>
+                    <h2><i class="fa-solid fa-diagram-project"></i> Proyectos</h2>
+                    <p>Mis trabajos recientes</p>
                 </div>
 
                 <div class="projects-grid">
-                    <!-- Tarjeta Proyecto 1 -->
                     <article class="project-card">
                         <div class="project-image">
                             <img src="img/project1.jpg" alt="Dashboard Analytics Web">
@@ -216,14 +198,13 @@
                         </div>
                         <div class="project-content">
                             <h3>Dashboard Analytics Web</h3>
-                            <p>Plataforma interactiva para visualización de métricas de rendimiento y datos estadísticos en tiempo real.</p>
+                            <p>Plataforma para visualización de métricas de rendimiento y datos en tiempo real.</p>
                             <button class="btn btn-outline btn-modal-trigger" data-project="1">
                                 <i class="fa-solid fa-circle-info"></i> Ver más
                             </button>
                         </div>
                     </article>
 
-                    <!-- Tarjeta Proyecto 2 -->
                     <article class="project-card">
                         <div class="project-image">
                             <img src="img/project2.jpg" alt="App Móvil de Gestión">
@@ -231,22 +212,21 @@
                         </div>
                         <div class="project-content">
                             <h3>App Móvil de Gestión</h3>
-                            <p>Aplicación de organización de tareas y productividad personal con diseño intuitivo y soporte offline.</p>
+                            <p>Aplicación de organización de tareas y productividad personal con diseño intuitivo.</p>
                             <button class="btn btn-outline btn-modal-trigger" data-project="2">
                                 <i class="fa-solid fa-circle-info"></i> Ver más
                             </button>
                         </div>
                     </article>
 
-                    <!-- Tarjeta Proyecto 3 -->
                     <article class="project-card">
                         <div class="project-image">
                             <img src="img/project3.jpg" alt="Portal de APIs REST">
-                            <span class="project-tag">Backend / Cloud</span>
+                            <span class="project-tag">Backend</span>
                         </div>
                         <div class="project-content">
                             <h3>Portal de APIs & Services</h3>
-                            <p>Arquitectura de microservicios RESTful con autenticación segura y documentación interactiva.</p>
+                            <p>Arquitectura de servicios web RESTful con documentación interactiva.</p>
                             <button class="btn btn-outline btn-modal-trigger" data-project="3">
                                 <i class="fa-solid fa-circle-info"></i> Ver más
                             </button>
@@ -256,34 +236,32 @@
             </div>
         </section>
 
-        <!-- Sección 5: Formulario de Contacto -->
         <section id="contact" class="section section-contact">
             <div class="container">
                 <div class="section-title">
-                    <h2><i class="fa-solid fa-paper-plane"></i> Formulario de Contacto</h2>
-                    <p>Envíame un mensaje y me pondré en contacto contigo pronto</p>
+                    <h2><i class="fa-solid fa-paper-plane"></i> Contacto</h2>
+                    <p>Envíame un mensaje</p>
                 </div>
 
                 <div class="contact-wrapper">
                     <form id="contact-form" class="contact-form" novalidate>
-                        <!-- Alert Box para mensajes de error o éxito -->
                         <div id="form-alert" class="form-alert" style="display: none;"></div>
 
                         <div class="form-group">
                             <label for="name"><i class="fa-solid fa-user"></i> Nombre Completo</label>
-                            <input type="text" id="name" name="name" placeholder="Ej. Juan Pérez" autocomplete="name">
+                            <input type="text" id="name" name="name" placeholder="Ej. Carlos Cachin" autocomplete="name">
                             <small class="error-msg" id="name-error"></small>
                         </div>
 
                         <div class="form-group">
                             <label for="email"><i class="fa-solid fa-envelope"></i> Correo Electrónico</label>
-                            <input type="email" id="email" name="email" placeholder="Ej. estudiante@umg.edu.gt" autocomplete="email">
+                            <input type="email" id="email" name="email" placeholder="Ej. correo@umg.edu.gt" autocomplete="email">
                             <small class="error-msg" id="email-error"></small>
                         </div>
 
                         <div class="form-group">
                             <label for="message"><i class="fa-solid fa-comment-dots"></i> Mensaje</label>
-                            <textarea id="message" name="message" rows="5" placeholder="Escribe tu mensaje o consulta aquí..."></textarea>
+                            <textarea id="message" name="message" rows="5" placeholder="Escribe tu mensaje aquí..."></textarea>
                             <small class="error-msg" id="message-error"></small>
                         </div>
 
@@ -297,7 +275,6 @@
 
     </main>
 
-    <!-- Modal para Proyectos (JavaScript) -->
     <div id="project-modal" class="modal-overlay" aria-hidden="true">
         <div class="modal-container">
             <button id="modal-close" class="modal-close-btn" aria-label="Cerrar modal">&times;</button>
@@ -306,10 +283,10 @@
                 <span id="modal-tag" class="project-tag">Categoría</span>
             </div>
             <div class="modal-body">
-                <img id="modal-img" src="" alt="Imagen de Proyecto" class="modal-img">
-                <p id="modal-description">Descripción detallada del proyecto...</p>
+                <img id="modal-img" src="" alt="Proyecto" class="modal-img">
+                <p id="modal-description">Descripción...</p>
                 <div class="modal-techs">
-                    <h4>Tecnologías utilizadas:</h4>
+                    <h4>Tecnologías:</h4>
                     <ul id="modal-tech-list" class="tech-tags"></ul>
                 </div>
             </div>
@@ -321,7 +298,6 @@
         </div>
     </div>
 
-    <!-- Pie de Página -->
     <footer class="footer">
         <div class="container footer-content">
             <p>&copy; 2026 CARLOS CACHIN — Práctica 1 Desarrollo Web UMG</p>
@@ -332,7 +308,6 @@
         </div>
     </footer>
 
-    <!-- Script JS -->
     <script src="js/script.js"></script>
 </body>
 </html>
