@@ -1,0 +1,157 @@
+:root {
+    --bg-color: #f4f6f9;
+    --text-color: #212529;
+    --card-bg: #ffffff;
+    --primary-color: #0d6efd;
+    --primary-hover: #0b5ed7;
+}
+
+body.dark-theme {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --card-bg: #1e1e1e;
+    --primary-color: #3d8bfd;
+    --primary-hover: #6ea8fe;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    padding-bottom: 40px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary-color), #4f8cff);
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: relative;
+}
+
+.avatar-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+section {
+    background-color: var(--card-bg);
+    margin-bottom: 30px;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+h2 {
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 5px;
+}
+
+/* Habilidades (Grid) */
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.skill-card {
+    background-color: var(--bg-color);
+    padding: 12px;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Proyectos (Grid y Tarjetas) */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.project-card {
+    background-color: var(--bg-color);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.btn-custom {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 10px;
+    align-self: flex-start;
+}
+
+.btn-custom:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Formulario */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.error-msg {
+    color: #dc3545;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.datetime, .visit-counter {
+    position: absolute;
+    top: 15px;
+    font-size: 14px;
+    background: rgba(0,0,0,0.2);
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.datetime { left: 15px; }
+.visit-counter { right: 15px; }
