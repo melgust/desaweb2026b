@@ -29,6 +29,9 @@ ealvizuresp5/
 ├── img/
 │   └── foto-perfil.jpg
 └── README.md
+```
+
+## Cómo visualizar el proyecto
 
 ## Cómo visualizar el proyecto
 
