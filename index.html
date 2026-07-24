@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Perfil Profesional Interactivo - Práctica 1 Desarrollo Web UMG">
+    <title>Perfil Profesional | Desarrollo Web UMG</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Estilos Externos -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Navegación Superior -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <i class="fa-solid fa-code"></i> UMG<span>Dev</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#about"><i class="fa-solid fa-user"></i> Sobre mí</a></li>
+                <li><a href="#skills"><i class="fa-solid fa-laptop-code"></i> Habilidades</a></li>
+                <li><a href="#projects"><i class="fa-solid fa-folder-open"></i> Proyectos</a></li>
+                <li><a href="#contact"><i class="fa-solid fa-envelope"></i> Contacto</a></li>
+            </ul>
+            <div class="nav-actions">
+                <!-- Botón Cambio de Tema -->
+                <button id="theme-toggle" class="btn-icon" aria-label="Cambiar Tema" title="Alternar Modo Oscuro/Claro">
+                    <i class="fa-solid fa-sun" id="theme-icon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Encabezado / Hero Section -->
+    <header class="hero-header">
+        <div class="hero-container">
+            <div class="hero-badge-bar">
+                <!-- Contador de Visitas -->
+                <div class="visit-counter" id="visit-counter-badge">
+                    <i class="fa-solid fa-eye"></i> Visitas: <span id="visit-count">1</span>
+                </div>
+                <!-- Fecha y Hora Actuales -->
+                <div class="datetime-display" id="datetime-badge">
+                    <i class="fa-regular fa-clock"></i> <span id="live-datetime">Cargando fecha...</span>
+                </div>
+            </div>
+
+            <div class="hero-content">
+                <div class="profile-img-wrapper">
+                    <img src="img/profile.png?v=2" alt="Fotografía de Perfil" class="profile-img" id="profile-img">
+                    <div class="status-indicator" title="Disponible para proyectos"></div>
+                </div>
+
+                <div class="profile-info">
+                    <span class="sub-heading">Perfil Profesional Interactivo</span>
+                    <h1 class="profile-name">CARLOS CACHIN</h1>
+                    <h2 class="profile-degree">
+                        <i class="fa-solid fa-graduation-cap"></i> Ingeniería en Sistemas de Información y Ciencias de la Computación
+                    </h2>
+                    <h3 class="profile-university">
+                        <i class="fa-solid fa-building-columns"></i> Universidad Mariano Gálvez de Guatemala (UMG)
+                    </h3>
+                    <p class="profile-quote">
+                        <i class="fa-solid fa-quote-left"></i>
+                        Transformando ideas complejas en soluciones digitales elegantes, escalables y orientadas al usuario.
+                        <i class="fa-solid fa-quote-right"></i>
+                    </p>
+                    <div class="hero-cta">
+                        <a href="#contact" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Contáctame</a>
+                        <a href="#projects" class="btn btn-secondary"><i class="fa-solid fa-diagram-project"></i> Ver Proyectos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+
+        <!-- Sección 2: Sobre Mí -->
+        <section id="about" class="section section-about">
+            <div class="container">
+                <div class="section-title">
+                    <h2><i class="fa-solid fa-user-gear"></i> Sobre Mí</h2>
+                    <p>Conoce mi trasfondo, pasión por la tecnología y visión profesional</p>
+                </div>
+
+                <div class="about-grid">
+                    <div class="about-card">
+                        <div class="card-icon"><i class="fa-solid fa-heart"></i></div>
+                        <h3>Intereses</h3>
+                        <p>Desarrollo web moderno, arquitectura de software, inteligencia artificial aplicada, interfaces interactivas y ciberseguridad.</p>
+                    </div>
+
+                    <div class="about-card">
+                        <div class="card-icon"><i class="fa-solid fa-brain"></i></div>
+                        <h3>Habilidades</h3>
+                        <p>Resolución analítica de problemas, diseño de algoritmos, trabajo en equipo bajo metodología Git, pensamiento crítico y rápida adaptación.</p>
+                    </div>
+
+                    <div class="about-card">
+                        <div class="card-icon"><i class="fa-solid fa-bullseye"></i></div>
+                        <h3>Objetivos Profesionales</h3>
+                        <p>Crear plataformas web innovadoras de alto impacto, especializarme en desarrollo Full-Stack e impulsar la transformación digital empresarial.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 3: Habilidades Tecnológicas -->
+        <section id="skills" class="section section-skills">
+            <div class="container">
+                <div class="section-title">
+                    <h2><i class="fa-solid fa-code"></i> Habilidades Tecnológicas</h2>
+                    <p>Dominio técnico y herramientas de desarrollo</p>
+                </div>
+
+                <div class="skills-grid">
+                    <!-- Habilidad 1 -->
+                    <div class="skill-card">
+                        <div class="skill-header">
+                            <div class="skill-icon"><i class="fa-brands fa-html5"></i></div>
+                            <div class="skill-info">
+                                <h3>HTML5 & CSS3</h3>
+                                <span>Semántica, Flexbox & Grid</span>
+                            </div>
+                            <span class="skill-percentage">95%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: 95%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Habilidad 2 -->
+                    <div class="skill-card">
+                        <div class="skill-header">
+                            <div class="skill-icon"><i class="fa-brands fa-js"></i></div>
+                            <div class="skill-info">
+                                <h3>JavaScript Nativo (ES6+)</h3>
+                                <span>DOM, Eventos, Async/Fetch</span>
+                            </div>
+                            <span class="skill-percentage">90%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: 90%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Habilidad 3 -->
+                    <div class="skill-card">
+                        <div class="skill-header">
+                            <div class="skill-icon"><i class="fa-brands fa-git-alt"></i></div>
+                            <div class="skill-info">
+                                <h3>Git & Control de Versiones</h3>
+                                <span>Ramas, Commits, GitHub</span>
+                            </div>
+                            <span class="skill-percentage">88%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: 88%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Habilidad 4 -->
+                    <div class="skill-card">
+                        <div class="skill-header">
+                            <div class="skill-icon"><i class="fa-solid fa-database"></i></div>
+                            <div class="skill-info">
+                                <h3>Bases de Datos & SQL</h3>
+                                <span>Diseño relacional y consultas</span>
+                            </div>
+                            <span class="skill-percentage">82%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: 82%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Habilidad 5 -->
+                    <div class="skill-card">
+                        <div class="skill-header">
+                            <div class="skill-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                            <div class="skill-info">
+                                <h3>Diseño Adaptable (Responsive)</h3>
+                                <span>Mobile-first & Accesibilidad</span>
+                            </div>
+                            <span class="skill-percentage">92%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: 92%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 4: Proyectos -->
+        <section id="projects" class="section section-projects">
+            <div class="container">
+                <div class="section-title">
+                    <h2><i class="fa-solid fa-diagram-project"></i> Mis Proyectos</h2>
+                    <p>Muestra de desarrollos recientes e interacciones</p>
+                </div>
+
+                <div class="projects-grid">
+                    <!-- Tarjeta Proyecto 1 -->
+                    <article class="project-card">
+                        <div class="project-image">
+                            <img src="img/project1.jpg" alt="Dashboard Analytics Web">
+                            <span class="project-tag">Web App</span>
+                        </div>
+                        <div class="project-content">
+                            <h3>Dashboard Analytics Web</h3>
+                            <p>Plataforma interactiva para visualización de métricas de rendimiento y datos estadísticos en tiempo real.</p>
+                            <button class="btn btn-outline btn-modal-trigger" data-project="1">
+                                <i class="fa-solid fa-circle-info"></i> Ver más
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Tarjeta Proyecto 2 -->
+                    <article class="project-card">
+                        <div class="project-image">
+                            <img src="img/project2.jpg" alt="App Móvil de Gestión">
+                            <span class="project-tag">UI / Mobile</span>
+                        </div>
+                        <div class="project-content">
+                            <h3>App Móvil de Gestión</h3>
+                            <p>Aplicación de organización de tareas y productividad personal con diseño intuitivo y soporte offline.</p>
+                            <button class="btn btn-outline btn-modal-trigger" data-project="2">
+                                <i class="fa-solid fa-circle-info"></i> Ver más
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Tarjeta Proyecto 3 -->
+                    <article class="project-card">
+                        <div class="project-image">
+                            <img src="img/project3.jpg" alt="Portal de APIs REST">
+                            <span class="project-tag">Backend / Cloud</span>
+                        </div>
+                        <div class="project-content">
+                            <h3>Portal de APIs & Services</h3>
+                            <p>Arquitectura de microservicios RESTful con autenticación segura y documentación interactiva.</p>
+                            <button class="btn btn-outline btn-modal-trigger" data-project="3">
+                                <i class="fa-solid fa-circle-info"></i> Ver más
+                            </button>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 5: Formulario de Contacto -->
+        <section id="contact" class="section section-contact">
+            <div class="container">
+                <div class="section-title">
+                    <h2><i class="fa-solid fa-paper-plane"></i> Formulario de Contacto</h2>
+                    <p>Envíame un mensaje y me pondré en contacto contigo pronto</p>
+                </div>
+
+                <div class="contact-wrapper">
+                    <form id="contact-form" class="contact-form" novalidate>
+                        <!-- Alert Box para mensajes de error o éxito -->
+                        <div id="form-alert" class="form-alert" style="display: none;"></div>
+
+                        <div class="form-group">
+                            <label for="name"><i class="fa-solid fa-user"></i> Nombre Completo</label>
+                            <input type="text" id="name" name="name" placeholder="Ej. Juan Pérez" autocomplete="name">
+                            <small class="error-msg" id="name-error"></small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email"><i class="fa-solid fa-envelope"></i> Correo Electrónico</label>
+                            <input type="email" id="email" name="email" placeholder="Ej. estudiante@umg.edu.gt" autocomplete="email">
+                            <small class="error-msg" id="email-error"></small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message"><i class="fa-solid fa-comment-dots"></i> Mensaje</label>
+                            <textarea id="message" name="message" rows="5" placeholder="Escribe tu mensaje o consulta aquí..."></textarea>
+                            <small class="error-msg" id="message-error"></small>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fa-solid fa-paper-plane"></i> Enviar Mensaje
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal para Proyectos (JavaScript) -->
+    <div id="project-modal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-container">
+            <button id="modal-close" class="modal-close-btn" aria-label="Cerrar modal">&times;</button>
+            <div class="modal-header">
+                <h3 id="modal-title">Título del Proyecto</h3>
+                <span id="modal-tag" class="project-tag">Categoría</span>
+            </div>
+            <div class="modal-body">
+                <img id="modal-img" src="" alt="Imagen de Proyecto" class="modal-img">
+                <p id="modal-description">Descripción detallada del proyecto...</p>
+                <div class="modal-techs">
+                    <h4>Tecnologías utilizadas:</h4>
+                    <ul id="modal-tech-list" class="tech-tags"></ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-action-btn" class="btn btn-primary">
+                    <i class="fa-solid fa-external-link"></i> Ver Demostración
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pie de Página -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <p>&copy; 2026 CARLOS CACHIN — Práctica 1 Desarrollo Web UMG</p>
+            <div class="social-links">
+                <a href="https://github.com" target="_blank" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script JS -->
+    <script src="js/script.js"></script>
+</body>
+</html>
