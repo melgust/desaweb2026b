@@ -61,21 +61,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('project-modal');
     const modalTitle = document.getElementById('modal-title');
     const modalDescription = document.getElementById('modal-description');
+    const modalLinkContainer = document.getElementById('modal-link-container');
     const closeModal = document.getElementById('close-modal');
     const btnMores = document.querySelectorAll('.btn-more');
 
     const projectData = {
         '1': {
-            title: 'Sistema de Gestión Escolar',
-            description: 'Proyecto desarrollado con Javascript nativo y CSS Grid. Permite la administración de calificaciones de alumnos, control de asistencia y generación de reportes en PDF de forma automatizada.'
+            title: 'Sistema de Gestión Comercial',
+            description: 'Este repositorio contiene el diseño lógico, físico e implementaciones programables de la base de datos centralizada para Innovación S.A. El sistema asegura la persistencia, trazabilidad e integridad transaccional (Modelo ACID) del pipeline de ventas, control de interacciones comerciales (actividades) y reportes gerenciales para la toma de decisiones.',
+            link: 'https://github.com/maxair180/InnovacionSA'
         },
         '2': {
             title: 'E-commerce interactivo',
-            description: 'Aplicación web interactiva que simula una tienda en línea. Incluye carrito de compras dinámico, cálculo de impuestos, almacenamiento de preferencias en LocalStorage y filtrado de productos.'
+            description: 'Aplicación web interactiva que simula una tienda en línea. Incluye carrito de compras dinámico, cálculo de impuestos, almacenamiento de preferencias en LocalStorage y filtrado de productos.',
+            link: null
         },
         '3': {
-            title: 'Dashboard Financiero',
-            description: 'Panel de control para la gestión de finanzas personales. Incorpora cálculos automáticos, gráficos dinámicos y categorización de gastos e ingresos en tiempo real.'
+            title: 'Sistema La Esperanza',
+            description: 'Sistema web para la gestión y comercialización agrícola de la comunidad rural La Esperanza.',
+            link: 'https://github.com/GarHer1399/la-esperanza'
         }
     };
 
@@ -87,6 +91,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data) {
                 modalTitle.textContent = data.title;
                 modalDescription.textContent = data.description;
+                
+                if (data.link) {
+                    modalLinkContainer.innerHTML = `<a href="${data.link}" target="_blank" rel="noopener noreferrer" style="color: var(--primary-color); font-weight: bold; text-decoration: underline;">Ver Repositorio en GitHub ↗</a>`;
+                } else {
+                    modalLinkContainer.innerHTML = '';
+                }
+
                 modal.classList.remove('hidden');
             }
         });
@@ -124,19 +135,16 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         let isValid = true;
 
-        // Limpiar errores previos
         nameError.textContent = '';
         emailError.textContent = '';
         messageError.textContent = '';
         formSuccess.textContent = '';
 
-        // Validar Nombre
         if (nameInput.value.trim() === '') {
             nameError.textContent = 'El nombre es obligatorio.';
             isValid = false;
         }
 
-        // Validar Email
         if (emailInput.value.trim() === '') {
             emailError.textContent = 'El correo electrónico es obligatorio.';
             isValid = false;
@@ -145,13 +153,11 @@ document.addEventListener('DOMContentLoaded', () => {
             isValid = false;
         }
 
-        // Validar Mensaje
         if (messageInput.value.trim() === '') {
             messageError.textContent = 'El mensaje no puede estar vacío.';
             isValid = false;
         }
 
-        // Si todo es válido
         if (isValid) {
             formSuccess.textContent = '¡Mensaje enviado con éxito!';
             form.reset();

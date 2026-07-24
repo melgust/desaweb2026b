@@ -198,6 +198,17 @@ body {
     gap: 0.5rem;
 }
 
+.skill-info {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.skill-percent {
+    color: var(--primary-color);
+}
+
 .progress-bar {
     width: 100%;
     height: 10px;
