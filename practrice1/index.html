@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Perfil Profesional | Melannie Lorenzana</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <header class="header">
+
+        <nav class="navbar">
+
+            <h1 class="logo">ML</h1>
+
+            <button id="themeButton" class="theme-button">
+                🌙 Modo oscuro
+            </button>
+
+        </nav>
+
+        <div class="header-content">
+
+            <div class="profile-image-container">
+
+                <img 
+                    src="img/foto.jpeg"
+                    alt="Fotografía de Melannie Lorenzana"
+                    class="profile-image"
+                >
+
+            </div>
+
+            <div class="profile-information">
+
+                <p class="welcome-text">
+                    Bienvenida a mi perfil profesional
+                </p>
+
+                <h2>
+                    Melannie Lorenzana
+                </h2>
+
+                <h3>
+                    Estudiante de Ingeniería en Sistemas
+                </h3>
+
+                <p>
+                    Universidad Mariano Gálvez de Guatemala
+                </p>
+
+                <p class="personal-phrase">
+                    "La tecnología transforma ideas en soluciones."
+                </p>
+
+                <p id="dateTime"></p>
+
+                <p>
+                    Visitas en este navegador:
+                    <strong id="visitCount">0</strong>
+                </p>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <!-- SOBRE MÍ -->
+
+        <section id="about" class="section">
+
+            <h2 class="section-title">
+                Sobre mí
+            </h2>
+
+            <div class="about-card">
+
+                <p>
+                    Soy estudiante de Ingeniería en Sistemas de Información
+                    con interés en el desarrollo de software, el diseño de
+                    soluciones tecnológicas y la creación de aplicaciones
+                    útiles para las personas.
+                </p>
+
+                <p>
+                    Me interesa continuar desarrollando mis conocimientos
+                    en programación, bases de datos, desarrollo web y
+                    análisis de sistemas.
+                </p>
+
+                <p>
+                    Mi objetivo profesional es seguir creciendo en el área
+                    de tecnología, adquirir experiencia y participar en
+                    proyectos innovadores que permitan resolver problemas
+                    mediante soluciones digitales.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- HABILIDADES -->
+
+        <section id="skills" class="section">
+
+            <h2 class="section-title">
+                Mis habilidades
+            </h2>
+
+            <div class="skills-grid">
+
+                <div class="skill-card">
+
+                    <span class="skill-icon">💻</span>
+
+                    <h3>
+                        Programación
+                    </h3>
+
+                    <p>
+                        Desarrollo de soluciones utilizando diferentes lenguajes.
+                    </p>
+
+                </div>
+
+
+                <div class="skill-card">
+
+                    <span class="skill-icon">🌐</span>
+
+                    <h3>
+                        Desarrollo Web
+                    </h3>
+
+                    <p>
+                        Creación de páginas web con HTML, CSS y JavaScript.
+                    </p>
+
+                </div>
+
+
+                <div class="skill-card">
+
+                    <span class="skill-icon">🗄️</span>
+
+                    <h3>
+                        Bases de Datos
+                    </h3>
+
+                    <p>
+                        Diseño y manejo de bases de datos.
+                    </p>
+
+                </div>
+
+
+                <div class="skill-card">
+
+                    <span class="skill-icon">🧠</span>
+
+                    <h3>
+                        Resolución de problemas
+                    </h3>
+
+                    <p>
+                        Capacidad para analizar problemas y buscar soluciones.
+                    </p>
+
+                </div>
+
+
+                <div class="skill-card">
+
+                    <span class="skill-icon">🤝</span>
+
+                    <h3>
+                        Trabajo en equipo
+                    </h3>
+
+                    <p>
+                        Colaboración y comunicación para alcanzar objetivos.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PROYECTOS -->
+
+        <section id="projects" class="section">
+
+            <h2 class="section-title">
+                Mis proyectos
+            </h2>
+
+            <div class="projects-grid">
+
+                <article class="project-card">
+
+                    <h3>
+                        Sistema de Gestión de Agua
+                    </h3>
+
+                    <p>
+                        Sistema desarrollado para gestionar información
+                        relacionada con el consumo y administración del agua.
+                    </p>
+
+                    <button
+                        class="project-button"
+                        onclick="showProjectDetails(1)"
+                    >
+                        Ver más
+                    </button>
+
+                </article>
+
+
+                <article class="project-card">
+
+                    <h3>
+                        Robot Resuelve Laberintos
+                    </h3>
+
+                    <p>
+                        Proyecto de electrónica digital que permite a un robot
+                        encontrar la salida de un laberinto.
+                    </p>
+
+                    <button
+                        class="project-button"
+                        onclick="showProjectDetails(2)"
+                    >
+                        Ver más
+                    </button>
+
+                </article>
+
+
+                <article class="project-card">
+
+                    <h3>
+                        Sistema de Información
+                    </h3>
+
+                    <p>
+                        Proyecto enfocado en el análisis y desarrollo de
+                        soluciones para la gestión de información.
+                    </p>
+
+                    <button
+                        class="project-button"
+                        onclick="showProjectDetails(3)"
+                    >
+                        Ver más
+                    </button>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- INFORMACIÓN ADICIONAL DE PROYECTOS -->
+
+        <section
+            id="projectDetails"
+            class="project-details hidden"
+        >
+
+            <div class="details-card">
+
+                <button
+                    id="closeDetails"
+                    class="close-button"
+                >
+                    ✕
+                </button>
+
+                <h2 id="projectTitle">
+                    Información del proyecto
+                </h2>
+
+                <p id="projectDescription"></p>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONTACTO -->
+
+        <section id="contact" class="section">
+
+            <h2 class="section-title">
+                Contacto
+            </h2>
+
+            <form id="contactForm" class="contact-form">
+
+                <div class="form-group">
+
+                    <label for="name">
+                        Nombre
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Escribe tu nombre"
+                    >
+
+                    <small
+                        id="nameError"
+                        class="error-message"
+                    ></small>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Correo electrónico
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="ejemplo@correo.com"
+                    >
+
+                    <small
+                        id="emailError"
+                        class="error-message"
+                    ></small>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="message">
+                        Mensaje
+                    </label>
+
+                    <textarea
+                        id="message"
+                        rows="5"
+                        placeholder="Escribe tu mensaje"
+                    ></textarea>
+
+                    <small
+                        id="messageError"
+                        class="error-message"
+                    ></small>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="submit-button"
+                >
+                    Enviar mensaje
+                </button>
+
+                <p
+                    id="successMessage"
+                    class="success-message"
+                ></p>
+
+            </form>
+
+        </section>
+
+    </main>
+
+
+    <footer class="footer">
+
+        <p>
+            © 2026 Melannie Lorenzana | Perfil Profesional
+        </p>
+
+    </footer>
+
+
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>
