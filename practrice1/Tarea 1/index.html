@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil Profesional - Jimmy Hernández</title>
+    <!-- Hoja de estilos externa -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Encabezado -->
+    <header id="main-header">
+        <div class="header-container">
+            <div id="datetime" class="datetime"></div>
+            <button id="theme-toggle" class="btn-custom">Cambiar Tema</button>
+            <div class="profile-info">
+                <img src="img/foto.jpg" alt="Fotografía de perfil" class="avatar-img">
+                <h1>Jimmy Hernández</h1>
+                <p><strong>Carrera:</strong> Ingeniería en Sistemas</p>
+                <p><strong>Universidad:</strong> Universidad Mariano Gálvez (UMG)</p>
+                <blockquote class="personal-quote">"El código limpio es la base de todo gran sistema."</blockquote>
+            </div>
+            <div class="visit-counter">
+                Visitas en este navegador: <span id="count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 2. Sobre mí -->
+        <section id="about">
+            <h2>Sobre mí</h2>
+            <p>Hola, soy estudiante de ingeniería con una gran pasión por el desarrollo de software y la gestión de bases de datos. Me interesa aprender sobre arquitectura de computadoras, redes y la automatización de procesos mediante código eficiente.</p>
+        </section>
+
+        <!-- Habilidades -->
+        <section id="skills">
+            <h2>Habilidades</h2>
+            <div class="skills-grid">
+                <div class="skill-card">Python</div>
+                <div class="skill-card">Java</div>
+                <div class="skill-card">SQL Server / PostgreSQL</div>
+                <div class="skill-card">Git & Control de Versiones</div>
+                <div class="skill-card">Redes y Active Directory</div>
+            </div>
+        </section>
+
+        <!-- Proyectos -->
+        <section id="projects">
+            <h2>Proyectos</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <h3>Mercado La Esperanza</h3>
+                    <p>Aplicación web desarrollada con Flask y PostgreSQL para la gestión comercial.</p>
+                    <button class="btn-custom btn-details">Ver más</button>
+                    <div class="project-details" style="display: none;">
+                        <p><strong>Detalles:</strong> Incluye control de ramas en Git, arquitectura backend en Python y despliegue de base de datos relacional.</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <h3>Simulador de Máquina de Turing</h3>
+                    <p>Herramienta web interactiva creada con HTML, CSS y JavaScript puro.</p>
+                    <button class="btn-custom btn-details">Ver más</button>
+                    <div class="project-details" style="display: none;">
+                        <p><strong>Detalles:</strong> Desarrollado para el curso de lenguajes formales, simulando estados lógicos y transiciones de cinta.</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <h3>Cluster Active Directory</h3>
+                    <p>Implementación de red multi-nodo utilizando Windows Server en máquinas virtuales.</p>
+                    <button class="btn-custom btn-details">Ver más</button>
+                    <div class="project-details" style="display: none;">
+                        <p><strong>Detalles:</strong> Configuración avanzada de dominios, políticas de seguridad y resolución de conflictos de red en VirtualBox.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contacto -->
+        <section id="contact">
+            <h2>Contacto</h2>
+            <form id="contact-form">
+                <div class="form-group">
+                    <label for="name">Nombre:</label>
+                    <input type="text" id="name" name="name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Correo electrónico:</label>
+                    <input type="text" id="email" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="message">Mensaje:</label>
+                    <textarea id="message" name="message" rows="4"></textarea>
+                </div>
+                <div id="form-error" class="error-msg"></div>
+                <button type="submit" class="btn-custom">Enviar Mensaje</button>
+            </form>
+        </section>
+    </main>
+
+
+    <script src="js/script.js"></script>
+</body>
+</html>
