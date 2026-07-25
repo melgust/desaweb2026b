@@ -4,10 +4,10 @@
 
 :root {
 
-    --color-primary: #1a1c24;
-    --color-header-1: #2c0d17;
-    --color-header-2: #4f1217;
-    --color-header-3: #974668;
+    --color-primary: #7370ad;
+    --color-header-1: #0d132c;
+    --color-header-2: #3e2a98;
+    --color-header-3: #9499d9;
 
     --background-main: #eef2ff;
 
@@ -572,71 +572,5 @@ body.dark-mode .form-control::placeholder {
 #mensajeFormulario {
 
     min-height:25px;
-
-}
-/* =====================================
-   AJUSTE DE ALINEACIÓN PRINCIPAL
-===================================== */
-
-
-.about-card {
-
-    padding-bottom:20px;
-
-}
-
-
-
-.col-lg-7,
-.col-lg-5 {
-
-    display:flex;
-
-    flex-direction:column;
-
-}
-
-
-
-/* Separación de proyectos */
-
-.proyectos {
-
-    margin-top:60px !important;
-
-}
-
-
-
-/* Evita que las tarjetas se peguen */
-
-.info-card,
-.project-card {
-
-    overflow:hidden;
-
-}
-
-
-
-/* En escritorio mantiene equilibrio */
-
-@media(min-width:992px){
-
-
-.about-card .row {
-
-    align-items:flex-start;
-
-}
-
-
-
-.proyectos .project-card {
-
-    height:100%;
-
-}
-
 
 }
