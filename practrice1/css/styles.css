@@ -1,49 +1,94 @@
-/* ================= GENERAL ================= */
+/* ==================================================
+   VARIABLES GENERALES
+================================================== */
+
+:root {
+
+    --color-primary: #1a1c24;
+    --color-header-1: #2c0d17;
+    --color-header-2: #4f1217;
+    --color-header-3: #974668;
+
+    --background-main: #eef2ff;
+
+    --white: #ffffff;
+
+    --shadow-light:
+        0 15px 35px rgba(0,0,0,.08);
+
+    --shadow-hover:
+        0 25px 50px rgba(0,0,0,.15);
+
+    --radius-card: 25px;
+
+    --transition:
+        .35s ease;
+
+}
+
+
+
+
+
+/* ==================================================
+   GENERAL
+================================================== */
+
 
 body {
 
-    background: linear-gradient(
+    background:
+    linear-gradient(
         135deg,
         #eef2ff,
         #f8fafc,
         #e0f2fe
     );
 
-    min-height: 100vh;
+    min-height:100vh;
 
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family:
+    "Segoe UI",
+    Arial,
+    sans-serif;
 
-    color: #1f2937;
+    color:#1f2937;
 
 }
 
 
-/* Contenedor principal */
 
 .container {
 
-    max-width: 1100px;
+    max-width:1100px;
 
 }
 
 
-/* ================= HEADER ================= */
+
+
+/* ==================================================
+   HEADER
+================================================== */
+
 
 .header-personalizado {
 
     background:
     linear-gradient(
         135deg,
-        #5e0e28,
-        #982a33,
-        #974668
+        var(--color-header-1),
+        var(--color-header-2),
+        var(--color-header-3)
     );
 
     color:white;
 
-    border-radius:0 0 35px 35px;
+    border-radius:
+    0 0 35px 35px;
 
 }
+
 
 
 .profile-img {
@@ -54,12 +99,18 @@ body {
 
     object-fit:cover;
 
-    border:8px solid rgba(255,255,255,.4);
+    border:
+    8px solid rgba(255,255,255,.4);
 
 }
 
 
-/* ================= TITULOS ================= */
+
+
+
+/* ==================================================
+   TITULOS
+================================================== */
 
 
 .section-title {
@@ -72,9 +123,10 @@ body {
 
     margin-bottom:40px;
 
-    color:#1e3a8a;
+    color:var(--color-primary);
 
 }
+
 
 
 .section-title::after {
@@ -97,16 +149,23 @@ body {
 
 
 
-/* ================= SOBRE MI ================= */
+
+
+/* ==================================================
+   SOBRE MI
+================================================== */
 
 
 .about-card {
 
-    border-radius:25px;
+    border-radius:
+    var(--radius-card);
 
-    background:rgba(255,255,255,.85);
+    background:
+    rgba(255,255,255,.85);
 
-    backdrop-filter:blur(10px);
+    backdrop-filter:
+    blur(10px);
 
     box-shadow:
     0 20px 40px rgba(0,0,0,.08);
@@ -127,36 +186,50 @@ body {
 
 
 
-/* ================= TARJETAS INFO ================= */
 
 
-.info-card {
+/* ==================================================
+   TARJETAS GENERALES
+================================================== */
 
-    border-radius:25px !important;
 
-    background:white;
+.info-card,
+.project-card {
+
+    border-radius:
+    var(--radius-card)!important;
+
+    background:
+    var(--white);
 
     box-shadow:
+    var(--shadow-light);
 
-    0 15px 35px rgba(0,0,0,.08);
-
-    transition:.35s ease;
+    transition:
+    var(--transition);
 
 }
 
 
-.info-card:hover {
 
-    transform:translateY(-12px);
+.info-card:hover,
+.project-card:hover {
+
+    transform:
+    translateY(-12px);
 
     box-shadow:
-
-    0 25px 50px rgba(0,0,0,.15);
+    var(--shadow-hover);
 
 }
 
 
-/* Iconos */
+
+
+
+/* ==================================================
+   ICONOS
+================================================== */
 
 
 .icon-circle {
@@ -178,122 +251,30 @@ body {
 }
 
 
+
 .icon-circle i {
 
-    font-size:2.3rem;
+    font-size:
+    2.3rem;
 
 }
 
 
 
-/* ================= ESPACIADO ================= */
 
 
-section {
-
-    margin-top:70px;
-
-    margin-bottom:70px;
-
-}
-
-
-
-/* ================= RESPONSIVE ================= */
-
-
-@media(max-width:768px){
-
-    .header-personalizado{
-
-        text-align:center;
-
-    }
-
-
-    .profile-img{
-
-        width:160px;
-
-        height:160px;
-
-        margin-bottom:25px;
-
-    }
-
-
-    .about-text{
-
-        text-align:left;
-
-    }
-
-}
-/* ================= BARRAS DE HABILIDADES ================= */
-
-.progress {
-
-    height: 22px;
-
-    border-radius: 20px;
-
-    background:#e5e7eb;
-
-    overflow:hidden;
-
-}
-
-
-.progress-bar {
-
-    font-weight:600;
-
-    border-radius:20px;
-
-    transition:0.5s ease;
-
-}
-
-
-.progress-bar:hover {
-
-    filter:brightness(1.1);
-
-}
-/* ================= PROYECTOS ================= */
-
-
-.project-card {
-
-    border-radius:25px !important;
-
-    background:white;
-
-    box-shadow:
-    0 15px 35px rgba(0,0,0,.08);
-
-    transition:.35s ease;
-
-}
-
-
-
-.project-card:hover {
-
-    transform:translateY(-12px);
-
-    box-shadow:
-    0 25px 50px rgba(0,0,0,.15);
-
-}
-
+/* ==================================================
+   PROYECTOS
+================================================== */
 
 
 .project-card h4 {
 
-    color:#1e3a8a;
+    color:
+    var(--color-primary);
 
-    font-weight:700;
+    font-weight:
+    700;
 
 }
 
@@ -313,10 +294,61 @@ section {
 
     border-radius:20px;
 
-    padding:10px 25px;
+    padding:
+    10px 25px;
 
 }
 
+
+
+
+
+/* ==================================================
+   HABILIDADES
+================================================== */
+
+
+.progress {
+
+    height:22px;
+
+    border-radius:20px;
+
+    background:#e5e7eb;
+
+    overflow:hidden;
+
+}
+
+
+
+.progress-bar {
+
+    font-weight:600;
+
+    border-radius:20px;
+
+    transition:
+    .5s ease;
+
+}
+
+
+
+.progress-bar:hover {
+
+    filter:
+    brightness(1.1);
+
+}
+
+
+
+
+
+/* ==================================================
+   MODAL
+================================================== */
 
 
 .modal-content {
@@ -325,24 +357,286 @@ section {
 
     border:none;
 
-    box-shadow:0 20px 50px rgba(0,0,0,.2);
+    box-shadow:
+    0 20px 50px rgba(0,0,0,.2);
 
 }
+
 
 
 .modal-header {
 
-    background:#5e0e28;
+    background:
+    var(--color-header-1);
 
     color:white;
 
-    border-radius:25px 25px 0 0;
+    border-radius:
+    25px 25px 0 0;
 
 }
 
 
+
 .btn-close {
 
-    filter:invert(1);
+    filter:
+    invert(1);
+
+}
+
+
+
+
+
+/* ==================================================
+   CONTACTO
+================================================== */
+
+
+.form-control {
+
+    border-radius:15px;
+
+    padding:12px;
+
+}
+
+
+
+.form-control:focus {
+
+    border-color:
+    var(--color-primary);
+
+    box-shadow:
+    0 0 0 .25rem rgba(30,58,138,.15);
+
+}
+
+
+
+.btn {
+
+    transition:
+    .3s ease;
+
+}
+
+
+
+.btn:hover {
+
+    transform:
+    translateY(-3px);
+
+}
+
+
+
+
+
+/* ==================================================
+   ESPACIADO
+================================================== */
+
+
+section {
+
+    margin-top:70px;
+
+    margin-bottom:70px;
+
+}
+
+
+
+
+
+/* ==================================================
+   RESPONSIVE
+================================================== */
+
+
+@media(max-width:768px){
+
+
+.header-personalizado {
+
+    text-align:center;
+
+}
+
+
+
+.profile-img {
+
+    width:160px;
+
+    height:160px;
+
+    margin-bottom:25px;
+
+}
+
+
+
+.about-text {
+
+    text-align:left;
+
+}
+
+
+
+.section-title {
+
+    font-size:1.6rem;
+
+}
+
+
+}
+/* =====================================
+   MODO OSCURO
+===================================== */
+
+
+body.dark-mode {
+
+
+    background:
+    linear-gradient(
+        135deg,
+        #111827,
+        #1f2937
+    );
+
+
+    color:#f9fafb;
+
+}
+
+
+
+body.dark-mode .about-card,
+body.dark-mode .info-card,
+body.dark-mode .project-card {
+
+
+    background:#1f2937;
+
+    color:white;
+
+}
+
+
+
+body.dark-mode .project-card p,
+body.dark-mode .about-text {
+
+    color:#e5e7eb;
+
+}
+
+
+
+body.dark-mode .section-title {
+
+    color:#93c5fd;
+
+}
+
+
+
+body.dark-mode .form-control {
+
+    background:#374151;
+
+    color:white;
+
+    border-color:#4b5563;
+
+}
+
+
+
+body.dark-mode .form-control::placeholder {
+
+    color:#d1d5db;
+
+}
+
+
+
+#mensajeFormulario {
+
+    min-height:25px;
+
+}
+/* =====================================
+   AJUSTE DE ALINEACIÓN PRINCIPAL
+===================================== */
+
+
+.about-card {
+
+    padding-bottom:20px;
+
+}
+
+
+
+.col-lg-7,
+.col-lg-5 {
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+
+
+/* Separación de proyectos */
+
+.proyectos {
+
+    margin-top:60px !important;
+
+}
+
+
+
+/* Evita que las tarjetas se peguen */
+
+.info-card,
+.project-card {
+
+    overflow:hidden;
+
+}
+
+
+
+/* En escritorio mantiene equilibrio */
+
+@media(min-width:992px){
+
+
+.about-card .row {
+
+    align-items:flex-start;
+
+}
+
+
+
+.proyectos .project-card {
+
+    height:100%;
+
+}
+
 
 }
