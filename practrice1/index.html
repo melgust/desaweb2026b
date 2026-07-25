@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Walter Ramos | Perfil Profesional</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="header">
+    <div class="header__bar">
+      <span id="fecha-hora" class="fecha-hora"></span>
+      <button id="btn-tema" class="btn btn--tema" aria-label="Cambiar tema">🌙 Modo oscuro</button>
+    </div>
+
+    <div class="header__content">
+      <img src="img/foto.jpg" alt="Foto de perfil de Walter Yair Ramos Carreto" class="foto-perfil">
+      <div class="header__info">
+        <h1>Walter Yair Ramos Carreto</h1>
+        <p class="carrera">Ingeniería en Sistemas de Información y Ciencias de la Computación</p>
+        <p class="universidad">Universidad Mariano Gálvez de Guatemala</p>
+        <p class="frase">"Play Hard, Work Hard."</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ===================== SOBRE MÍ ===================== -->
+    <section id="sobre-mi" class="section">
+      <h2>Sobre mí</h2>
+      <p>
+        Soy Walter Yair Ramos Carreto, estudiante de Ingeniería en Sistemas de Información y
+        Ciencias de la Computación en la Universidad Mariano Gálvez de Guatemala. Me interesa
+        especialmente el área de redes, desarrollo de software y tecnologías de comunicación.
+        Me considero una persona responsable, adaptable, con facilidad para aprender nuevas
+        tecnologías y trabajar en equipo. Mi objetivo es continuar desarrollándome profesionalmente
+        en el área tecnológica y aplicar mis conocimientos en la creación de soluciones que
+        resuelvan problemas reales.
+      </p>
+
+      <div class="sobre-mi__grid">
+        <div class="sobre-mi__card">
+          <h3>Intereses</h3>
+          <ul>
+            <li>Redes y tecnologías de comunicación</li>
+            <li>Desarrollo de software y aplicaciones</li>
+            <li>Ciberseguridad e infraestructura tecnológica</li>
+          </ul>
+        </div>
+        <div class="sobre-mi__card">
+          <h3>Habilidades blandas</h3>
+          <ul>
+            <li>Trabajo en equipo</li>
+            <li>Adaptabilidad y aprendizaje rápido</li>
+            <li>Responsabilidad y diligencia</li>
+          </ul>
+        </div>
+        <div class="sobre-mi__card">
+          <h3>Objetivo profesional</h3>
+          <p>Desarrollarme como profesional en tecnología, especializándome en redes, desarrollo de software e infraestructura tecnológica.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== HABILIDADES ===================== -->
+    <section id="habilidades" class="section">
+      <h2>Habilidades técnicas</h2>
+      <div class="skills">
+
+        <div class="skill">
+          <div class="skill__top">
+            <span>HTML5</span><span>85%</span>
+          </div>
+          <div class="skill__bar"><div class="skill__fill" style="width:85%"></div></div>
+        </div>
+
+        <div class="skill">
+          <div class="skill__top">
+            <span>CSS3</span><span>80%</span>
+          </div>
+          <div class="skill__bar"><div class="skill__fill" style="width:80%"></div></div>
+        </div>
+
+        <div class="skill">
+          <div class="skill__top">
+            <span>JavaScript</span><span>75%</span>
+          </div>
+          <div class="skill__bar"><div class="skill__fill" style="width:75%"></div></div>
+        </div>
+
+        <div class="skill">
+          <div class="skill__top">
+            <span>Python</span><span>80%</span>
+          </div>
+          <div class="skill__bar"><div class="skill__fill" style="width:80%"></div></div>
+        </div>
+
+        <div class="skill">
+          <div class="skill__top">
+            <span>SQL / Bases de Datos</span><span>85%</span>
+          </div>
+          <div class="skill__bar"><div class="skill__fill" style="width:85%"></div></div>
+        </div>
+
+        <div class="skill">
+          <div class="skill__top">
+            <span>Git / GitHub</span><span>80%</span>
+          </div>
+          <div class="skill__bar"><div class="skill__fill" style="width:80%"></div></div>
+        </div>
+
+        <div class="skill">
+          <div class="skill__top">
+            <span>Docker</span><span>70%</span>
+          </div>
+          <div class="skill__bar"><div class="skill__fill" style="width:70%"></div></div>
+        </div>
+
+        <div class="skill">
+          <div class="skill__top">
+            <span>Redes de computadoras</span><span>75%</span>
+          </div>
+          <div class="skill__bar"><div class="skill__fill" style="width:75%"></div></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================== PROYECTOS ===================== -->
+    <section id="proyectos" class="section">
+      <h2>Proyectos</h2>
+      <div class="proyectos">
+
+        <article class="proyecto-card">
+          <h3>La Esperanza</h3>
+          <p>Sistema de gestión y comercialización agrícola para administrar productores, compradores, productos, solicitudes y entregas.</p>
+          <div class="tags">
+            <span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span><span class="tag">PHP</span><span class="tag">MySQL</span>
+          </div>
+          <button class="btn btn--ver-mas" data-proyecto="esperanza">Ver más</button>
+        </article>
+
+        <article class="proyecto-card">
+          <h3>Sistema de Puntos de Interés</h3>
+          <p>Aplicación geoespacial desarrollada con FastAPI, PostgreSQL/PostGIS y Docker para registrar y consultar lugares mediante ubicación y distancia.</p>
+          <div class="tags">
+            <span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">PostGIS</span><span class="tag">Docker</span>
+          </div>
+          <button class="btn btn--ver-mas" data-proyecto="geoespacial">Ver más</button>
+        </article>
+
+        <article class="proyecto-card">
+          <h3>Sistema de Base de Datos Empresarial</h3>
+          <p>Proyecto desarrollado en SQL Server que implementa procedimientos, triggers, auditoría, transacciones, optimización, ETL y Data Warehouse.</p>
+          <div class="tags">
+            <span class="tag">SQL Server</span><span class="tag">T-SQL</span><span class="tag">ETL</span><span class="tag">Data Warehouse</span>
+          </div>
+          <button class="btn btn--ver-mas" data-proyecto="bd-empresarial">Ver más</button>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ===================== CONTACTO ===================== -->
+    <section id="contacto" class="section">
+      <h2>Contacto</h2>
+      <p class="contacto-info">
+        ✉ wramosc4@miumg.edu.gt &nbsp;|&nbsp; GitHub: WalterRamos22
+      </p>
+
+      <form id="form-contacto" class="form-contacto" novalidate>
+        <div class="form-group">
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre" name="nombre" placeholder="Tu nombre">
+          <span class="error" id="error-nombre"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com">
+          <span class="error" id="error-email"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="mensaje">Mensaje</label>
+          <textarea id="mensaje" name="mensaje" rows="5" placeholder="Escribe tu mensaje..."></textarea>
+          <span class="error" id="error-mensaje"></span>
+        </div>
+
+        <button type="submit" class="btn btn--enviar">Enviar mensaje</button>
+        <p class="form-exito" id="form-exito"></p>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- ===================== MODAL PROYECTOS ===================== -->
+  <div id="modal" class="modal oculto">
+    <div class="modal__contenido">
+      <button id="modal-cerrar" class="modal__cerrar" aria-label="Cerrar">&times;</button>
+      <h3 id="modal-titulo"></h3>
+      <p id="modal-texto"></p>
+    </div>
+  </div>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <p>Contador de visitas: <span id="contador-visitas">0</span></p>
+    <p>&copy; 2026 Walter Yair Ramos Carreto</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
