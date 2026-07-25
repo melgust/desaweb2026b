@@ -31,7 +31,6 @@ ealvizuresp5/
 └── README.md
 ```
 
-## Cómo visualizar el proyecto
 
 ## Cómo visualizar el proyecto
 
