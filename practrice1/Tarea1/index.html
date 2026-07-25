@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Perfil Profesional Dalila Zacarias</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+
+</head>
+
+<body>
+
+    <!-- ==========================
+         ENCABEZADO
+    =========================== -->
+
+    <header class="header">
+
+        <img src="img/logomitsuri.png" alt="Logomitsuri" class="logo-mitsuri">
+
+        <button id="theme-btn" class="theme-toggle">
+            <img id="theme-icon"
+                 src="img/dia-y-noche.png"
+                 alt="Cambiar tema">
+        </button>
+
+        <div class="perfil">
+
+            <img src="img/Lily.jpeg"
+                 alt="Fotografía"
+                 class="foto">
+
+            <h1>Dalila Nineth Zacarias de León <div Zacarias=""></div></h1>
+
+            <h2>Ingeniería en Sistemas</h2>
+
+            <h3>Universidad Mariano Gálvez de Guatemala</h3>
+
+            <p class="frase">
+                "La tecnología alcanza su verdadero propósito cuando mejora la vida de quienes más lo necesitan"
+            </p>
+
+            <div class="informacion-header">
+
+                <div id="fechaHora"></div>
+
+                <div id="contadorVisitas"></div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- ==========================
+         SOBRE MÍ
+    =========================== -->
+
+    <section id="sobre-mi">
+
+        <h2>Sobre mí</h2>
+
+        <p>
+            Soy estudiante de Ingeniería en Sistemas con experiencia en aseguramiento de calidad (QA),
+            pruebas de software, bases de datos y desarrollo web.
+            Me apasiona aprender nuevas tecnologías, mejorar continuamente mis habilidades
+            y desarrollar soluciones que aporten valor a las personas y a las organizaciones.
+
+        </p>
+
+         </p>
+            Soy una persona responsable, proactiva y con interés en seguir aprendiendo. Me gusta trabajar en equipo, enfrentar nuevos retos y desarrollar soluciones creativas, busco seguir creciendo profesionalmente mientras aporto valor a cada proyecto en el que participo.
+         </p>
+
+        <br>
+
+        <h3>Intereses</h3>
+
+        <ul>
+
+            <li>Desarrollo Web</li>
+
+            <li>Automatización de pruebas</li>
+
+            <li>Bases de Datos</li>
+
+            <li>Ciberseguridad</li>
+
+            <li>Diseño de Software</li>
+
+        </ul>
+
+        <br>
+
+        <h3>Objetivos Profesionales</h3>
+
+        <p>
+
+            Mi objetivo es convertirme en una profesional especializada en desarrollo de software
+            y aseguramiento de calidad, participando en proyectos tecnológicos innovadores
+            que permitan resolver problemas reales mediante soluciones eficientes.
+
+        </p>
+
+    </section>
+
+        <!-- ==========================
+         HABILIDADES
+    =========================== -->
+
+    <section id="habilidades">
+
+        <h2>Mis Habilidades</h2>
+
+        <div class="skills">
+
+            <div class="skill">
+                <h3>HTML5</h3>
+                <progress value="90" max="100"></progress>
+            </div>
+
+            <div class="skill">
+                <h3>CSS3</h3>
+                <progress value="85" max="100"></progress>
+            </div>
+
+            <div class="skill">
+                <h3>JavaScript</h3>
+                <progress value="75" max="100"></progress>
+            </div>
+
+            <div class="skill">
+                <h3>Git & GitHub</h3>
+                <progress value="80" max="100"></progress>
+            </div>
+
+            <div class="skill">
+                <h3>SQL</h3>
+                <progress value="85" max="100"></progress>
+            </div>
+
+            <div class="skill">
+                <h3>Java</h3>
+                <progress value="85" max="100"></progress>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================
+         PROYECTOS
+    =========================== -->
+
+    <section id="proyectos">
+
+        <h2>Proyectos</h2>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <h3>Sistema Agrícola</h3>
+
+                <p>
+                    Plataforma para facilitar la comercialización entre productores y compradores.
+                </p>
+
+                <button onclick="mostrarProyecto(1)">
+                    Ver más
+                </button>
+
+            </div>
+
+            <div class="card">
+
+                <h3>Base de Datos Hospital</h3>
+
+                <p>
+                    Proyecto desarrollado utilizando SQL Server para la administración hospitalaria.
+                </p>
+
+                <button onclick="mostrarProyecto(2)">
+                    Ver más
+                </button>
+
+            </div>
+
+            <div class="card">
+
+                <h3>QA Testing</h3>
+
+                <p>
+                    Elaboración de casos de prueba, reportes de errores y validaciones funcionales.
+                </p>
+
+                <button onclick="mostrarProyecto(3)">
+                    Ver más
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================
+         MODAL
+    =========================== -->
+
+    <div id="modal" class="modal">
+
+        <div class="modal-contenido">
+
+            <span id="cerrar">&times;</span>
+
+            <h2 id="tituloProyecto"></h2>
+
+            <p id="descripcionProyecto"></p>
+
+        </div>
+
+    </div>
+
+    <!-- ==========================
+         CONTACTO
+    =========================== -->
+
+    <section id="contacto">
+
+        <h2>Contáctame</h2>
+
+        <form id="contactForm">
+
+            <label for="nombre">Nombre</label>
+
+            <input
+                type="text"
+                id="nombre"
+                placeholder="Ingrese su nombre">
+
+            <label for="correo">Correo electrónico</label>
+
+            <input
+                type="email"
+                id="correo"
+                placeholder="correo@ejemplo.com">
+
+            <label for="mensaje">Mensaje</label>
+
+            <textarea
+                id="mensaje"
+                placeholder="Escriba su mensaje aquí..."></textarea>
+
+            <button type="submit">
+                Enviar mensaje
+            </button>
+
+        </form>
+
+    </section>
+
+    <!-- ==========================
+         FOOTER
+    =========================== -->
+
+    <footer>
+
+        <p>
+            © 2026 Dalila Zacarias | Perfil Profesional Interactivo
+        </p>
+
+    </footer>
+
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>
