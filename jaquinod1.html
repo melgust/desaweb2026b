@@ -1,0 +1,235 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil Profesional Interactivo</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Encabezado -->
+    <header>
+        <div class="contenedor-header">
+
+            <div class="foto">
+                <img src="fotos/foto.jpg" alt="Fotografía del estudiante">
+            </div>
+
+            <div class="informacion">
+                <h1>Joshua Daniel Aquino Diaz</h1>
+                <h2>Ingeniería en Sistemas</h2>
+                <h3>Universidad Mariano Gálvez</h3>
+
+                <p class="frase">
+                    "Lo importante es siempre volver a intentar"
+                </p>
+
+                <button id="temaBtn">
+                    Cambiar Tema
+                </button>
+
+                <div id="fechaHora"></div>
+
+                <div id="contadorVisitas"></div>
+
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Menú -->
+    <nav>
+        <ul>
+            <li><a href="#sobreMi">Sobre mí</a></li>
+            <li><a href="#habilidades">Habilidades</a></li>
+            <li><a href="#proyectos">Proyectos</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <!-- Sobre mí -->
+        <section id="sobreMi">
+
+            <h2>Sobre mí</h2>
+
+            <p>
+                Soy un estudiante de ingeniería en sistemas, cursando el octavo ciclo de la carrera, puedo aprender rapido y soy perserverante y nunca me rindo
+            </p>
+
+        </section>
+
+        <!-- Habilidades -->
+        <section id="habilidades">
+
+            <h2>Habilidades</h2>
+
+            <div class="contenedor-habilidades">
+
+                <div class="habilidad">
+                    <h3>HTML5</h3>
+                    
+                </div>
+
+                <div class="habilidad">
+                    <h3>CSS3</h3>
+                   
+                </div>
+
+                <div class="habilidad">
+                    <h3>JavaScript</h3>
+                    
+                </div>
+
+                <div class="habilidad">
+                    <h3>Java</h3>
+                   
+                </div>
+
+                <div class="habilidad">
+                    <h3>SQL</h3>
+                </div>
+
+                <div class="habilidad">
+                    <h3>Code Igniter 4</h3>
+                </div>
+
+                <div class="habilidad">
+                    <h3>python</h3>
+                </div>
+
+                <div class="habilidad">
+                    <h3>c++</h3>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Proyectos -->
+        <section id="proyectos">
+
+            <h2>Proyectos</h2>
+
+            <div class="contenedor-proyectos">
+
+                <div class="tarjeta">
+
+                    <h3>Sistema para rellenar PDFs</h3>
+
+                    <p>
+                        Sistema para Cainan para rellenar formularios medicos
+                    </p>
+
+                    <button class="verMas"
+                        data-info="Sistema hecho en java">
+                        Ver más
+                    </button>
+
+                </div>
+
+                <div class="tarjeta">
+
+                    <h3>Sitio web de Computacion Comercial</h3>
+
+                    <p>
+                        Pagina web para la empresa computacion comercial
+                    </p>
+
+                    <button class="verMas"
+                        data-info="Hecho en html, css, javascript y codeigniter4">
+                        Ver más
+                    </button>
+
+                </div>
+
+                <div class="tarjeta">
+
+                    <h3>Aplicación para jugar Sudoku</h3>
+
+                    <p>
+                        Aplicación simple que genera Sudokus para resolver
+                    </p>
+
+                    <button class="verMas"
+                        data-info="Hecho en java">
+                        Ver más
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Contacto -->
+        <section id="contacto">
+
+            <h2>Contacto</h2>
+
+            <form id="formulario">
+
+                <label for="nombre">Nombre</label>
+
+                <input
+                    type="text"
+                    id="nombre"
+                    placeholder="Ingrese su nombre">
+
+                <label for="correo">Correo electrónico</label>
+
+                <input
+                    type="email"
+                    id="correo"
+                    placeholder="correo@ejemplo.com">
+
+                <label for="mensaje">Mensaje</label>
+
+                <textarea
+                    id="mensaje"
+                    rows="6"
+                    placeholder="Escriba su mensaje"></textarea>
+
+                <button type="submit">
+                    Enviar
+                </button>
+
+                <p id="mensajeError"></p>
+
+            </form>
+
+        </section>
+
+    </main>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+
+        <div class="modal-contenido">
+
+            <span id="cerrarModal">&times;</span>
+
+            <h2>Información del Proyecto</h2>
+
+            <p id="textoModal"></p>
+
+        </div>
+
+    </div>
+
+    <footer>
+
+        <p>
+            © 2026 - Universidad Mariano Galvez
+        </p>
+
+    </footer>
+
+    <script src="js/script.js"></script>
+
+</body>
+</html>
+
