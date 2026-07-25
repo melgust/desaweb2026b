@@ -1,0 +1,930 @@
+/* ==========================================
+   CONFIGURACIÓN GENERAL
+========================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    background:
+        #FFF7FA url("../img/mariposas.gif");
+
+    background-repeat:no-repeat;
+
+    background-size:cover;
+
+    background-attachment:fixed;
+
+    color:#444;
+
+    line-height:1.6;
+
+    transition:background .6s ease,color .6s ease;
+
+}
+
+/* ==========================================
+   ENCABEZADO
+========================================== */
+
+.header{
+
+    background:linear-gradient(135deg,#F8BBD0,#EC407A);
+
+    color:white;
+
+    padding:60px 20px;
+
+    text-align:center;
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.header::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:300px;
+
+    height:300px;
+
+    background:rgba(255,255,255,.12);
+
+    border-radius:50%;
+
+    top:-120px;
+
+    right:-120px;
+
+}
+
+.perfil{
+
+    position:relative;
+
+    z-index:2;
+
+    max-width:900px;
+
+    margin:auto;
+
+}
+
+.logo-mitsuri{
+
+    position:absolute;
+
+    top:20px;
+
+    left:20px;
+
+    width:70px;
+
+    height:auto;
+
+}
+
+.foto{
+
+    width:180px;
+
+    height:180px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:6px solid white;
+
+    box-shadow:0 12px 30px rgba(0,0,0,.25);
+
+    transition:.4s;
+
+}
+
+.foto:hover{
+
+    transform:scale(1.05) rotate(-3deg);
+
+}
+
+.header h1{
+
+    margin-top:20px;
+
+    font-size:2.8rem;
+
+}
+
+.header h2{
+
+    font-weight:500;
+
+    margin-top:10px;
+
+}
+
+.header h3{
+
+    margin-top:5px;
+
+    font-weight:400;
+
+}
+
+.frase{
+
+    margin-top:20px;
+
+    font-style:italic;
+
+    font-size:18px;
+
+    opacity:.95;
+
+}
+
+.informacion-header{
+
+    margin-top:25px;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:25px;
+
+    flex-wrap:wrap;
+
+    font-weight:600;
+
+}
+
+/* ==========================================
+   BOTÓN CAMBIO DE TEMA
+========================================== */
+
+.theme-toggle{
+
+    position:absolute;
+
+    top:25px;
+
+    right:25px;
+
+    width:75px;
+
+    height:75px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:white;
+
+    cursor:pointer;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+
+    transition:.4s;
+
+    z-index:10;
+
+}
+
+.theme-toggle:hover{
+
+    transform:scale(1.1) rotate(12deg);
+
+}
+
+#theme-icon{
+
+    width:55px;
+
+    height:55px;
+
+    object-fit:contain;
+
+    transition:.5s;
+
+}
+
+/* ==========================================
+   SECCIONES
+========================================== */
+
+section{
+
+    width:90%;
+
+    max-width:1100px;
+
+    margin:50px auto;
+
+}
+
+section h2{
+
+    text-align:center;
+
+    margin-bottom:30px;
+
+    color:#D81B60;
+
+    font-size:2rem;
+
+}
+
+/* ==========================================
+   SOBRE MÍ
+========================================== */
+
+#sobre-mi{
+
+    background:white;
+
+    padding:35px;
+
+    border-radius:20px;
+
+    box-shadow:0 10px 25px rgba(236,64,122,.15);
+
+    transition:.4s;
+
+}
+
+#sobre-mi:hover{
+
+    transform:translateY(-5px);
+
+}
+
+#sobre-mi h3{
+
+    color:#EC407A;
+
+    margin-top:15px;
+
+    margin-bottom:10px;
+
+}
+
+#sobre-mi ul{
+
+    margin-left:25px;
+
+}
+
+#sobre-mi li{
+
+    margin-bottom:8px;
+
+}
+
+/* ==========================================
+   HABILIDADES
+========================================== */
+
+.skills{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+    gap:25px;
+
+}
+
+.skill{
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:20px;
+
+    box-shadow:0 10px 25px rgba(236,64,122,.15);
+
+    text-align:center;
+
+    transition:all .35s ease;
+
+}
+
+.skill:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 18px 35px rgba(236,64,122,.30);
+
+}
+
+.skill h3{
+
+    color:#D81B60;
+
+    margin-bottom:15px;
+
+}
+
+progress{
+
+    width:100%;
+
+    height:18px;
+
+    border:none;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+}
+
+progress::-webkit-progress-bar{
+
+    background:#F8BBD0;
+
+    border-radius:20px;
+
+}
+
+progress::-webkit-progress-value{
+
+    background:linear-gradient(90deg,#EC407A,#F06292);
+
+    border-radius:20px;
+
+}
+
+progress::-moz-progress-bar{
+
+    background:linear-gradient(90deg,#EC407A,#F06292);
+
+}
+
+/* ==========================================
+   PROYECTOS
+========================================== */
+
+.cards{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+
+    gap:30px;
+
+}
+
+.card{
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:20px;
+
+    box-shadow:0 12px 25px rgba(236,64,122,.15);
+
+    transition:all .4s ease;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+}
+
+.card:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:0 20px 35px rgba(236,64,122,.30);
+
+}
+
+.card h3{
+
+    color:#D81B60;
+
+    margin-bottom:15px;
+
+}
+
+.card p{
+
+    flex:1;
+
+    margin-bottom:25px;
+
+}
+
+.card button{
+
+    background:#EC407A;
+
+    color:white;
+
+    border:none;
+
+    padding:12px;
+
+    border-radius:30px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    transition:.3s;
+
+}
+
+.card button:hover{
+
+    background:#D81B60;
+
+    transform:scale(1.05);
+
+}
+
+/* ==========================================
+   MODAL
+========================================== */
+
+.modal{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.55);
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:1000;
+
+}
+
+.modal-contenido{
+
+    background:white;
+
+    width:90%;
+
+    max-width:550px;
+
+    border-radius:20px;
+
+    padding:35px;
+
+    position:relative;
+
+    animation:modalEntrada .35s ease;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.30);
+
+}
+
+@keyframes modalEntrada{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(-40px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+#cerrar{
+
+    position:absolute;
+
+    right:20px;
+
+    top:15px;
+
+    font-size:32px;
+
+    color:#D81B60;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+#cerrar:hover{
+
+    transform:rotate(90deg);
+
+}
+
+/* ==========================================
+   FORMULARIO DE CONTACTO
+========================================== */
+
+#contacto{
+
+    margin-bottom:60px;
+
+}
+
+#contactForm{
+
+    background:white;
+
+    padding:35px;
+
+    border-radius:20px;
+
+    box-shadow:0 10px 25px rgba(236,64,122,.15);
+
+}
+
+#contactForm label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    margin-top:18px;
+
+    font-weight:600;
+
+    color:#D81B60;
+
+}
+
+#contactForm input,
+
+#contactForm textarea{
+
+    width:100%;
+
+    padding:14px;
+
+    border:2px solid #F8BBD0;
+
+    border-radius:12px;
+
+    font-size:16px;
+
+    outline:none;
+
+    transition:.3s;
+
+}
+
+#contactForm input:focus,
+
+#contactForm textarea:focus{
+
+    border-color:#EC407A;
+
+    box-shadow:0 0 10px rgba(236,64,122,.25);
+
+}
+
+#contactForm textarea{
+
+    resize:none;
+
+    height:140px;
+
+}
+
+#contactForm button{
+
+    width:100%;
+
+    margin-top:25px;
+
+    background:linear-gradient(135deg,#EC407A,#D81B60);
+
+    color:white;
+
+    border:none;
+
+    padding:15px;
+
+    font-size:17px;
+
+    border-radius:30px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+#contactForm button:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 10px 20px rgba(236,64,122,.35);
+
+}
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+footer{
+
+    background:#D81B60;
+
+    color:white;
+
+    text-align:center;
+
+    padding:25px;
+
+    margin-top:40px;
+
+}
+
+footer p{
+
+    font-size:15px;
+
+}
+
+/* ==========================================
+   MODO OSCURO
+========================================== */
+
+.dark{
+
+    background:#1F1F2E;
+
+    color:#F5F5F5;
+
+}
+
+.dark .header{
+
+    background:linear-gradient(135deg,#3F2A56,#1F1F2E);
+
+}
+
+.dark section,
+
+.dark .skill,
+
+.dark .card,
+
+.dark #sobre-mi,
+
+.dark #contactForm,
+
+.dark .modal-contenido{
+
+    background:#2B2B3D;
+
+    color:white;
+
+}
+
+.dark h2,
+
+.dark h3{
+
+    color:#FFB6D9;
+
+}
+
+.dark input,
+
+.dark textarea{
+
+    background:#3A3A4F;
+
+    color:white;
+
+    border:2px solid #FFB6D9;
+
+}
+
+.dark input::placeholder,
+
+.dark textarea::placeholder{
+
+    color:#DDDDDD;
+
+}
+
+.dark progress::-webkit-progress-bar{
+
+    background:#555;
+
+}
+
+.dark footer{
+
+    background:#111827;
+
+}
+
+.dark .theme-toggle{
+
+    background:#2B2B3D;
+
+}
+
+/* ==========================================
+   ANIMACIONES
+========================================== */
+
+.card,
+
+.skill,
+
+#sobre-mi,
+
+#contactForm{
+
+    animation:fadeUp .8s ease;
+
+}
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(30px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:768px){
+
+    .header{
+
+        padding:40px 15px;
+
+    }
+
+    .foto{
+
+        width:140px;
+
+        height:140px;
+
+    }
+
+    .header h1{
+
+        font-size:2rem;
+
+    }
+
+    .header h2{
+
+        font-size:1.3rem;
+
+    }
+
+    .header h3{
+
+        font-size:1rem;
+
+    }
+
+    .theme-toggle{
+
+        width:60px;
+
+        height:60px;
+
+        top:15px;
+
+        right:15px;
+
+    }
+
+    #theme-icon{
+
+        width:42px;
+
+        height:42px;
+
+    }
+
+    .cards{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .skills{
+
+        grid-template-columns:1fr;
+
+    }
+
+    section{
+
+        width:95%;
+
+    }
+
+    .informacion-header{
+
+        flex-direction:column;
+
+        gap:10px;
+
+    }
+
+}
+
+@media(max-width:480px){
+
+    body{
+
+        font-size:15px;
+
+    }
+
+    .header{
+
+        padding-top:80px;
+
+    }
+
+    .foto{
+
+        width:120px;
+
+        height:120px;
+
+    }
+
+    .card,
+
+    .skill{
+
+        padding:20px;
+
+    }
+
+    #contactForm{
+
+        padding:20px;
+
+    }
+
+}
