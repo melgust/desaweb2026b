@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  api_persons:
+    build: .
+    container_name: api_persons_imoralesi
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html/practice3/imoralesi
