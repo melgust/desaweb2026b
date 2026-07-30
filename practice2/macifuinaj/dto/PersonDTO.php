@@ -39,10 +39,10 @@ class PersonDTO{
 
     public function toArray(): array{
         return[
-            'id' => $this.id,
-            'nombre' => $this.nombre,
-            'dob' => $this.dob,
-            'correo' => $this.correo
+            'id' => $this->id,
+            'nombre' => $this->nombre,
+            'dob' => $this->dob,
+            'correo' => $this->correo
         ];
     }
 }

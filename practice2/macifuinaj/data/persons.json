@@ -1,1 +1,8 @@
-[]
+[
+    {
+        "id": 1,
+        "nombre": "Panchito",
+        "dob": "2025-05-26",
+        "correo": "pachito@gmail.com"
+    }
+]
