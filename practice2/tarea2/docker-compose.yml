@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  php-api:
+    build: .
+    container_name: person-api
+
+    ports:
+      - "8080:80"
+
+    volumes:
+      - .:/var/www/html
+
+    restart: unless-stopped

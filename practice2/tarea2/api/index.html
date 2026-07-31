@@ -1,0 +1,113 @@
+<?php
+
+header("Content-Type: application/json");
+
+require_once __DIR__ . '/../controllers/PersonController.php';
+
+$controller = new PersonController();
+
+$method = $_SERVER['REQUEST_METHOD'];
+
+// Obtener la ruta
+$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+// Separar la ruta
+$segments = explode('/', trim($path, '/'));
+
+/*
+Ejemplos:
+
+/api/persons
+/api/persons/1
+/api/persons/1/age
+*/
+
+// POST /api/persons
+if (
+    $method === "POST" &&
+    count($segments) === 2 &&
+    $segments[0] === "api" &&
+    $segments[1] === "persons"
+) {
+
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    $controller->create($data);
+
+    exit;
+}
+
+// GET /api/persons
+if (
+    $method === "GET" &&
+    count($segments) === 2 &&
+    $segments[0] === "api" &&
+    $segments[1] === "persons"
+) {
+
+    $controller->getAll();
+
+    exit;
+}
+
+// GET /api/persons/{id}
+if (
+    $method === "GET" &&
+    count($segments) === 3 &&
+    $segments[0] === "api" &&
+    $segments[1] === "persons"
+) {
+
+    $controller->getById((int)$segments[2]);
+
+    exit;
+}
+
+// PUT /api/persons/{id}
+if (
+    $method === "PUT" &&
+    count($segments) === 3 &&
+    $segments[0] === "api" &&
+    $segments[1] === "persons"
+) {
+
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    $controller->update((int)$segments[2], $data);
+
+    exit;
+}
+
+// DELETE /api/persons/{id}
+if (
+    $method === "DELETE" &&
+    count($segments) === 3 &&
+    $segments[0] === "api" &&
+    $segments[1] === "persons"
+) {
+
+    $controller->delete((int)$segments[2]);
+
+    exit;
+}
+
+// GET /api/persons/{id}/age
+if (
+    $method === "GET" &&
+    count($segments) === 4 &&
+    $segments[0] === "api" &&
+    $segments[1] === "persons" &&
+    $segments[3] === "age"
+) {
+
+    $controller->getAge((int)$segments[2]);
+
+    exit;
+}
+
+// Endpoint no encontrado
+http_response_code(404);
+
+echo json_encode([
+    "message" => "Endpoint not found"
+]);
