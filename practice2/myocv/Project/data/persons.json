@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "name": "Madeline Follin McKenna",
+        "birthday": "1988-11-07",
+        "email": "cults@email.com"
+    },
+    {
+        "id": 2,
+        "name": "Jenna Ortega",
+        "birthday": "2002-09-27",
+        "email": "jortega@email.com"
+    },
+    {
+        "id": 3,
+        "name": "Emma Myers",
+        "birthday": "2002-04-02",
+        "email": "emma@email.com"
+    },
+    {
+        "id": 4,
+        "name": "Claire Elizabeth Cottrill",
+        "birthday": "1998-08-18",
+        "email": "clairo@email.com"
+    },
+    {
+        "id": 5,
+        "name": "Emma Harvey",
+        "birthday": "1995-08-19",
+        "email": "yungelita@email.com"
+    }
+]
