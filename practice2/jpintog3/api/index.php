@@ -10,51 +10,43 @@ $controller = new PersonController();
 
 $method = $_SERVER["REQUEST_METHOD"];
 $route = $_GET["route"] ?? "";
-$segments = array_filter(explode("/", trim($route, "/")));
-$segments = array_values($segments);
 
-/*
-Ejemplo:
-http://localhost:8080/api/persons
-$segments = ["api", "persons"]
+$segments = array_values(array_filter(explode("/", trim($route, "/"))));
 
-http://localhost:8080/api/persons/1
-$segments = ["api", "persons", "1"]
+if (count($segments) >= 1 && $segments[0] == "persons") {
 
-http://localhost:8080/api/persons/1/age
-$segments = ["api", "persons", "1", "age"]
-*/
-
-if (count($segments) >= 1 && $segments[0] == "persons"){
-
-    // GET /api/persons
-    if ($method == "GET" && count($segments) == 2) {
+    // GET /persons
+    if ($method == "GET" && count($segments) == 1) {
         $controller->getAll();
     }
 
-    // POST /api/persons
-    elseif ($method == "POST" && count($segments) == 2) {
+    // POST /persons
+    elseif ($method == "POST" && count($segments) == 1) {
         $controller->create();
     }
 
-    // GET /api/persons/{id}
-    elseif ($method == "GET" && count($segments) == 3) {
-        $controller->getById($segments[2]);
+    // GET /persons/{id}
+    elseif ($method == "GET" && count($segments) == 2) {
+        $controller->getById($segments[1]);
     }
 
-    // PUT /api/persons/{id}
-    elseif ($method == "PUT" && count($segments) == 3) {
-        $controller->update($segments[2]);
+    // PUT /persons/{id}
+    elseif ($method == "PUT" && count($segments) == 2) {
+        $controller->update($segments[1]);
     }
 
-    // DELETE /api/persons/{id}
-    elseif ($method == "DELETE" && count($segments) == 3) {
-        $controller->delete($segments[2]);
+    // DELETE /persons/{id}
+    elseif ($method == "DELETE" && count($segments) == 2) {
+        $controller->delete($segments[1]);
     }
 
-    // GET /api/persons/{id}/age
-    elseif ($method == "GET" && count($segments) == 4 && $segments[3] == "age") {
-        $controller->getAge($segments[2]);
+    // GET /persons/{id}/age
+    elseif (
+        $method == "GET" &&
+        count($segments) == 3 &&
+        $segments[2] == "age"
+    ) {
+        $controller->getAge($segments[1]);
     }
 
     else {
