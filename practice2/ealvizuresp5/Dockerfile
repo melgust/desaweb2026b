@@ -1,12 +1,13 @@
 FROM php:8.3-apache
 
-# Enable Apache rewrite module
 RUN a2enmod rewrite
+RUN sed -ri 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
 
-# Copy application files
 COPY . /var/www/html/
 
-# Set working directory
 WORKDIR /var/www/html
+
+RUN chown -R www-data:www-data /var/www/html/data \
+    && chmod -R 775 /var/www/html/data
 
 EXPOSE 80

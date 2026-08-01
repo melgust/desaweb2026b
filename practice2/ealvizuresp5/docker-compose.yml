@@ -1,11 +1,13 @@
-version: "3.9"
-
 services:
   api:
     build: .
-    container_name: mcalic1
+    container_name: ealvizuresp5-persons-api
     ports:
       - "8080:80"
     volumes:
       - ./:/var/www/html
+    command: >
+      sh -c "chown -R www-data:www-data /var/www/html/data &&
+      chmod -R 775 /var/www/html/data &&
+      apache2-foreground"
     restart: unless-stopped
