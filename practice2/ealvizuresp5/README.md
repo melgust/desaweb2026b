@@ -32,11 +32,20 @@ ealvizuresp5/
 
 ## Componentes principales
 
-Un DTO (Data Transfer Object) es un objeto utilizado para representar y transportar datos entre componentes. `PersonDTO` define los campos `id`, `name`, `birthday` y `email`; además, permite convertir una persona en un arreglo mediante `toArray()` antes de almacenarla.
+Un DTO sirve para reunir y trasladar los datos de una persona de manera ordenada.
+En este proyecto, `PersonDTO` contiene los campos `id`, `name`, `birthday` y `email`.
+Se utilizó al crear y actualizar personas para mantener sus datos organizados.
+Su método `toArray()` convierte el objeto en un arreglo que puede guardarse en el archivo JSON.
 
-Un Controller coordina las solicitudes relacionadas con un recurso. `PersonController` implementa las operaciones para listar, buscar, crear, actualizar y eliminar personas, además de calcular la edad y aplicar las validaciones correspondientes.
+Un Controller recibe y coordina las operaciones que se solicitan a la API.
+`PersonController` administra la creación, consulta, actualización y eliminación de personas.
+También valida los datos recibidos y calcula la edad a partir de la fecha de nacimiento.
+Se comunica con `PersonDTO` y `FileManager`, evitando colocar toda la lógica en el archivo de rutas.
 
-Un Helper encapsula una tarea auxiliar que puede reutilizarse sin mezclarla con la lógica de negocio. `FileManager` se encarga exclusivamente de crear, leer y escribir el archivo `data/persons.json`.
+Un Helper contiene una tarea de apoyo que puede reutilizarse en el proyecto.
+`FileManager` se encarga de leer y escribir la información almacenada en `persons.json`.
+Además, comprueba que el archivo exista y procura que su contenido se conserve como JSON válido.
+Así, el manejo de archivos queda separado y el controlador puede concentrarse en las operaciones de las personas.
 
 ## Ejecución con Docker
 
