@@ -9,9 +9,9 @@ header("Content-Type: application/json");
 $controller = new PersonController();
 
 $method = $_SERVER["REQUEST_METHOD"];
-$path = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
-
-$segments = explode("/", trim($path, "/"));
+$route = $_GET["route"] ?? "";
+$segments = array_filter(explode("/", trim($route, "/")));
+$segments = array_values($segments);
 
 /*
 Ejemplo:
@@ -25,7 +25,7 @@ http://localhost:8080/api/persons/1/age
 $segments = ["api", "persons", "1", "age"]
 */
 
-if (count($segments) >= 2 && $segments[0] == "api" && $segments[1] == "persons") {
+if (count($segments) >= 1 && $segments[0] == "persons"){
 
     // GET /api/persons
     if ($method == "GET" && count($segments) == 2) {
