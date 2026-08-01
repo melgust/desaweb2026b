@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "Edwin Morales",
+        "birthday": "1980-02-02",
+        "email": "emoralesm37@email.com"
+    }    
+    {
+        "id": 2,
+        "name": "Ana Lopez",
+        "birthday": "1995-04-12",
+        "email": "ana@email.com"
+    }
+   {
+        "id": 3,
+        "name": "Juana de Arco",
+        "birthday": "1995-10-12",
+        "email": "Juana_arco@email.com"
+    }
+    {
+        "id": 4,
+        "name": "Lorenzo Marquez",
+        "birthday": "2000-09-12",
+        "email": "Lorenzo@gmial.com"
+    }
+]
