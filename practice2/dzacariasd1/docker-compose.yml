@@ -1,7 +1,10 @@
 version: '3.8'
 
 services:
-  php:
+  php-api:
     build: .
+    container_name: php-rest-api
     ports:
       - "8080:80"
+    volumes:
+      - .:/var/www/html
