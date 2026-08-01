@@ -1,0 +1,9 @@
+services:
+  api:
+    build: .
+    container_name: wramosc4_persons_api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/var/www/html/data
+    restart: unless-stopped
