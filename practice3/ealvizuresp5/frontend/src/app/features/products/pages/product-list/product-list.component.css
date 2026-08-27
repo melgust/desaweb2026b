@@ -1,0 +1,20 @@
+.pagination-mode {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.pagination-mode button.active {
+  font-weight: bold;
+}
+
+.scroll-sentinel {
+  height: 20px;
+}
+
+.loading-message,
+.scroll-status {
+  padding: 1rem 0;
+  text-align: center;
+}
