@@ -1,0 +1,16 @@
+.btn-primary {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  border: 1px solid #2563eb !important;
+}
+
+.btn-secondary {
+  background-color: #6b7280 !important;
+  color: #ffffff !important;
+  border: 1px solid #6b7280 !important;
+  opacity: 0.8;
+}
+
+.btn-secondary:hover {
+  opacity: 1;
+}
