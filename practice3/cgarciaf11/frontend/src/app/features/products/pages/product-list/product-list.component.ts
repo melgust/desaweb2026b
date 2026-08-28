@@ -1,41 +1,58 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ProductService } from '../../../../core/services/product.service';
-import { AuthService } from '../../../../core/services/auth.service';
-import { Product } from '../../../../core/models/product.model';
+import { RouterModule } from '@angular/router';
+import { ProductService } from '../../services/product.service';
+import { AuthService } from '../../core/services/auth.service'; // Ajusta la ruta si es necesario
+import { Product } from '../../models/product.model';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
-  templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.css']
+  imports: [CommonModule, FormsModule, RouterModule],
+  templateUrl: './product-list.component.html'
 })
 export class ProductListComponent implements OnInit {
   products = signal<Product[]>([]);
-  totalItems = signal(0);
-  totalPages = signal(0);
-  page = signal(1);
-  loading = signal(false);
-
+  loading = signal<boolean>(false);
+  page = signal<number>(1);
+  totalPages = signal<number>(1);
+  
   searchTerm = '';
   sortBy = 'name';
-  sortDirection: 'asc' | 'desc' = 'asc';
+  sortDirection = 'asc';
+  
+  // Nuevo estado para controlar el tipo de paginación
+  paginationMode = signal<'offset' | 'infinite'>('offset');
 
-  constructor(public auth: AuthService, private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    public auth: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
   }
 
-  loadProducts(): void {
+  loadProducts(append: boolean = false): void {
+    if (this.loading()) return;
     this.loading.set(true);
-    this.productService.getProducts(this.searchTerm, this.sortBy, this.sortDirection, this.page()).subscribe({
+
+    this.productService.getProducts(
+      this.searchTerm,
+      this.sortBy,
+      this.sortDirection,
+      this.page(),
+      10
+    ).subscribe({
       next: (res) => {
-        this.products.set(res.items);
-        this.totalItems.set(res.totalItems);
+        if (append && this.paginationMode() === 'infinite') {
+          // Concatena los productos nuevos a los ya existentes
+          this.products.update(prev => [...prev, ...res.items]);
+        } else {
+          // Reemplaza la lista (comportamiento normal por offset)
+          this.products.set(res.items);
+        }
         this.totalPages.set(res.totalPages);
         this.loading.set(false);
       },
@@ -43,29 +60,62 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-  onSearchChange(): void {
-    this.page.set(1);
-    this.loadProducts();
+  setPage(newPage: number): void {
+    if (newPage >= 1 && newPage <= this.totalPages()) {
+      this.page.set(newPage);
+      this.loadProducts(false);
+    }
   }
 
-  toggleSort(column: string): void {
-    if (this.sortBy === column) {
+  onSearchChange(): void {
+    this.page.set(1);
+    this.loadProducts(false);
+  }
+
+  toggleSort(field: string): void {
+    if (this.sortBy === field) {
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     } else {
-      this.sortBy = column;
+      this.sortBy = field;
       this.sortDirection = 'asc';
     }
-    this.loadProducts();
+    this.page.set(1);
+    this.loadProducts(false);
+  }
+
+  // Cambia el modo de paginación desde el HTML
+  setPaginationMode(mode: 'offset' | 'infinite'): void {
+    this.paginationMode.set(mode);
+    this.page.set(1);
+    this.loadProducts(false);
+  }
+
+  // Detecta cuando el usuario hace scroll hasta el final de la pantalla
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    if (this.paginationMode() !== 'infinite' || this.loading()) return;
+
+    const windowHeight = 'innerHeight' in window ? window.innerHeight : document.documentElement.offsetHeight;
+    const body = document.body;
+    const html = document.documentElement;
+    const docHeight = Math.max(
+      body.scrollHeight, body.offsetHeight,
+      html.clientHeight, html.scrollHeight, html.offsetHeight
+    );
+    const windowBottom = windowHeight + window.pageYOffset;
+
+    // Si llega cerca del final (100px antes) y aún hay páginas disponibles
+    if (windowBottom >= docHeight - 100 && this.page() < this.totalPages()) {
+      this.page.set(this.page() + 1);
+      this.loadProducts(true);
+    }
   }
 
   deleteProduct(id: string): void {
-    if (confirm('Delete product?')) {
-      this.productService.deleteProduct(id).subscribe(() => this.loadProducts());
+    if (confirm('Are you sure?')) {
+      this.productService.deleteProduct(id).subscribe(() => {
+        this.loadProducts(false);
+      });
     }
-  }
-
-  setPage(p: number): void {
-    this.page.set(p);
-    this.loadProducts();
   }
 }
