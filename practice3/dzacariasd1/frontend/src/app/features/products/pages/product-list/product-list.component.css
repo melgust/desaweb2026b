@@ -1,0 +1,130 @@
+/* ---------------------------------------------------------------------------
+   Selector de estrategia de paginacion (offset vs. scroll infinito)
+   --------------------------------------------------------------------------- */
+.mode-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.mode-switch__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+  margin-right: 4px;
+}
+
+.mode-switch__btn {
+  padding: 7px 14px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #334155;
+  border-radius: 999px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.mode-switch__btn:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.mode-switch__btn.is-active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+/* ---------------------------------------------------------------------------
+   Resumen de resultados y estados
+   --------------------------------------------------------------------------- */
+.results-summary {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.alert-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.empty-row {
+  text-align: center;
+  color: #94a3b8;
+  padding: 24px 0;
+}
+
+.loading-block {
+  padding: 24px 0;
+  color: #64748b;
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll infinito: indicador de carga, fin de lista y centinela
+   --------------------------------------------------------------------------- */
+.scroll-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 48px;
+  padding: 8px 0 4px;
+}
+
+.scroll-status__loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.scroll-status__end {
+  color: #94a3b8;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+}
+
+.btn-load-more {
+  padding: 8px 18px;
+  border: 1px solid #2563eb;
+  background: #fff;
+  color: #2563eb;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-load-more:hover {
+  background: #eff6ff;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #bfdbfe;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Centinela invisible observado con IntersectionObserver. Necesita alto > 0
+   para que el observador pueda detectar su entrada en el area visible. */
+.scroll-anchor {
+  height: 1px;
+  width: 100%;
+}

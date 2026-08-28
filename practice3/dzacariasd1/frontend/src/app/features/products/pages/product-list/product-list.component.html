@@ -1,0 +1,95 @@
+<div class="container">
+  <header class="header">
+    <h2>Enterprise Products</h2>
+    <a *ngIf="auth.canManageProducts()" routerLink="/products/new" class="btn btn-primary">+ Add Product</a>
+  </header>
+
+  <!-- Selector de estrategia de paginacion -->
+  <div class="mode-switch" role="group" aria-label="Tipo de paginacion">
+    <span class="mode-switch__label">Paginación:</span>
+    <button type="button"
+            class="mode-switch__btn"
+            [class.is-active]="mode() === 'offset'"
+            (click)="setMode('offset')">
+      Offset (páginas)
+    </button>
+    <button type="button"
+            class="mode-switch__btn"
+            [class.is-active]="mode() === 'infinite'"
+            (click)="setMode('infinite')">
+      Scroll infinito
+    </button>
+  </div>
+
+  <input type="text"
+         placeholder="Buscar productos... (presione Enter)"
+         [(ngModel)]="searchTerm"
+         (keyup.enter)="onSearchChange()"
+         class="search-bar" />
+
+  <p class="results-summary" *ngIf="!loading()">
+    <ng-container *ngIf="mode() === 'offset'; else infiniteSummary">
+      Página {{ page() }} de {{ totalPages() }} — {{ totalItems() }} productos en total
+    </ng-container>
+    <ng-template #infiniteSummary>
+      Mostrando {{ products().length }} de {{ totalItems() }} productos
+    </ng-template>
+  </p>
+
+  <div class="alert-error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+
+  <table class="grid-table" *ngIf="!loading(); else loadingTpl">
+    <thead>
+      <tr>
+        <th (click)="toggleSort('name')">Name {{ sortIcon('name') }}</th>
+        <th>Description</th>
+        <th (click)="toggleSort('price')">Price {{ sortIcon('price') }}</th>
+        <th (click)="toggleSort('stock')">Stock {{ sortIcon('stock') }}</th>
+        <th *ngIf="auth.canManageProducts()">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of products()">
+        <td>{{ item.name }}</td>
+        <td>{{ item.description || '-' }}</td>
+        <td>${{ item.price | number:'1.2-2' }}</td>
+        <td>{{ item.stock }}</td>
+        <td *ngIf="auth.canManageProducts()">
+          <a [routerLink]="['/products/edit', item.id]">Edit</a>
+          <button *ngIf="auth.canDeleteProducts()" (click)="deleteProduct(item.id)" class="text-danger">Delete</button>
+        </td>
+      </tr>
+      <tr *ngIf="products().length === 0">
+        <td [attr.colspan]="auth.canManageProducts() ? 5 : 4" class="empty-row">
+          No se encontraron productos.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Modo 1: paginacion clasica por offset -->
+  <div class="pagination" *ngIf="mode() === 'offset' && !loading()">
+    <button [disabled]="page() <= 1" (click)="setPage(page() - 1)">Anterior</button>
+    <span>Página {{ page() }} de {{ totalPages() }}</span>
+    <button [disabled]="page() >= totalPages()" (click)="setPage(page() + 1)">Siguiente</button>
+  </div>
+
+  <!-- Modo 2: scroll infinito. #scrollAnchor es el centinela observado con
+       IntersectionObserver: al entrar en pantalla dispara la siguiente carga. -->
+  <ng-container *ngIf="mode() === 'infinite' && !loading()">
+    <div class="scroll-status">
+      <div *ngIf="loadingMore()" class="scroll-status__loading">
+        <span class="spinner"></span> Cargando más productos...
+      </div>
+      <div *ngIf="!loadingMore() && !hasMore() && products().length > 0" class="scroll-status__end">
+        — Fin del catálogo ({{ products().length }} productos) —
+      </div>
+      <button *ngIf="!loadingMore() && hasMore()" class="btn-load-more" (click)="loadMore()">
+        Cargar más
+      </button>
+    </div>
+    <div #scrollAnchor class="scroll-anchor" aria-hidden="true"></div>
+  </ng-container>
+
+  <ng-template #loadingTpl><div class="loading-block">Cargando datos...</div></ng-template>
+</div>

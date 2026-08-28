@@ -1,0 +1,6 @@
+# Evita enviar dependencias y artefactos locales al contexto de build de Docker:
+# la imagen ejecuta su propio `npm install` y `npm run build`.
+node_modules
+dist
+.angular
+*.log

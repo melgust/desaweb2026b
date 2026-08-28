@@ -1,0 +1,3 @@
+# Artefactos de compilacion locales: la imagen hace su propio restore/publish.
+**/bin
+**/obj
