@@ -2,9 +2,11 @@ import { Component, OnInit, signal, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { ProductService } from '../../services/product.service';
-import { AuthService } from '../../core/services/auth.service'; // Ajusta la ruta si es necesario
-import { Product } from '../../models/product.model';
+
+// Rutas corregidas apuntando a /core/services y /core/models
+import { ProductService } from '../../../../core/services/product.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { Product, ProductPagedResult } from '../../../../core/models/product.model';
 
 @Component({
   selector: 'app-product-list',
@@ -22,7 +24,6 @@ export class ProductListComponent implements OnInit {
   sortBy = 'name';
   sortDirection = 'asc';
   
-  // Nuevo estado para controlar el tipo de paginación
   paginationMode = signal<'offset' | 'infinite'>('offset');
 
   constructor(
@@ -45,12 +46,10 @@ export class ProductListComponent implements OnInit {
       this.page(),
       10
     ).subscribe({
-      next: (res) => {
+      next: (res: ProductPagedResult) => {
         if (append && this.paginationMode() === 'infinite') {
-          // Concatena los productos nuevos a los ya existentes
           this.products.update(prev => [...prev, ...res.items]);
         } else {
-          // Reemplaza la lista (comportamiento normal por offset)
           this.products.set(res.items);
         }
         this.totalPages.set(res.totalPages);
@@ -83,14 +82,12 @@ export class ProductListComponent implements OnInit {
     this.loadProducts(false);
   }
 
-  // Cambia el modo de paginación desde el HTML
   setPaginationMode(mode: 'offset' | 'infinite'): void {
     this.paginationMode.set(mode);
     this.page.set(1);
     this.loadProducts(false);
   }
 
-  // Detecta cuando el usuario hace scroll hasta el final de la pantalla
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
     if (this.paginationMode() !== 'infinite' || this.loading()) return;
@@ -104,7 +101,6 @@ export class ProductListComponent implements OnInit {
     );
     const windowBottom = windowHeight + window.pageYOffset;
 
-    // Si llega cerca del final (100px antes) y aún hay páginas disponibles
     if (windowBottom >= docHeight - 100 && this.page() < this.totalPages()) {
       this.page.set(this.page() + 1);
       this.loadProducts(true);
