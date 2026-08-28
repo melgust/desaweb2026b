@@ -1,0 +1,42 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.table-container {
+  max-height: calc(100vh - 250px); /* fallback if not active */
+}
+
+.table-container.infinite-scroll-active {
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.grid-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Ensure header stays visible when scrolling */
+.infinite-scroll-active .grid-table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #f4f4f4;
+  z-index: 1;
+}
+
+.loading-indicator {
+  text-align: center;
+  padding: 15px;
+  color: #666;
+  font-style: italic;
+}

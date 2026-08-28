@@ -1,0 +1,50 @@
+<div class="container">
+  <header class="header">
+    <h2>Productos Empresariales CACHIN</h2>
+    <div class="actions">
+      <button class="btn btn-secondary" (click)="toggleInfiniteScroll()">
+        {{ isInfiniteScrollEnabled() ? 'Desactivar' : 'Activar' }} Scroll Infinito
+      </button>
+      <a *ngIf="auth.canManageProducts()" routerLink="/products/new" class="btn btn-primary">+ Agregar Producto</a>
+    </div>
+  </header>
+
+  <input type="text" placeholder="Buscar productos CACHIN... (presiona Enter)" [(ngModel)]="searchTerm" (keyup.enter)="onSearchChange()" class="search-bar" />
+
+  <div class="table-container" (scroll)="onScroll($event)" [class.infinite-scroll-active]="isInfiniteScrollEnabled()">
+    <table class="grid-table" *ngIf="products().length > 0; else noDataTpl">
+      <thead>
+        <tr>
+          <th (click)="toggleSort('name')">Nombre</th>
+          <th>Descripción</th>
+          <th (click)="toggleSort('price')">Precio</th>
+          <th (click)="toggleSort('stock')">Inventario</th>
+          <th *ngIf="auth.canManageProducts()">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of products()">
+          <td>{{ item.name }}</td>
+          <td>{{ item.description || '-' }}</td>
+          <td>\${{ item.price | number:'1.2-2' }}</td>
+          <td>{{ item.stock }}</td>
+          <td *ngIf="auth.canManageProducts()">
+            <a [routerLink]="['/products/edit', item.id]">Editar</a>
+            <button *ngIf="auth.canDeleteProducts()" (click)="deleteProduct(item.id)" class="text-danger">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="loading()" class="loading-indicator">Cargando datos...</div>
+  </div>
+
+  <div class="pagination" *ngIf="!isInfiniteScrollEnabled()">
+    <button [disabled]="page() <= 1" (click)="setPage(page() - 1)">Ant</button>
+    <span>Página {{ page() }} de {{ totalPages() }}</span>
+    <button [disabled]="page() >= totalPages()" (click)="setPage(page() + 1)">Sig</button>
+  </div>
+
+  <ng-template #noDataTpl>
+    <div *ngIf="!loading()">No se encontraron productos.</div>
+  </ng-template>
+</div>
