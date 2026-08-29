@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProductService } from '../../../../core/services/product.service';
+import { CategoryService } from '../../../../core/services/category.service';
+import { Category } from '../../../../core/models/category.model';
 
 @Component({
   selector: 'app-product-form',
@@ -21,21 +23,31 @@ export class ProductFormComponent implements OnInit {
     description: '',
     price: 0,
     stock: 0,
-    isActive: true
+    isActive: true,
+    categoryId: null as string | null
   };
+
+  categories: Category[] = [];
 
   constructor(
     private productService: ProductService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit(): void {
+    this.loadCategories();
     this.productId = this.route.snapshot.paramMap.get('id');
     if (this.productId) {
       this.isEditMode = true;
+      this.loadCategories();
       this.loadProduct(this.productId);
     }
+  }
+
+  loadCategories(): void {
+    this.categoryService.getAll().subscribe(data => this.categories = data);
   }
 
   loadProduct(id: string): void {
@@ -47,7 +59,8 @@ export class ProductFormComponent implements OnInit {
           description: product.description || '',
           price: product.price,
           stock: product.stock,
-          isActive: product.isActive
+          isActive: product.isActive,
+          categoryId: product.categoryId || null
         };
         this.loading = false;
       },

@@ -1,28 +1,36 @@
 <div class="container">
   <header class="header">
-    <h2>{{ isEditMode ? 'Edit Product' : 'Create New Product' }}</h2>
-    <a routerLink="/products" class="btn">Back to List</a>
+    <h2>{{ isEditMode ? 'Editar Producto' : 'Crear Nuevo Producto' }}</h2>
+    <a routerLink="/products" class="btn">Volver a la Lista</a>
   </header>
 
   <form (ngSubmit)="onSubmit()" *ngIf="!loading; else loadingTpl">
     <div class="form-group">
-      <label for="name">Product Name</label>
+      <label for="name">Nombre del Producto</label>
       <input type="text" id="name" [(ngModel)]="formData.name" name="name" class="form-control" required />
     </div>
 
     <div class="form-group">
-      <label for="description">Description</label>
+      <label for="description">Descripción</label>
       <textarea id="description" [(ngModel)]="formData.description" name="description" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="category">Categoría</label>
+      <select id="category" [(ngModel)]="formData.categoryId" name="categoryId" class="form-control">
+        <option [ngValue]="null">-- Ninguna --</option>
+        <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
+      </select>
     </div>
 
     <div class="form-row">
       <div class="form-group col">
-        <label for="price">Price ($)</label>
+        <label for="price">Precio ($)</label>
         <input type="number" id="price" [(ngModel)]="formData.price" name="price" class="form-control" step="0.01" required />
       </div>
 
       <div class="form-group col">
-        <label for="stock">Stock Quantity</label>
+        <label for="stock">Cantidad en Inventario</label>
         <input type="number" id="stock" [(ngModel)]="formData.stock" name="stock" class="form-control" required />
       </div>
     </div>
@@ -30,12 +38,12 @@
     <div class="form-group checkbox-group">
       <label>
         <input type="checkbox" [(ngModel)]="formData.isActive" name="isActive" />
-        Is Active
+        Activo
       </label>
     </div>
 
     <button type="submit" class="btn btn-primary">
-      {{ isEditMode ? 'Update Product' : 'Create Product' }}
+      {{ isEditMode ? 'Actualizar Producto' : 'Crear Producto' }}
     </button>
   </form>
 
