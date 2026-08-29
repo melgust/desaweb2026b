@@ -1,0 +1,99 @@
+<section class="catalog">
+  <header class="catalog__header">
+    <div>
+      <h2>Catálogo de Productos</h2>
+      <p class="catalog__subtitle">
+        Consulta los productos usando paginación offset o scroll infinito.
+      </p>
+    </div>
+
+    <div class="pagination-mode" role="group" aria-label="Modo de paginación">
+      <button
+        type="button"
+        class="mode-button"
+        [class.mode-button--active]="!isInfiniteScroll"
+        (click)="toggleMode(false)"
+        [disabled]="loading && !isInfiniteScroll">
+        Paginación Offset
+      </button>
+
+      <button
+        type="button"
+        class="mode-button"
+        [class.mode-button--active]="isInfiniteScroll"
+        (click)="toggleMode(true)"
+        [disabled]="loading && isInfiniteScroll">
+        Scroll Infinito
+      </button>
+    </div>
+  </header>
+
+  <div class="catalog__summary">
+    <span>{{ totalItems }} productos disponibles</span>
+    <span *ngIf="!isInfiniteScroll">
+      Página {{ page }} de {{ totalPages }}
+    </span>
+    <span *ngIf="isInfiniteScroll">
+      Mostrando {{ products.length }} productos
+    </span>
+  </div>
+
+  <div class="product-grid">
+    <article
+      class="product-card"
+      *ngFor="let product of products; trackBy: trackByProductId">
+
+      <h3>{{ product.name }}</h3>
+      <p class="product-card__description">
+        {{ product.description || 'Sin descripción disponible.' }}
+      </p>
+      <p class="product-card__price">
+        Q{{ product.price | number:'1.2-2' }}
+      </p>
+    </article>
+  </div>
+
+  <div *ngIf="loading" class="status status--loading" aria-live="polite">
+    <span class="spinner" aria-hidden="true"></span>
+    <span>
+      {{ isInfiniteScroll ? 'Cargando más productos...' : 'Cargando productos...' }}
+    </span>
+  </div>
+
+  <div
+    *ngIf="!hasMore && isInfiniteScroll && !loading"
+    class="status status--end">
+    Has llegado al final del catálogo.
+  </div>
+
+  <!-- Sentinel observado por IntersectionObserver para activar el scroll infinito. -->
+    <div 
+    #scrollAnchor 
+    class="scroll-anchor" 
+    [style.display]="isInfiniteScroll ? 'block' : 'none'"
+    style="height: 20px; width: 100%;" 
+    aria-hidden="true">
+  </div>
+
+  <nav
+    *ngIf="!isInfiniteScroll && !loading && totalPages > 1"
+    class="offset-pagination"
+    aria-label="Paginación de productos">
+
+    <button
+      type="button"
+      (click)="goToPage(page - 1)"
+      [disabled]="page === 1">
+      ← Anterior
+    </button>
+
+    <span>Página {{ page }} de {{ totalPages }}</span>
+
+    <button
+      type="button"
+      (click)="goToPage(page + 1)"
+      [disabled]="page === totalPages">
+      Siguiente →
+    </button>
+  </nav>
+</section>
