@@ -1,0 +1,42 @@
+.mode-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.mode-selector span {
+  font-weight: 600;
+}
+
+.mode-selector button {
+  padding: 8px 14px;
+  border: 1px solid #999;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+}
+
+.mode-selector button.active {
+  border: 2px solid #333;
+  font-weight: 600;
+}
+
+.infinite-status {
+  text-align: center;
+  padding: 20px 10px;
+}
+
+.infinite-status small {
+  display: block;
+  margin-top: 8px;
+}
+
+.status-message {
+  text-align: center;
+  padding: 25px;
+}
+
+.pagination {
+  margin-top: 20px;
+}
