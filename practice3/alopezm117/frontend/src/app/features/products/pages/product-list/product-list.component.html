@@ -1,0 +1,166 @@
+<section class="catalog">
+  <div class="catalog-heading">
+    <div>
+      <p class="eyebrow">INVENTARIO</p>
+      <h2>Catalogo de productos</h2>
+      <p class="subtitle">
+        Consulta, ordena y administra los productos registrados.
+      </p>
+    </div>
+
+    <a
+      *ngIf="auth.canManageProducts()"
+      routerLink="/products/new"
+      class="new-product">
+      Nuevo producto
+    </a>
+  </div>
+
+  <div class="controls">
+    <label class="control search-control">
+      <span>Buscar</span>
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        (keyup.enter)="search()"
+        placeholder="Nombre o descripcion" />
+    </label>
+
+    <label class="control">
+      <span>Ordenar por</span>
+      <select [(ngModel)]="orderField" (change)="applyOrder()">
+        <option value="name">Nombre</option>
+        <option value="price">Precio</option>
+        <option value="stock">Stock</option>
+        <option value="createdAt">Fecha</option>
+      </select>
+    </label>
+
+    <label class="control">
+      <span>Direccion</span>
+      <select [(ngModel)]="orderDirection" (change)="applyOrder()">
+        <option value="asc">Ascendente</option>
+        <option value="desc">Descendente</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="view-bar">
+    <div class="mode-buttons">
+      <button
+        type="button"
+        [class.selected]="mode === 'offset'"
+        (click)="changeMode('offset')">
+        Paginacion
+      </button>
+
+      <button
+        type="button"
+        [class.selected]="mode === 'infinite'"
+        (click)="changeMode('infinite')">
+        Scroll infinito
+      </button>
+    </div>
+
+    <span class="counter">
+      {{ products().length }} mostrados / {{ totalItems() }} registrados
+    </span>
+  </div>
+
+  <div
+    class="product-grid"
+    *ngIf="products().length > 0; else resultState">
+
+    <article class="product-card" *ngFor="let item of products()">
+      <div class="card-top">
+        <span class="stock" [class.low-stock]="item.stock <= 10">
+          Stock: {{ item.stock }}
+        </span>
+
+        <span class="status" [class.inactive]="!item.isActive">
+          {{ item.isActive ? 'Activo' : 'Inactivo' }}
+        </span>
+      </div>
+
+      <h3>{{ item.name }}</h3>
+
+      <p class="description">
+        {{ item.description || 'Sin descripcion disponible' }}
+      </p>
+
+      <div class="card-bottom">
+        <strong class="price">
+          ${{ item.price | number:'1.2-2' }}
+        </strong>
+
+        <div class="actions" *ngIf="auth.canManageProducts()">
+          <a [routerLink]="['/products/edit', item.id]">
+            Editar
+          </a>
+
+          <button
+            *ngIf="auth.canDeleteProducts()"
+            type="button"
+            (click)="deleteProduct(item.id)">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="pager" *ngIf="mode === 'offset' && totalItems() > 0">
+    <button
+      type="button"
+      [disabled]="currentPage() <= 1 || isLoading()"
+      (click)="goToPage(currentPage() - 1)">
+      Anterior
+    </button>
+
+    <span>
+      Pagina {{ currentPage() }} de {{ totalPages() }}
+    </span>
+
+    <button
+      type="button"
+      [disabled]="currentPage() >= totalPages() || isLoading()"
+      (click)="goToPage(currentPage() + 1)">
+      Siguiente
+    </button>
+  </div>
+
+  <div class="infinite-message" *ngIf="mode === 'infinite'">
+    <span *ngIf="isLoading() && products().length > 0">
+      Cargando mas productos...
+    </span>
+
+    <span
+      *ngIf="
+        !isLoading() &&
+        currentPage() < totalPages()
+      ">
+      Desplazate hacia abajo para cargar mas.
+    </span>
+
+    <span
+      *ngIf="
+        !isLoading() &&
+        currentPage() >= totalPages() &&
+        totalItems() > 0
+      ">
+      Se cargaron todos los productos.
+    </span>
+  </div>
+
+  <ng-template #resultState>
+    <div class="empty-state" *ngIf="isLoading(); else noResults">
+      Cargando productos...
+    </div>
+  </ng-template>
+
+  <ng-template #noResults>
+    <div class="empty-state">
+      No se encontraron productos.
+    </div>
+  </ng-template>
+</section>
