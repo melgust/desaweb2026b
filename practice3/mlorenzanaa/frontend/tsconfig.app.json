@@ -1,13 +1,32 @@
 {
-  "extends": "./tsconfig.json",
+  "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "./out-tsc/app",
-    "types": []
+    "rootDir": "./src",
+    "outDir": "./dist/out-tsc",
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "bundler",
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "paths": {
+      "@core/*": ["./src/app/core/*"],
+      "@services/*": ["./src/app/core/services/*"],
+      "@models/*": ["./src/app/core/models/*"],
+      "@features/*": ["./src/app/features/*"]
+    }
   },
-  "files": [
-    "src/main.ts"
-  ],
-  "include": [
-    "src/**/*.d.ts"
-  ]
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }
 }
