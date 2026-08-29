@@ -1,100 +1,121 @@
-import { Component, OnInit, ViewChild, signal } from '@angular/core';
+import { Component, OnInit, signal, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ProductService } from '../../../../core/services/product.service';
-import { AuthService } from '../../../../core/services/auth.service';
-import { Product } from '../../../../core/models/product.model';
+import { RouterModule } from '@angular/router';
+import { ProductService } from '../../services/product.service';
+import { AuthService } from '../../core/services/auth.service'; // Ajusta la ruta si es necesario
+import { Product } from '../../models/product.model';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressBarModule
-  ],
-  templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.css']
+  imports: [CommonModule, FormsModule, RouterModule],
+  templateUrl: './product-list.component.html'
 })
 export class ProductListComponent implements OnInit {
-  @ViewChild(MatSort) sort!: MatSort;
-
   products = signal<Product[]>([]);
-  totalItems = signal(0);
-  loading = signal(false);
-
-  // Server-side paging state (MatPaginator is zero-based).
-  pageIndex = 0;
-  pageSize = 10;
-  readonly pageSizeOptions = [5, 10, 25, 50];
-
+  loading = signal<boolean>(false);
+  page = signal<number>(1);
+  totalPages = signal<number>(1);
+  
   searchTerm = '';
   sortBy = 'name';
-  sortDirection: 'asc' | 'desc' = 'asc';
+  sortDirection = 'asc';
+  
+  // Nuevo estado para controlar el tipo de paginación
+  paginationMode = signal<'offset' | 'infinite'>('offset');
 
-  displayedColumns: string[] = ['name', 'description', 'price', 'stock', 'supplier'];
-
-  constructor(public auth: AuthService, private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    public auth: AuthService
+  ) {}
 
   ngOnInit(): void {
-    if (this.auth.canManageProducts()) {
-      this.displayedColumns = [...this.displayedColumns, 'actions'];
-    }
     this.loadProducts();
   }
 
-  loadProducts(): void {
+  loadProducts(append: boolean = false): void {
+    if (this.loading()) return;
     this.loading.set(true);
-    this.productService
-      .getProducts(this.searchTerm, this.sortBy, this.sortDirection, this.pageIndex + 1, this.pageSize)
-      .subscribe({
-        next: (res) => {
+
+    this.productService.getProducts(
+      this.searchTerm,
+      this.sortBy,
+      this.sortDirection,
+      this.page(),
+      10
+    ).subscribe({
+      next: (res) => {
+        if (append && this.paginationMode() === 'infinite') {
+          // Concatena los productos nuevos a los ya existentes
+          this.products.update(prev => [...prev, ...res.items]);
+        } else {
+          // Reemplaza la lista (comportamiento normal por offset)
           this.products.set(res.items);
-          this.totalItems.set(res.totalItems);
-          this.loading.set(false);
-        },
-        error: () => this.loading.set(false)
-      });
+        }
+        this.totalPages.set(res.totalPages);
+        this.loading.set(false);
+      },
+      error: () => this.loading.set(false)
+    });
+  }
+
+  setPage(newPage: number): void {
+    if (newPage >= 1 && newPage <= this.totalPages()) {
+      this.page.set(newPage);
+      this.loadProducts(false);
+    }
   }
 
   onSearchChange(): void {
-    this.pageIndex = 0;
-    this.loadProducts();
+    this.page.set(1);
+    this.loadProducts(false);
   }
 
-  onSortChange(sort: Sort): void {
-    this.sortBy = sort.active;
-    this.sortDirection = sort.direction === 'desc' ? 'desc' : 'asc';
-    this.pageIndex = 0;
-    this.loadProducts();
+  toggleSort(field: string): void {
+    if (this.sortBy === field) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortBy = field;
+      this.sortDirection = 'asc';
+    }
+    this.page.set(1);
+    this.loadProducts(false);
   }
 
-  onPageChange(event: PageEvent): void {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.loadProducts();
+  // Cambia el modo de paginación desde el HTML
+  setPaginationMode(mode: 'offset' | 'infinite'): void {
+    this.paginationMode.set(mode);
+    this.page.set(1);
+    this.loadProducts(false);
+  }
+
+  // Detecta cuando el usuario hace scroll hasta el final de la pantalla
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    if (this.paginationMode() !== 'infinite' || this.loading()) return;
+
+    const windowHeight = 'innerHeight' in window ? window.innerHeight : document.documentElement.offsetHeight;
+    const body = document.body;
+    const html = document.documentElement;
+    const docHeight = Math.max(
+      body.scrollHeight, body.offsetHeight,
+      html.clientHeight, html.scrollHeight, html.offsetHeight
+    );
+    const windowBottom = windowHeight + window.pageYOffset;
+
+    // Si llega cerca del final (100px antes) y aún hay páginas disponibles
+    if (windowBottom >= docHeight - 100 && this.page() < this.totalPages()) {
+      this.page.set(this.page() + 1);
+      this.loadProducts(true);
+    }
   }
 
   deleteProduct(id: string): void {
-    if (confirm('Delete product?')) {
-      this.productService.deleteProduct(id).subscribe(() => this.loadProducts());
+    if (confirm('Are you sure?')) {
+      this.productService.deleteProduct(id).subscribe(() => {
+        this.loadProducts(false);
+      });
     }
   }
 }
