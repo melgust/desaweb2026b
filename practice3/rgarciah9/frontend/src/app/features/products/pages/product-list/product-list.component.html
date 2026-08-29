@@ -1,0 +1,153 @@
+<div class="container">
+
+  <header class="header">
+    <h2>Enterprise Products</h2>
+
+    <a
+      *ngIf="auth.canManageProducts()"
+      routerLink="/products/new"
+      class="btn btn-primary">
+      + Add Product
+    </a>
+  </header>
+
+  <!-- Selector de tipo de paginación -->
+  <div class="pagination-mode">
+    <label for="paginationMode">
+      Tipo de paginación:
+    </label>
+
+    <select
+      id="paginationMode"
+      [(ngModel)]="paginationMode"
+      (change)="changePaginationMode()">
+
+      <option value="offset">
+        Paginación Offset
+      </option>
+
+      <option value="infinite">
+        Scroll Infinito
+      </option>
+
+    </select>
+  </div>
+
+  <!-- Buscador -->
+  <input
+    type="text"
+    placeholder="Search products... (press Enter)"
+    [(ngModel)]="searchTerm"
+    (keyup.enter)="onSearchChange()"
+    class="search-bar"
+  />
+
+  <!-- Tabla -->
+  <table class="grid-table">
+    <thead>
+      <tr>
+        <th (click)="toggleSort('name')">
+          Name
+        </th>
+
+        <th>
+          Description
+        </th>
+
+        <th (click)="toggleSort('price')">
+          Price
+        </th>
+
+        <th (click)="toggleSort('stock')">
+          Stock
+        </th>
+
+        <th *ngIf="auth.canManageProducts()">
+          Actions
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of products()">
+
+        <td>
+          {{ item.name }}
+        </td>
+
+        <td>
+          {{ item.description || '-' }}
+        </td>
+
+        <td>
+          ${{ item.price | number:'1.2-2' }}
+        </td>
+
+        <td>
+          {{ item.stock }}
+        </td>
+
+        <td *ngIf="auth.canManageProducts()">
+
+          <a [routerLink]="['/products/edit', item.id]">
+            Edit
+          </a>
+
+          <button
+            *ngIf="auth.canDeleteProducts()"
+            (click)="deleteProduct(item.id)"
+            class="text-danger">
+            Delete
+          </button>
+
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- PAGINACIÓN OFFSET -->
+  <div
+    class="pagination"
+    *ngIf="paginationMode === 'offset'">
+
+    <button
+      [disabled]="page() <= 1 || loading()"
+      (click)="setPage(page() - 1)">
+      Prev
+    </button>
+
+    <span>
+      Page {{ page() }} of {{ totalPages() }}
+    </span>
+
+    <button
+      [disabled]="page() >= totalPages() || loading()"
+      (click)="setPage(page() + 1)">
+      Next
+    </button>
+
+  </div>
+
+  <!-- SCROLL INFINITO -->
+  <div
+    class="infinite-status"
+    *ngIf="paginationMode === 'infinite'">
+
+    <p *ngIf="loading()">
+      Cargando más productos...
+    </p>
+
+    <p
+      *ngIf="!loading() && page() < totalPages()">
+      Desplázate hacia abajo para cargar más productos
+    </p>
+
+    <p
+      *ngIf="!loading() && totalPages() > 0 && page() >= totalPages()">
+      Todos los productos han sido cargados.
+    </p>
+
+  </div>
+
+</div>
