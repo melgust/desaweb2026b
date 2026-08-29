@@ -1,0 +1,44 @@
+.mode-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.mode-selector span {
+  font-weight: bold;
+}
+
+.mode-selector button {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: white;
+  cursor: pointer;
+}
+
+.mode-selector button:hover {
+  background: #f0f0f0;
+}
+
+.mode-selector button.active {
+  font-weight: bold;
+  border-color: #333;
+}
+
+.infinite-scroll {
+  width: 100%;
+  text-align: center;
+}
+
+.scroll-sentinel {
+  min-height: 80px;
+  padding: 25px;
+  margin-top: 10px;
+}
+
+.loading {
+  text-align: center;
+  padding: 30px;
+  font-size: 18px;
+}
