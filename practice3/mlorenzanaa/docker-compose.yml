@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   db:
     image: mysql:8.0
-    container_name: enterprise_db
+    container_name: mlorenzanaa_db
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: YourSecurePassword123!
@@ -17,7 +15,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: enterprise_backend
+    container_name: mlorenzanaa_backend
     restart: always
     ports:
       - "5000:80"
@@ -30,7 +28,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: enterprise_frontend
+    container_name: mlorenzanaa_frontend
     restart: always
     ports:
       - "81:80"
