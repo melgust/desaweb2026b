@@ -1,0 +1,48 @@
+.toolbar-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.search-field {
+  width: 100%;
+  max-width: 400px;
+}
+
+.table-container {
+  width: 100%;
+  overflow: auto;
+  background: #fff;
+}
+
+/* When infinite scroll is active, the table gets a fixed viewport so the
+   user actually scrolls inside it and the sentinel can trigger new pages. */
+.infinite-scroll-container {
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+.scroll-sentinel {
+  text-align: center;
+  padding: 12px;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.infinite-summary {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #6c757d;
+  text-align: right;
+}
+
+table {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
