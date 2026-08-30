@@ -1,71 +1,102 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+
+// Servicios y Modelos
 import { ProductService } from '../../../../core/services/product.service';
+import { CategoryService } from '../../../../core/services/category.service';
+import { Category } from '../../../../core/models/category.model';
+import { CreateProductRequest, UpdateProductRequest } from '../../../../core/models/product.model';
 
 @Component({
   selector: 'app-product-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './product-form.component.html',
-  styleUrls: ['./product-form.component.css']
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  templateUrl: './product-form.component.html'
 })
 export class ProductFormComponent implements OnInit {
-  isEditMode = false;
+  productForm!: FormGroup;
+  isEditMode = signal<boolean>(false);
   productId: string | null = null;
-  loading = false;
-
-  formData = {
-    name: '',
-    description: '',
-    price: 0,
-    stock: 0,
-    isActive: true
-  };
+  categories = signal<Category[]>([]);
+  loading = signal<boolean>(false);
 
   constructor(
+    private fb: FormBuilder,
     private productService: ProductService,
+    private categoryService: CategoryService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.initForm();
+    this.loadCategories();
+
     this.productId = this.route.snapshot.paramMap.get('id');
     if (this.productId) {
-      this.isEditMode = true;
+      this.isEditMode.set(true);
       this.loadProduct(this.productId);
     }
   }
 
-  loadProduct(id: string): void {
-    this.loading = true;
-    this.productService.getProductById(id).subscribe({
+  private initForm(): void {
+    this.productForm = this.fb.group({
+      name: ['', [Validators.required, Validators.maxLength(150)]],
+      description: [''],
+      price: [0, [Validators.required, Validators.min(0.01)]],
+      stock: [0, [Validators.required, Validators.min(0)]],
+      categoryId: ['', [Validators.required]],
+      isActive: [true]
+    });
+  }
+
+  private loadCategories(): void {
+    this.categoryService.getCategories().subscribe({
+      next: (data) => this.categories.set(data),
+      error: (err) => console.error('Error al cargar categorías', err)
+    });
+  }
+
+  private loadProduct(id: string): void {
+    this.loading.set(true);
+    this.productService.getProduct(id).subscribe({
       next: (product) => {
-        this.formData = {
+        this.productForm.patchValue({
           name: product.name,
-          description: product.description || '',
+          description: product.description,
           price: product.price,
           stock: product.stock,
+          categoryId: product.categoryId,
           isActive: product.isActive
-        };
-        this.loading = false;
+        });
+        this.loading.set(false);
       },
-      error: () => this.router.navigate(['/products'])
+      error: () => this.loading.set(false)
     });
   }
 
   onSubmit(): void {
-    this.loading = true;
-    if (this.isEditMode && this.productId) {
-      this.productService.updateProduct(this.productId, this.formData).subscribe({
+    if (this.productForm.invalid) {
+      this.productForm.markAllAsTouched();
+      return;
+    }
+
+    this.loading.set(true);
+    const formValue = this.productForm.value;
+
+    if (this.isEditMode() && this.productId) {
+      const updateData: UpdateProductRequest = { ...formValue };
+      this.productService.updateProduct(this.productId, updateData).subscribe({
         next: () => this.router.navigate(['/products']),
-        error: () => (this.loading = false)
+        error: () => this.loading.set(false)
       });
     } else {
-      this.productService.createProduct(this.formData).subscribe({
+      const createData: CreateProductRequest = { ...formValue };
+      this.productService.createProduct(createData).subscribe({
         next: () => this.router.navigate(['/products']),
-        error: () => (this.loading = false)
+        error: () => this.loading.set(false)
       });
     }
   }

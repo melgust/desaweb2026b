@@ -1,45 +1,98 @@
-<div class="container">
-  <header class="header">
-    <h2>{{ isEditMode ? 'Edit Product' : 'Create New Product' }}</h2>
-    <a routerLink="/products" class="btn">Back to List</a>
-  </header>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">{{ isEditMode() ? 'Editar Producto' : 'Crear Nuevo Producto' }}</h3>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+            
+            <!-- Nombre -->
+            <div class="mb-3">
+              <label for="name" class="form-label">Nombre del Producto *</label>
+              <input 
+                type="text" 
+                id="name" 
+                class="form-control" 
+                formControlName="name"
+                [ngClass]="{ 'is-invalid': productForm.get('name')?.touched && productForm.get('name')?.invalid }" />
+              <div class="invalid-feedback">El nombre es requerido (máx. 150 caracteres).</div>
+            </div>
 
-  <form (ngSubmit)="onSubmit()" *ngIf="!loading; else loadingTpl">
-    <div class="form-group">
-      <label for="name">Product Name</label>
-      <input type="text" id="name" [(ngModel)]="formData.name" name="name" class="form-control" required />
-    </div>
+            <!-- Categoría -->
+            <div class="mb-3">
+              <label for="categoryId" class="form-label">Categoría *</label>
+              <select 
+                id="categoryId" 
+                class="form-control" 
+                formControlName="categoryId"
+                [ngClass]="{ 'is-invalid': productForm.get('categoryId')?.touched && productForm.get('categoryId')?.invalid }">
+                <option value="" disabled>-- Seleccione una categoría --</option>
+                <option *ngFor="let cat of categories()" [value]="cat.id">
+                  {{ cat.name }}
+                </option>
+              </select>
+              <div class="invalid-feedback">Debe seleccionar una categoría para el producto.</div>
+            </div>
 
-    <div class="form-group">
-      <label for="description">Description</label>
-      <textarea id="description" [(ngModel)]="formData.description" name="description" class="form-control" rows="3"></textarea>
-    </div>
+            <!-- Descripción -->
+            <div class="mb-3">
+              <label for="description" class="form-label">Descripción</label>
+              <textarea 
+                id="description" 
+                rows="3" 
+                class="form-control" 
+                formControlName="description"></textarea>
+            </div>
 
-    <div class="form-row">
-      <div class="form-group col">
-        <label for="price">Price ($)</label>
-        <input type="number" id="price" [(ngModel)]="formData.price" name="price" class="form-control" step="0.01" required />
+            <!-- Precio y Stock -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="price" class="form-label">Precio *</label>
+                <input 
+                  type="number" 
+                  step="0.01" 
+                  id="price" 
+                  class="form-control" 
+                  formControlName="price"
+                  [ngClass]="{ 'is-invalid': productForm.get('price')?.touched && productForm.get('price')?.invalid }" />
+                <div class="invalid-feedback">Ingrese un precio mayor a 0.</div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="stock" class="form-label">Stock *</label>
+                <input 
+                  type="number" 
+                  id="stock" 
+                  class="form-control" 
+                  formControlName="stock"
+                  [ngClass]="{ 'is-invalid': productForm.get('stock')?.touched && productForm.get('stock')?.invalid }" />
+                <div class="invalid-feedback">El stock no puede ser negativo.</div>
+              </div>
+            </div>
+
+            <!-- Estado -->
+            <div class="form-check mb-4">
+              <input 
+                type="checkbox" 
+                id="isActive" 
+                class="form-check-input" 
+                formControlName="isActive" />
+              <label for="isActive" class="form-check-label">Producto Activo</label>
+            </div>
+
+            <!-- Botones -->
+            <div class="d-flex justify-content-end gap-2">
+              <a routerLink="/products" class="btn btn-secondary">Cancelar</a>
+              <button type="submit" class="btn btn-primary" [disabled]="loading()">
+                {{ loading() ? 'Guardando...' : 'Guardar Producto' }}
+              </button>
+            </div>
+
+          </form>
+        </div>
       </div>
-
-      <div class="form-group col">
-        <label for="stock">Stock Quantity</label>
-        <input type="number" id="stock" [(ngModel)]="formData.stock" name="stock" class="form-control" required />
-      </div>
     </div>
-
-    <div class="form-group checkbox-group">
-      <label>
-        <input type="checkbox" [(ngModel)]="formData.isActive" name="isActive" />
-        Is Active
-      </label>
-    </div>
-
-    <button type="submit" class="btn btn-primary">
-      {{ isEditMode ? 'Update Product' : 'Create Product' }}
-    </button>
-  </form>
-
-  <ng-template #loadingTpl>
-    <div>Loading form data...</div>
-  </ng-template>
+  </div>
 </div>
