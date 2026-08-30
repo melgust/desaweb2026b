@@ -7,7 +7,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProductService } from '../../../../core/services/product.service';
 import { CategoryService } from '../../../../core/services/category.service';
 import { Category } from '../../../../core/models/category.model';
-import { CreateProductRequest, UpdateProductRequest } from '../../../../core/models/product.model';
+import { Product, CreateProductRequest, UpdateProductRequest } from '../../../../core/models/product.model';
 
 @Component({
   selector: 'app-product-form',
@@ -61,8 +61,8 @@ export class ProductFormComponent implements OnInit {
 
   private loadProduct(id: string): void {
     this.loading.set(true);
-    this.productService.getProduct(id).subscribe({
-      next: (product) => {
+    this.productService.getProductById(id).subscribe({
+      next: (product: Product) => {
         this.productForm.patchValue({
           name: product.name,
           description: product.description,

@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
 
-public class ApplicationDbContext : DbContext
+public class AppDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
 
@@ -33,7 +33,7 @@ public class ApplicationDbContext : DbContext
                   .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // Opcional: Datos semilla (Seed Data) iniciales para Categorías
+        // Datos semilla (Seed Data) iniciales para Categorías
         modelBuilder.Entity<Category>().HasData(
             new Category { Id = 1, Name = "Electrónica", Description = "Dispositivos y gadgets electrónicos" },
             new Category { Id = 2, Name = "Ropa", Description = "Prendas de vestir y accesorios" },

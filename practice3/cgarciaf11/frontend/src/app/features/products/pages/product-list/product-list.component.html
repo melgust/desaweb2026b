@@ -1,7 +1,7 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Catálogo de Productos</h2>
-    <a *ngIf="auth.isLoggedIn()" routerLink="/products/new" class="btn btn-primary">
+    <a *ngIf="auth.isAuthenticated()" routerLink="/products/new" class="btn btn-primary">
       <i class="bi bi-plus-circle"></i> Nuevo Producto
     </a>
   </div>
@@ -56,7 +56,7 @@
           </th>
           <th>Stock</th>
           <th>Categoría</th>
-          <th *ngIf="auth.isLoggedIn()" class="text-center">Acciones</th>
+          <th *ngIf="auth.isAuthenticated()" class="text-center">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -74,7 +74,7 @@
               {{ product.categoryName || 'Sin categoría' }}
             </span>
           </td>
-          <td *ngIf="auth.isLoggedIn()" class="text-center">
+          <td *ngIf="auth.isAuthenticated()" class="text-center">
             <a [routerLink]="['/products', product.id, 'edit']" class="btn btn-sm btn-outline-warning me-2">
               Editar
             </a>
