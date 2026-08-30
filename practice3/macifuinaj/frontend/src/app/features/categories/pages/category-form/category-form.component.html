@@ -1,0 +1,73 @@
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">
+      {{ isEditMode ? 'Edit Category' : 'New Category' }}
+    </h3>
+  </div>
+
+  <div class="card-body">
+
+    <div *ngIf="loading" class="mb-3">
+      Loading...
+    </div>
+
+    <form (ngSubmit)="save()">
+
+      <div class="form-group">
+        <label for="name">Name</label>
+
+        <input
+          id="name"
+          name="name"
+          type="text"
+          class="form-control"
+          [(ngModel)]="category.name"
+          required />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+
+        <textarea
+          id="description"
+          name="description"
+          class="form-control"
+          rows="3"
+          [(ngModel)]="category.description">
+        </textarea>
+      </div>
+
+      <div class="form-group form-check">
+        <input
+          id="isActive"
+          name="isActive"
+          type="checkbox"
+          class="form-check-input"
+          [(ngModel)]="category.isActive" />
+
+        <label
+          for="isActive"
+          class="form-check-label">
+          Active
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="loading">
+          {{ isEditMode ? 'Update' : 'Create' }}
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancel()">
+          Cancel
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
