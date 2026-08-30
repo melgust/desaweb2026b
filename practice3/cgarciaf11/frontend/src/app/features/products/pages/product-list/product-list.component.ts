@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-// Rutas corregidas apuntando a /core/services y /core/models
+// Servicios y Modelos
 import { ProductService } from '../../../../core/services/product.service';
+import { CategoryService } from '../../../../core/services/category.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Product, ProductPagedResult } from '../../../../core/models/product.model';
+import { Category } from '../../../../core/models/category.model';
 
 @Component({
   selector: 'app-product-list',
@@ -16,11 +18,13 @@ import { Product, ProductPagedResult } from '../../../../core/models/product.mod
 })
 export class ProductListComponent implements OnInit {
   products = signal<Product[]>([]);
+  categories = signal<Category[]>([]);
   loading = signal<boolean>(false);
   page = signal<number>(1);
   totalPages = signal<number>(1);
   
   searchTerm = '';
+  selectedCategoryId = '';
   sortBy = 'name';
   sortDirection = 'asc';
   
@@ -28,11 +32,20 @@ export class ProductListComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
+    private categoryService: CategoryService,
     public auth: AuthService
   ) {}
 
   ngOnInit(): void {
+    this.loadCategories();
     this.loadProducts();
+  }
+
+  loadCategories(): void {
+    this.categoryService.getCategories().subscribe({
+      next: (data) => this.categories.set(data),
+      error: (err) => console.error('Error al cargar categorias', err)
+    });
   }
 
   loadProducts(append: boolean = false): void {
@@ -47,10 +60,17 @@ export class ProductListComponent implements OnInit {
       10
     ).subscribe({
       next: (res: ProductPagedResult) => {
+        let items = res.items;
+
+        // Filtrado del lado del cliente por categoria si hay una seleccionada
+        if (this.selectedCategoryId) {
+          items = items.filter(p => p.categoryId === this.selectedCategoryId);
+        }
+
         if (append && this.paginationMode() === 'infinite') {
-          this.products.update(prev => [...prev, ...res.items]);
+          this.products.update(prev => [...prev, ...items]);
         } else {
-          this.products.set(res.items);
+          this.products.set(items);
         }
         this.totalPages.set(res.totalPages);
         this.loading.set(false);
@@ -67,6 +87,11 @@ export class ProductListComponent implements OnInit {
   }
 
   onSearchChange(): void {
+    this.page.set(1);
+    this.loadProducts(false);
+  }
+
+  onCategoryChange(): void {
     this.page.set(1);
     this.loadProducts(false);
   }
@@ -108,7 +133,7 @@ export class ProductListComponent implements OnInit {
   }
 
   deleteProduct(id: string): void {
-    if (confirm('Are you sure?')) {
+    if (confirm('¿Está seguro de eliminar este producto?')) {
       this.productService.deleteProduct(id).subscribe(() => {
         this.loadProducts(false);
       });
