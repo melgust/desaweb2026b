@@ -3,25 +3,41 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
 
-public class AppDbContext : DbContext
+public class ApplicationDbContext : DbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    {
+    }
 
-    public DbSet<User> Users => Set<User>();
-    public DbSet<Role> Roles => Set<Role>();
-    public DbSet<Product> Products => Set<Product>();
+    public DbSet<Product> Products { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<User>()
-            .HasOne(u => u.Role)
-            .WithMany(r => r.Users)
-            .HasForeignKey(u => u.RoleId)
-            .OnDelete(DeleteBehavior.Restrict);
+        // Configuración de la entidad Category
+        modelBuilder.Entity<Category>(entity =>
+        {
+            entity.HasKey(c => c.Id);
+            entity.Property(c => c.Name).IsRequired().HasMaxLength(100);
+            entity.Property(c => c.Description).HasMaxLength(500);
+        });
 
-        modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
-        modelBuilder.Entity<Role>().HasIndex(r => r.Name).IsUnique();
+        // Configuración de la relación uno a muchos entre Category y Product
+        modelBuilder.Entity<Product>(entity =>
+        {
+            entity.HasOne(p => p.Category)
+                  .WithMany(c => c.Products)
+                  .HasForeignKey(p => p.CategoryId)
+                  .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Opcional: Datos semilla (Seed Data) iniciales para Categorías
+        modelBuilder.Entity<Category>().HasData(
+            new Category { Id = 1, Name = "Electrónica", Description = "Dispositivos y gadgets electrónicos" },
+            new Category { Id = 2, Name = "Ropa", Description = "Prendas de vestir y accesorios" },
+            new Category { Id = 3, Name = "Hogar", Description = "Artículos para el hogar y decoración" }
+        );
     }
 }
