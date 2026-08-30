@@ -1,98 +1,111 @@
-<div class="container mt-4">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-          <h3 class="mb-0">{{ isEditMode() ? 'Editar Producto' : 'Crear Nuevo Producto' }}</h3>
+<div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md mt-6">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-gray-800">
+      {{ isEditMode() ? 'Edit Product' : 'Create New Product' }}
+    </h2>
+    <a routerLink="/products" class="text-indigo-600 hover:text-indigo-800 font-medium">
+      Back to List
+    </a>
+  </div>
+
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="space-y-4">
+    <!-- Product Name -->
+    <div>
+      <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        placeholder="Enter product name"
+      />
+      <div *ngIf="productForm.get('name')?.touched && productForm.get('name')?.invalid" class="text-red-500 text-xs mt-1">
+        Name is required (max 150 characters).
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div>
+      <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+      <textarea
+        id="description"
+        formControlName="description"
+        rows="3"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        placeholder="Enter description"
+      ></textarea>
+    </div>
+
+    <!-- Category Dropdown -->
+    <div>
+      <label for="categoryId" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+      <select
+        id="categoryId"
+        formControlName="categoryId"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+      >
+        <option value="">-- Select Category --</option>
+        <option *ngFor="let cat of categories()" [value]="cat.id">
+          {{ cat.name }}
+        </option>
+      </select>
+      <div *ngIf="productForm.get('categoryId')?.touched && productForm.get('categoryId')?.invalid" class="text-red-500 text-xs mt-1">
+        Please select a category.
+      </div>
+    </div>
+
+    <!-- Price and Stock Row -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price ($)</label>
+        <input
+          type="number"
+          id="price"
+          step="0.01"
+          formControlName="price"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        />
+        <div *ngIf="productForm.get('price')?.touched && productForm.get('price')?.invalid" class="text-red-500 text-xs mt-1">
+          Price must be greater than 0.
         </div>
-        <div class="card-body">
-          <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-            
-            <!-- Nombre -->
-            <div class="mb-3">
-              <label for="name" class="form-label">Nombre del Producto *</label>
-              <input 
-                type="text" 
-                id="name" 
-                class="form-control" 
-                formControlName="name"
-                [ngClass]="{ 'is-invalid': productForm.get('name')?.touched && productForm.get('name')?.invalid }" />
-              <div class="invalid-feedback">El nombre es requerido (máx. 150 caracteres).</div>
-            </div>
+      </div>
 
-            <!-- Categoría -->
-            <div class="mb-3">
-              <label for="categoryId" class="form-label">Categoría *</label>
-              <select 
-                id="categoryId" 
-                class="form-control" 
-                formControlName="categoryId"
-                [ngClass]="{ 'is-invalid': productForm.get('categoryId')?.touched && productForm.get('categoryId')?.invalid }">
-                <option value="" disabled>-- Seleccione una categoría --</option>
-                <option *ngFor="let cat of categories()" [value]="cat.id">
-                  {{ cat.name }}
-                </option>
-              </select>
-              <div class="invalid-feedback">Debe seleccionar una categoría para el producto.</div>
-            </div>
-
-            <!-- Descripción -->
-            <div class="mb-3">
-              <label for="description" class="form-label">Descripción</label>
-              <textarea 
-                id="description" 
-                rows="3" 
-                class="form-control" 
-                formControlName="description"></textarea>
-            </div>
-
-            <!-- Precio y Stock -->
-            <div class="row mb-3">
-              <div class="col-md-6">
-                <label for="price" class="form-label">Precio *</label>
-                <input 
-                  type="number" 
-                  step="0.01" 
-                  id="price" 
-                  class="form-control" 
-                  formControlName="price"
-                  [ngClass]="{ 'is-invalid': productForm.get('price')?.touched && productForm.get('price')?.invalid }" />
-                <div class="invalid-feedback">Ingrese un precio mayor a 0.</div>
-              </div>
-
-              <div class="col-md-6">
-                <label for="stock" class="form-label">Stock *</label>
-                <input 
-                  type="number" 
-                  id="stock" 
-                  class="form-control" 
-                  formControlName="stock"
-                  [ngClass]="{ 'is-invalid': productForm.get('stock')?.touched && productForm.get('stock')?.invalid }" />
-                <div class="invalid-feedback">El stock no puede ser negativo.</div>
-              </div>
-            </div>
-
-            <!-- Estado -->
-            <div class="form-check mb-4">
-              <input 
-                type="checkbox" 
-                id="isActive" 
-                class="form-check-input" 
-                formControlName="isActive" />
-              <label for="isActive" class="form-check-label">Producto Activo</label>
-            </div>
-
-            <!-- Botones -->
-            <div class="d-flex justify-content-end gap-2">
-              <a routerLink="/products" class="btn btn-secondary">Cancelar</a>
-              <button type="submit" class="btn btn-primary" [disabled]="loading()">
-                {{ loading() ? 'Guardando...' : 'Guardar Producto' }}
-              </button>
-            </div>
-
-          </form>
+      <div>
+        <label for="stock" class="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
+        <input
+          type="number"
+          id="stock"
+          formControlName="stock"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        />
+        <div *ngIf="productForm.get('stock')?.touched && productForm.get('stock')?.invalid" class="text-red-500 text-xs mt-1">
+          Stock must be a positive number.
         </div>
       </div>
     </div>
-  </div>
+
+    <!-- Is Active Checkbox -->
+    <div class="flex items-center pt-2">
+      <input
+        type="checkbox"
+        id="isActive"
+        formControlName="isActive"
+        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+      />
+      <label for="isActive" class="ml-2 block text-sm text-gray-900 font-medium">
+        Is Active
+      </label>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="pt-4">
+      <button
+        type="submit"
+        [disabled]="loading()"
+        class="w-full md:w-auto px-6 py-2 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+      >
+        {{ loading() ? 'Saving...' : (isEditMode() ? 'Update Product' : 'Create Product') }}
+      </button>
+    </div>
+  </form>
 </div>

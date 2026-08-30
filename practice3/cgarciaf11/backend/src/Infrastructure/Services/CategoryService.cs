@@ -8,9 +8,9 @@ namespace Infrastructure.Services;
 
 public class CategoryService : ICategoryService
 {
-    private readonly ApplicationDbContext _context;
+    private readonly AppDbContext _context;
 
-    public CategoryService(ApplicationDbContext context)
+    public CategoryService(AppDbContext context)
     {
         _context = context;
     }
