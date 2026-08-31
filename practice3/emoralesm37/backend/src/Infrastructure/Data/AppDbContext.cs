@@ -11,7 +11,7 @@ public class AppDbContext : DbContext
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Supplier> Suppliers => Set<Supplier>();
-
+    public DbSet<Categoria> Categorias => Set<Categoria>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -33,5 +33,19 @@ public class AppDbContext : DbContext
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<Supplier>().HasIndex(s => s.Name);
+
+        // CATEGORIA - PRODUCT
+        // One category -> many products
+
+        modelBuilder.Entity<Product>()
+            .HasOne(p => p.Categoria)
+            .WithMany(c => c.Products)
+            .HasForeignKey(p => p.CategoriaId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        // Optional: unique category name
+        modelBuilder.Entity<Categoria>()
+            .HasIndex(c => c.Name)
+            .IsUnique();
     }
 }

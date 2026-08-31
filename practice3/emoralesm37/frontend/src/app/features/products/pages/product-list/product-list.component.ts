@@ -50,7 +50,7 @@ export class ProductListComponent implements OnInit {
   sortBy = 'name';
   sortDirection: 'asc' | 'desc' = 'asc';
 
-  displayedColumns: string[] = ['name', 'description', 'price', 'stock', 'supplier'];
+  displayedColumns: string[] = ['name', 'description', 'price', 'stock', 'supplier', 'categoria'];
 
   constructor(public auth: AuthService, private productService: ProductService) {}
 

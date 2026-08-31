@@ -16,6 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
+builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 
 // JWT authentication
 var jwtKey = builder.Configuration["Jwt:Key"]!;
