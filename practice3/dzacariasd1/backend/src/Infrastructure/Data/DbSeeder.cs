@@ -4,11 +4,46 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Data;
 
 /// <summary>
-/// Seeds initial roles and users (admin + standard user) if they don't exist yet.
-/// Idempotent: safe to run on every startup.
+/// Siembra los datos iniciales (roles, usuarios, categorias y productos) si aun
+/// no existen. Idempotente: es seguro ejecutarlo en cada arranque.
 /// </summary>
 public static class DbSeeder
 {
+    /// <summary>
+    /// Categoria a la que se asigna un producto segun como empiece su nombre.
+    /// El orden importa: los prefijos mas largos se evaluan primero.
+    /// </summary>
+    private static readonly (string Prefijo, string Categoria)[] MapaCategorias =
+    {
+        ("Docking Station", "Perifericos"),
+        ("Disco Duro",      "Almacenamiento"),
+        ("Memoria RAM",     "Componentes"),
+        ("Laptop",          "Computo"),
+        ("Servidor",        "Computo"),
+        ("Tablet",          "Computo"),
+        ("Monitor",         "Perifericos"),
+        ("Teclado",         "Perifericos"),
+        ("Mouse",           "Perifericos"),
+        ("Router",          "Redes"),
+        ("Switch",          "Redes"),
+        ("Impresora",       "Impresion"),
+        ("Escaner",         "Impresion"),
+        ("Camara",          "Audio y Video"),
+        ("Proyector",       "Audio y Video"),
+    };
+
+    private static readonly (string Nombre, string Descripcion)[] Categorias =
+    {
+        ("Computo",        "Equipos de computo: laptops, servidores y tabletas."),
+        ("Perifericos",    "Dispositivos de entrada y salida conectados al equipo."),
+        ("Redes",          "Equipo de conectividad y comunicaciones."),
+        ("Impresion",      "Impresoras, escaneres y equipo de digitalizacion."),
+        ("Almacenamiento", "Unidades de disco y medios de almacenamiento."),
+        ("Componentes",    "Partes internas y refacciones."),
+        ("Audio y Video",  "Camaras, proyectores y equipo multimedia."),
+        ("General",        "Productos sin una categoria especifica asignada."),
+    };
+
     public static async Task SeedAsync(AppDbContext db, CancellationToken ct = default)
     {
         // --- Roles ---
@@ -60,8 +95,32 @@ public static class DbSeeder
 
         await db.SaveChangesAsync(ct);
 
-        // --- Products (catalogo de demostracion) ---
-        await SeedProductsAsync(db, ct);
+        // --- Categorias, productos y asignacion ---
+        var categorias = await SeedCategoriesAsync(db, ct);
+        await SeedProductsAsync(db, categorias, ct);
+        await AsignarCategoriaFaltanteAsync(db, categorias, ct);
+    }
+
+    /// <summary>
+    /// Crea las categorias que falten y devuelve un diccionario nombre -> Id para
+    /// poder asignarlas a los productos sin volver a consultar la base.
+    /// </summary>
+    private static async Task<Dictionary<string, Guid>> SeedCategoriesAsync(AppDbContext db, CancellationToken ct)
+    {
+        var existentes = await db.Categories.ToDictionaryAsync(c => c.Name, c => c, ct);
+
+        foreach (var (nombre, descripcion) in Categorias)
+        {
+            if (existentes.ContainsKey(nombre)) continue;
+
+            var nueva = new Category { Name = nombre, Description = descripcion };
+            db.Categories.Add(nueva);
+            existentes[nombre] = nueva;
+        }
+
+        await db.SaveChangesAsync(ct);
+
+        return existentes.ToDictionary(kv => kv.Key, kv => kv.Value.Id);
     }
 
     /// <summary>
@@ -71,11 +130,11 @@ public static class DbSeeder
     /// 10 productos no habria nada que paginar ni que cargar al hacer scroll.
     /// Es idempotente: si ya hay productos en la base no vuelve a insertar nada.
     /// </summary>
-    private static async Task SeedProductsAsync(AppDbContext db, CancellationToken ct)
+    private static async Task SeedProductsAsync(AppDbContext db, Dictionary<string, Guid> categorias, CancellationToken ct)
     {
         if (await db.Products.AnyAsync(ct)) return;
 
-        string[] categories =
+        string[] tipos =
         {
             "Laptop", "Monitor", "Teclado", "Mouse", "Impresora", "Router",
             "Servidor", "Switch", "Tablet", "Camara", "Proyector", "Escaner",
@@ -92,23 +151,59 @@ public static class DbSeeder
         int total = 150;
         for (int i = 0; i < total; i++)
         {
-            var category = categories[i % categories.Length];
-            var line = lines[(i / categories.Length) % lines.Length];
+            var tipo = tipos[i % tipos.Length];
+            var line = lines[(i / tipos.Length) % lines.Length];
             int model = 100 + i;
+            var nombre = tipo + " " + line + " " + model;
 
             products.Add(new Product
             {
-                Name = $"{category} {line} {model}",
-                Description = $"{category} de linea {line}, modelo {model}, equipo empresarial para uso diario.",
+                Name = nombre,
+                Description = tipo + " de linea " + line + ", modelo " + model + ", equipo empresarial para uso diario.",
                 Price = Math.Round((decimal)(random.NextDouble() * 2450 + 50), 2),
                 Stock = random.Next(0, 250),
                 IsActive = i % 17 != 0,
                 CreatedAt = createdBase.AddHours(i * 7),
-                UpdatedAt = createdBase.AddHours(i * 7)
+                UpdatedAt = createdBase.AddHours(i * 7),
+                CategoryId = ResolverCategoria(nombre, categorias)
             });
         }
 
         db.Products.AddRange(products);
         await db.SaveChangesAsync(ct);
+    }
+
+    /// <summary>
+    /// Asigna categoria a los productos que quedaron sin ella: los que ya existian
+    /// en la base antes de crear la tabla Categorias, y cualquiera creado a mano
+    /// sin elegir categoria.
+    /// </summary>
+    private static async Task AsignarCategoriaFaltanteAsync(AppDbContext db, Dictionary<string, Guid> categorias, CancellationToken ct)
+    {
+        var sinCategoria = await db.Products.Where(p => p.CategoryId == null).ToListAsync(ct);
+        if (sinCategoria.Count == 0) return;
+
+        foreach (var p in sinCategoria)
+            p.CategoryId = ResolverCategoria(p.Name, categorias);
+
+        await db.SaveChangesAsync(ct);
+    }
+
+    /// <summary>
+    /// Deduce la categoria a partir del nombre del producto. Si ningun prefijo
+    /// coincide, cae en "General".
+    /// </summary>
+    private static Guid ResolverCategoria(string nombreProducto, Dictionary<string, Guid> categorias)
+    {
+        foreach (var (prefijo, categoria) in MapaCategorias)
+        {
+            if (nombreProducto.StartsWith(prefijo, StringComparison.OrdinalIgnoreCase)
+                && categorias.TryGetValue(categoria, out var id))
+            {
+                return id;
+            }
+        }
+
+        return categorias["General"];
     }
 }

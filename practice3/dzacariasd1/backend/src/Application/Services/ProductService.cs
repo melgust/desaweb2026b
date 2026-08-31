@@ -7,8 +7,8 @@ namespace Application.Services;
 
 public interface IProductService
 {
-    Task<ProductPagedResult> GetProductsAsync(string? search, string? sortBy, string? sortDirection, int page, int pageSize, CancellationToken ct);
-    Task<ProductScrollResult> GetProductsScrollAsync(string? search, string? sortBy, string? sortDirection, int offset, int limit, CancellationToken ct);
+    Task<ProductPagedResult> GetProductsAsync(string? search, string? sortBy, string? sortDirection, Guid? categoryId, int page, int pageSize, CancellationToken ct);
+    Task<ProductScrollResult> GetProductsScrollAsync(string? search, string? sortBy, string? sortDirection, Guid? categoryId, int offset, int limit, CancellationToken ct);
     Task<ProductDto> GetByIdAsync(Guid id, CancellationToken ct);
     Task<ProductDto> CreateAsync(CreateProductRequest request, CancellationToken ct);
     Task<ProductDto> UpdateAsync(Guid id, UpdateProductRequest request, CancellationToken ct);
@@ -30,9 +30,14 @@ public class ProductService : IProductService
     /// El desempate por Id garantiza un orden estable: sin el, dos productos con
     /// el mismo nombre podrian repetirse o perderse al saltar de pagina.
     /// </summary>
-    private IQueryable<Product> BuildQuery(string? search, string? sortBy, string? sortDirection)
+    private IQueryable<Product> BuildQuery(string? search, string? sortBy, string? sortDirection, Guid? categoryId)
     {
         var query = _db.Products.AsNoTracking();
+
+        if (categoryId.HasValue)
+        {
+            query = query.Where(p => p.CategoryId == categoryId.Value);
+        }
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -46,26 +51,37 @@ public class ProductService : IProductService
             "price" => isDesc ? query.OrderByDescending(p => p.Price) : query.OrderBy(p => p.Price),
             "stock" => isDesc ? query.OrderByDescending(p => p.Stock) : query.OrderBy(p => p.Stock),
             "createdat" => isDesc ? query.OrderByDescending(p => p.CreatedAt) : query.OrderBy(p => p.CreatedAt),
+            "category" => isDesc
+                ? query.OrderByDescending(p => p.Category!.Name)
+                : query.OrderBy(p => p.Category!.Name),
             _ => isDesc ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name),
         };
 
         return ordered.ThenBy(p => p.Id);
     }
 
+    /// <summary>
+    /// Proyecta a DTO incluyendo el nombre de la categoria. Al hacerlo dentro de la
+    /// consulta, EF genera un LEFT JOIN y trae el nombre en la misma ida a la base
+    /// de datos, en lugar de una consulta adicional por cada producto.
+    /// </summary>
     private static IQueryable<ProductDto> Project(IQueryable<Product> query) =>
-        query.Select(p => new ProductDto(p.Id, p.Name, p.Description, p.Price, p.Stock, p.IsActive, p.CreatedAt));
+        query.Select(p => new ProductDto(
+            p.Id, p.Name, p.Description, p.Price, p.Stock, p.IsActive, p.CreatedAt,
+            p.CategoryId,
+            p.Category != null ? p.Category.Name : null));
 
     /// <summary>
     /// Paginacion clasica por offset: el cliente pide una pagina concreta y
     /// reemplaza por completo el contenido de la tabla.
     /// </summary>
-    public async Task<ProductPagedResult> GetProductsAsync(string? search, string? sortBy, string? sortDirection, int page, int pageSize, CancellationToken ct)
+    public async Task<ProductPagedResult> GetProductsAsync(string? search, string? sortBy, string? sortDirection, Guid? categoryId, int page, int pageSize, CancellationToken ct)
     {
         if (page < 1) page = 1;
         if (pageSize < 1) pageSize = 10;
         if (pageSize > MaxPageSize) pageSize = MaxPageSize;
 
-        var query = BuildQuery(search, sortBy, sortDirection);
+        var query = BuildQuery(search, sortBy, sortDirection, categoryId);
 
         int totalItems = await query.CountAsync(ct);
         int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
@@ -81,13 +97,13 @@ public class ProductService : IProductService
     /// le dice al cliente si quedan mas (HasMore) y desde donde continuar (NextOffset).
     /// El cliente va concatenando los bloques en vez de reemplazarlos.
     /// </summary>
-    public async Task<ProductScrollResult> GetProductsScrollAsync(string? search, string? sortBy, string? sortDirection, int offset, int limit, CancellationToken ct)
+    public async Task<ProductScrollResult> GetProductsScrollAsync(string? search, string? sortBy, string? sortDirection, Guid? categoryId, int offset, int limit, CancellationToken ct)
     {
         if (offset < 0) offset = 0;
         if (limit < 1) limit = 10;
         if (limit > MaxScrollLimit) limit = MaxScrollLimit;
 
-        var query = BuildQuery(search, sortBy, sortDirection);
+        var query = BuildQuery(search, sortBy, sortDirection, categoryId);
 
         int totalItems = await query.CountAsync(ct);
 
@@ -101,29 +117,42 @@ public class ProductService : IProductService
 
     public async Task<ProductDto> GetByIdAsync(Guid id, CancellationToken ct)
     {
-        var p = await _db.Products.FindAsync(new object[] { id }, ct) ?? throw new KeyNotFoundException("Product not found.");
-        return new ProductDto(p.Id, p.Name, p.Description, p.Price, p.Stock, p.IsActive, p.CreatedAt);
+        var dto = await Project(_db.Products.AsNoTracking().Where(p => p.Id == id)).FirstOrDefaultAsync(ct);
+        return dto ?? throw new KeyNotFoundException("Product not found.");
     }
 
     public async Task<ProductDto> CreateAsync(CreateProductRequest request, CancellationToken ct)
     {
-        var p = new Product { Name = request.Name, Description = request.Description, Price = request.Price, Stock = request.Stock, IsActive = request.IsActive };
+        await EnsureCategoryExistsAsync(request.CategoryId, ct);
+
+        var p = new Product
+        {
+            Name = request.Name,
+            Description = request.Description,
+            Price = request.Price,
+            Stock = request.Stock,
+            IsActive = request.IsActive,
+            CategoryId = request.CategoryId
+        };
         _db.Products.Add(p);
         await _db.SaveChangesAsync(ct);
-        return new ProductDto(p.Id, p.Name, p.Description, p.Price, p.Stock, p.IsActive, p.CreatedAt);
+        return await GetByIdAsync(p.Id, ct);
     }
 
     public async Task<ProductDto> UpdateAsync(Guid id, UpdateProductRequest request, CancellationToken ct)
     {
+        await EnsureCategoryExistsAsync(request.CategoryId, ct);
+
         var p = await _db.Products.FindAsync(new object[] { id }, ct) ?? throw new KeyNotFoundException("Product not found.");
         p.Name = request.Name;
         p.Description = request.Description;
         p.Price = request.Price;
         p.Stock = request.Stock;
         p.IsActive = request.IsActive;
+        p.CategoryId = request.CategoryId;
         p.UpdatedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync(ct);
-        return new ProductDto(p.Id, p.Name, p.Description, p.Price, p.Stock, p.IsActive, p.CreatedAt);
+        return await GetByIdAsync(p.Id, ct);
     }
 
     public async Task DeleteAsync(Guid id, CancellationToken ct)
@@ -131,5 +160,18 @@ public class ProductService : IProductService
         var p = await _db.Products.FindAsync(new object[] { id }, ct) ?? throw new KeyNotFoundException("Product not found.");
         _db.Products.Remove(p);
         await _db.SaveChangesAsync(ct);
+    }
+
+    /// <summary>
+    /// Valida la categoria antes de guardar. Sin esta comprobacion, un identificador
+    /// inexistente provocaria un error de clave foranea de MySQL, mucho menos claro
+    /// para quien consume la API.
+    /// </summary>
+    private async Task EnsureCategoryExistsAsync(Guid? categoryId, CancellationToken ct)
+    {
+        if (!categoryId.HasValue) return;
+
+        bool exists = await _db.Categories.AnyAsync(c => c.Id == categoryId.Value, ct);
+        if (!exists) throw new KeyNotFoundException("Category not found.");
     }
 }

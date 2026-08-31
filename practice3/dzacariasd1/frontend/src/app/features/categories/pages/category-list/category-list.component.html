@@ -1,0 +1,52 @@
+<div class="container">
+  <header class="header">
+    <h2>Categorías de productos</h2>
+    <a *ngIf="auth.canManageProducts()" routerLink="/categories/new" class="btn btn-primary">+ Nueva categoría</a>
+  </header>
+
+  <p class="results-summary" *ngIf="!loading()">
+    {{ categories().length }} categorías · {{ totalProducts() }} productos clasificados
+  </p>
+
+  <div class="alert-error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+
+  <table class="grid-table" *ngIf="!loading(); else loadingTpl">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th class="col-num">Productos</th>
+        <th>Estado</th>
+        <th *ngIf="auth.canManageProducts()">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of categories()">
+        <td><span class="badge">{{ c.name }}</span></td>
+        <td>{{ c.description || '-' }}</td>
+        <td class="col-num">{{ c.productCount }}</td>
+        <td>
+          <span class="state" [class.state--off]="!c.isActive">
+            {{ c.isActive ? 'Activa' : 'Inactiva' }}
+          </span>
+        </td>
+        <td *ngIf="auth.canManageProducts()">
+          <a [routerLink]="['/categories/edit', c.id]">Editar</a>
+          <button *ngIf="auth.isAdmin()" (click)="deleteCategory(c)" class="text-danger">Eliminar</button>
+        </td>
+      </tr>
+      <tr *ngIf="categories().length === 0">
+        <td [attr.colspan]="auth.canManageProducts() ? 5 : 4" class="empty-row">
+          No hay categorías registradas.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="hint">
+    Una categoría con productos asignados no se puede eliminar: primero hay que
+    reasignar esos productos a otra categoría.
+  </p>
+
+  <ng-template #loadingTpl><div class="loading-block">Cargando categorías...</div></ng-template>
+</div>

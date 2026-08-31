@@ -10,6 +10,7 @@ public class AppDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Product> Products => Set<Product>();
+    public DbSet<Category> Categories => Set<Category>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -23,5 +24,17 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
         modelBuilder.Entity<Role>().HasIndex(r => r.Name).IsUnique();
+
+        // --- Categoria 1 --- N Productos ---
+        // Restrict impide borrar una categoria que todavia tenga productos
+        // asignados: obliga a reasignarlos primero en lugar de dejar datos huerfanos.
+        modelBuilder.Entity<Product>()
+            .HasOne(p => p.Category)
+            .WithMany(c => c.Products)
+            .HasForeignKey(p => p.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Category>().HasIndex(c => c.Name).IsUnique();
+        modelBuilder.Entity<Category>().Property(c => c.Name).HasMaxLength(80);
     }
 }

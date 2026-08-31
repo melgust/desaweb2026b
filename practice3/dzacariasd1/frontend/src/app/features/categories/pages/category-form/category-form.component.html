@@ -1,0 +1,39 @@
+<div class="container">
+  <header class="header">
+    <h2>{{ isEditMode ? 'Editar categoría' : 'Nueva categoría' }}</h2>
+    <a routerLink="/categories" class="btn">Volver al listado</a>
+  </header>
+
+  <div class="alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <form (ngSubmit)="onSubmit()" *ngIf="!loading; else loadingTpl">
+    <div class="form-group">
+      <label for="name">Nombre de la categoría</label>
+      <input type="text" id="name" [(ngModel)]="formData.name" name="name"
+             class="form-control" maxlength="80" required />
+      <small class="hint">El nombre no se puede repetir.</small>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Descripción</label>
+      <textarea id="description" [(ngModel)]="formData.description" name="description"
+                class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="form-group checkbox-group">
+      <label>
+        <input type="checkbox" [(ngModel)]="formData.isActive" name="isActive" />
+        Categoría activa
+      </label>
+      <small class="hint">Solo las categorías activas aparecen al dar de alta un producto.</small>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+      {{ isEditMode ? 'Guardar cambios' : 'Crear categoría' }}
+    </button>
+  </form>
+
+  <ng-template #loadingTpl>
+    <div class="loading-block">Procesando...</div>
+  </ng-template>
+</div>

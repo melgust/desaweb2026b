@@ -1,4 +1,4 @@
-# Práctica 3 — Paginación offset + Scroll infinito
+# Práctica 3 — Paginación offset + Scroll infinito + Categorías
 
 **Usuario / Rama:** `dzacariasd1`
 **Universidad Mariano Gálvez de Guatemala** — Desarrollo Web 2026-2
@@ -10,6 +10,9 @@ que el usuario puede alternar desde la misma pantalla:
 1. **Paginación por offset** — la clásica, con botones *Anterior / Siguiente*.
 2. **Scroll infinito** — los productos se van cargando por bloques conforme el
    usuario baja en la página, usando `IntersectionObserver`.
+
+Posteriormente se agregó la **tabla `Categorias`** relacionada con productos, con
+su CRUD completo en backend y frontend, y filtrado de productos por categoría.
 
 ## Stack
 
@@ -107,6 +110,73 @@ Detalles cuidados en la implementación:
   navegadores sin `IntersectionObserver`).
 - **Buscar y ordenar reinician el listado** en ambos modos.
 - `ngOnDestroy` desconecta el observador para no dejar fugas.
+
+---
+
+## Entrega 2: tabla Categorías
+
+Relación **uno a muchos**: una categoría agrupa muchos productos.
+
+### Modelo de datos
+
+```
+Categories                          Products
+----------                          --------
+Id            char(36)  PK   1 ──┐  Id           char(36)  PK
+Name          varchar(80) UNIQUE│  ...
+Description   longtext          └─N CategoryId   char(36)  FK NULL
+IsActive      tinyint(1)           ...
+CreatedAt     datetime(6)
+UpdatedAt     datetime(6)
+```
+
+La clave foránea es **anulable** a propósito: los productos que ya existían antes
+de crear la tabla siguen siendo válidos. La migración se aplica sin pérdida de
+datos y el seeder los reasigna después según su nombre. En la interfaz, en cambio,
+el campo sí es obligatorio al dar de alta o editar.
+
+El borrado usa `DeleteBehavior.Restrict`: no se puede eliminar una categoría que
+todavía agrupa productos. El backend lo comprueba antes y responde **409 Conflict**
+con el motivo, en lugar de dejar que falle la restricción de MySQL.
+
+### Backend
+
+| Archivo | Cambio |
+|---------|--------|
+| `Domain/Entities/Category.cs` | Entidad nueva. |
+| `Domain/Entities/Product.cs` | `CategoryId` (`Guid?`) y navegación `Category`. |
+| `Infrastructure/Data/AppDbContext.cs` | `DbSet<Category>`, relación 1:N, índice único en `Name`. |
+| `Infrastructure/Data/Migrations/…_AddCategories.cs` | Migración: crea `Categories`, agrega la columna, el índice y la FK. |
+| `Infrastructure/Data/DbSeeder.cs` | Siembra 8 categorías y asigna una a cada producto según su nombre. |
+| `Application/DTOs/CategoryDtos.cs` | DTOs, incluido `ProductCount`. |
+| `Application/Services/CategoryService.cs` | CRUD, nombre único y bloqueo de borrado si hay productos. |
+| `Application/Services/ProductService.cs` | Filtro `categoryId`, orden por categoría y `CategoryName` en la proyección. |
+| `Api/Controllers/CategoriesController.cs` | Controlador nuevo con códigos 404 / 409. |
+
+### Frontend
+
+| Archivo | Cambio |
+|---------|--------|
+| `core/models/category.model.ts` | Interfaz `Category`. |
+| `core/services/category.service.ts` | Servicio con el CRUD. |
+| `features/categories/…/category-list` | Listado con conteo de productos y borrado. |
+| `features/categories/…/category-form` | Alta y edición. |
+| `features/products/…/product-list` | Columna **Categoría** y desplegable de filtro. |
+| `features/products/…/product-form` | Desplegable para elegir categoría. |
+| `app.routes.ts` · `app.component.ts` | Rutas `/categories` y enlaces en la barra superior. |
+
+### Endpoints de categorías
+
+| Método | Endpoint                  | Roles           | Descripción                        |
+|--------|---------------------------|-----------------|------------------------------------|
+| GET    | `/api/categories`         | Todos           | Listar (`?onlyActive=true`)        |
+| GET    | `/api/categories/{id}`    | Todos           | Obtener una                        |
+| POST   | `/api/categories`         | Admin, Manager  | Crear (409 si el nombre se repite) |
+| PUT    | `/api/categories/{id}`    | Admin, Manager  | Actualizar                         |
+| DELETE | `/api/categories/{id}`    | Admin           | Eliminar (409 si tiene productos)  |
+
+Los endpoints de productos aceptan además el parámetro `categoryId` para filtrar,
+y `sortBy=category` para ordenar por nombre de categoría.
 
 ---
 

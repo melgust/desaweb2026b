@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../../core/services/product.service';
+import { CategoryService } from '../../../../core/services/category.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Product } from '../../../../core/models/product.model';
+import { Category } from '../../../../core/models/category.model';
 
 /** Estrategia de paginacion activa en la pantalla. */
 export type PaginationMode = 'offset' | 'infinite';
@@ -21,6 +23,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   mode = signal<PaginationMode>('offset');
 
   products = signal<Product[]>([]);
+  categories = signal<Category[]>([]);
   totalItems = signal(0);
   totalPages = signal(0);
   page = signal(1);
@@ -41,14 +44,21 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   searchTerm = '';
   sortBy = 'name';
   sortDirection: 'asc' | 'desc' = 'asc';
+  /** Id de la categoria por la que se filtra. Cadena vacia = todas. */
+  categoryFilter = '';
 
   /** Elemento centinela: cuando entra en pantalla se pide el siguiente bloque. */
   @ViewChild('scrollAnchor') scrollAnchor?: ElementRef<HTMLElement>;
   private observer?: IntersectionObserver;
 
-  constructor(public auth: AuthService, private productService: ProductService) {}
+  constructor(
+    public auth: AuthService,
+    private productService: ProductService,
+    private categoryService: CategoryService
+  ) {}
 
   ngOnInit(): void {
+    this.loadCategories();
     this.reload();
   }
 
@@ -100,7 +110,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   private loadPage(): void {
     this.loading.set(true);
     this.productService
-      .getProducts(this.searchTerm, this.sortBy, this.sortDirection, this.page(), this.pageSize)
+      .getProducts(this.searchTerm, this.sortBy, this.sortDirection, this.page(), this.pageSize, this.categoryFilter)
       .subscribe({
         next: (res) => {
           this.products.set(res.items);
@@ -125,7 +135,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isFirstBlock) this.loading.set(true);
 
     this.productService
-      .getProductsScroll(this.searchTerm, this.sortBy, this.sortDirection, this.nextOffset(), this.scrollLimit)
+      .getProductsScroll(this.searchTerm, this.sortBy, this.sortDirection, this.nextOffset(), this.scrollLimit, this.categoryFilter)
       .subscribe({
         next: (res) => {
           this.products.update((current) => [...current, ...res.items]);
@@ -177,6 +187,25 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   // ---------------------------------------------------------------------------
   // Filtros y acciones
   // ---------------------------------------------------------------------------
+
+  /** Alimenta el desplegable del filtro. Solo se piden las categorias activas. */
+  private loadCategories(): void {
+    this.categoryService.getCategories(true).subscribe({
+      next: (res) => this.categories.set(res),
+      error: () => this.categories.set([])
+    });
+  }
+
+  /** Al cambiar de categoria se reinicia el listado en cualquiera de los dos modos. */
+  onCategoryChange(): void {
+    this.page.set(1);
+    this.reload();
+  }
+
+  /** Nombre de la categoria elegida, para mostrarlo en el resumen de resultados. */
+  selectedCategoryName(): string {
+    return this.categories().find((c) => c.id === this.categoryFilter)?.name ?? '';
+  }
 
   onSearchChange(): void {
     this.page.set(1);

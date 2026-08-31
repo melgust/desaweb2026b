@@ -15,7 +15,8 @@ export class ProductService {
     sortBy?: string,
     sortDirection?: string,
     page: number = 1,
-    pageSize: number = 10
+    pageSize: number = 10,
+    categoryId?: string | null
   ): Observable<ProductPagedResult> {
     let params = new HttpParams()
       .set('page', page.toString())
@@ -24,6 +25,7 @@ export class ProductService {
     if (search) params = params.set('search', search);
     if (sortBy) params = params.set('sortBy', sortBy);
     if (sortDirection) params = params.set('sortDirection', sortDirection);
+    if (categoryId) params = params.set('categoryId', categoryId);
 
     return this.http.get<ProductPagedResult>(this.apiUrl, { params });
   }
@@ -38,7 +40,8 @@ export class ProductService {
     sortBy?: string,
     sortDirection?: string,
     offset: number = 0,
-    limit: number = 12
+    limit: number = 12,
+    categoryId?: string | null
   ): Observable<ProductScrollResult> {
     let params = new HttpParams()
       .set('offset', offset.toString())
@@ -47,6 +50,7 @@ export class ProductService {
     if (search) params = params.set('search', search);
     if (sortBy) params = params.set('sortBy', sortBy);
     if (sortDirection) params = params.set('sortDirection', sortDirection);
+    if (categoryId) params = params.set('categoryId', categoryId);
 
     return this.http.get<ProductScrollResult>(`${this.apiUrl}/scroll`, { params });
   }

@@ -21,11 +21,23 @@
     </button>
   </div>
 
-  <input type="text"
-         placeholder="Buscar productos... (presione Enter)"
-         [(ngModel)]="searchTerm"
-         (keyup.enter)="onSearchChange()"
-         class="search-bar" />
+  <div class="filters">
+    <input type="text"
+           placeholder="Buscar productos... (presione Enter)"
+           [(ngModel)]="searchTerm"
+           (keyup.enter)="onSearchChange()"
+           class="search-bar" />
+
+    <label class="category-filter">
+      <span class="category-filter__label">Categoría:</span>
+      <select [(ngModel)]="categoryFilter" (ngModelChange)="onCategoryChange()" class="form-control">
+        <option value="">Todas las categorías</option>
+        <option *ngFor="let c of categories()" [value]="c.id">
+          {{ c.name }} ({{ c.productCount }})
+        </option>
+      </select>
+    </label>
+  </div>
 
   <p class="results-summary" *ngIf="!loading()">
     <ng-container *ngIf="mode() === 'offset'; else infiniteSummary">
@@ -34,6 +46,9 @@
     <ng-template #infiniteSummary>
       Mostrando {{ products().length }} de {{ totalItems() }} productos
     </ng-template>
+    <span *ngIf="categoryFilter" class="filter-chip">
+      Categoría: {{ selectedCategoryName() }}
+    </span>
   </p>
 
   <div class="alert-error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
@@ -42,6 +57,7 @@
     <thead>
       <tr>
         <th (click)="toggleSort('name')">Name {{ sortIcon('name') }}</th>
+        <th (click)="toggleSort('category')">Categoría {{ sortIcon('category') }}</th>
         <th>Description</th>
         <th (click)="toggleSort('price')">Price {{ sortIcon('price') }}</th>
         <th (click)="toggleSort('stock')">Stock {{ sortIcon('stock') }}</th>
@@ -51,6 +67,10 @@
     <tbody>
       <tr *ngFor="let item of products()">
         <td>{{ item.name }}</td>
+        <td>
+          <span class="badge" *ngIf="item.categoryName; else sinCategoria">{{ item.categoryName }}</span>
+          <ng-template #sinCategoria><span class="badge badge--empty">Sin categoría</span></ng-template>
+        </td>
         <td>{{ item.description || '-' }}</td>
         <td>${{ item.price | number:'1.2-2' }}</td>
         <td>{{ item.stock }}</td>
@@ -60,7 +80,7 @@
         </td>
       </tr>
       <tr *ngIf="products().length === 0">
-        <td [attr.colspan]="auth.canManageProducts() ? 5 : 4" class="empty-row">
+        <td [attr.colspan]="auth.canManageProducts() ? 6 : 5" class="empty-row">
           No se encontraron productos.
         </td>
       </tr>

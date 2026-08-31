@@ -6,6 +6,9 @@ export interface Product {
   stock: number;
   isActive: boolean;
   createdAt: string;
+  /** Categoria a la que pertenece. Puede venir vacia en productos antiguos. */
+  categoryId?: string | null;
+  categoryName?: string | null;
 }
 
 /** Respuesta de la paginacion clasica por offset (botones Anterior / Siguiente). */
