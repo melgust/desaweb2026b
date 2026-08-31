@@ -1,0 +1,44 @@
+.search-field {
+  width: 100%;
+  max-width: 400px;
+}
+
+.table-container {
+  width: 100%;
+  overflow: auto;
+  background: #fff;
+}
+
+table {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.product-scroll-container {
+  height: 600px;
+  overflow-y: auto;
+}
+.view-mode-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.view-mode-label {
+  font-weight: 500;
+}
+
+.infinite-scroll-container {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.infinite-scroll-status {
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+}
