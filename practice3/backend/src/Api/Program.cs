@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Register MySQL AppDbContext
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    options.UseInMemoryDatabase("LabDb"));
 
 // Application services
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -55,7 +55,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    dbContext.Database.Migrate();
+    dbContext.Database.EnsureCreated();
     await DbSeeder.SeedAsync(dbContext);
 }
 
