@@ -11,7 +11,7 @@ export class AuthService {
   private readonly USER_KEY = 'auth_user';
   private readonly apiUrl = `${environment.apiUrl}/auth`;
 
-  private currentUserSignal = signal<User | null>(this.getStoredUser());
+  private currentUserSignal = signal<User | null>(this.restoreSession());
 
   readonly currentUser = this.currentUserSignal.asReadonly();
   readonly isAuthenticated = computed(() => !!this.currentUserSignal());
@@ -42,7 +42,13 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    const token = localStorage.getItem(this.TOKEN_KEY)?.trim() || null;
+    if (!token || !this.isTokenValid(token)) {
+      localStorage.removeItem(this.TOKEN_KEY);
+      localStorage.removeItem(this.USER_KEY);
+      return null;
+    }
+    return token;
   }
 
   hasAnyRole(allowedRoles: string[]): boolean {
@@ -50,8 +56,26 @@ export class AuthService {
     return !!currentRole && allowedRoles.includes(currentRole);
   }
 
-  private getStoredUser(): User | null {
+  private restoreSession(): User | null {
+    if (!this.getToken()) return null;
+
     const data = localStorage.getItem(this.USER_KEY);
-    return data ? JSON.parse(data) : null;
+    if (!data) return null;
+
+    try {
+      return JSON.parse(data) as User;
+    } catch {
+      localStorage.removeItem(this.USER_KEY);
+      return null;
+    }
+  }
+
+  private isTokenValid(token: string): boolean {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+      return typeof payload.exp === 'number' && payload.exp * 1000 > Date.now();
+    } catch {
+      return false;
+    }
   }
 }

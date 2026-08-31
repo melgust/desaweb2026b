@@ -17,7 +17,7 @@
 
     <div class="form-row">
       <div class="form-group col">
-        <label for="price">Price ($)</label>
+        <label for="price">Price (Q)</label>
         <input type="number" id="price" [(ngModel)]="formData.price" name="price" class="form-control" step="0.01" required />
       </div>
 
@@ -25,6 +25,11 @@
         <label for="stock">Stock Quantity</label>
         <input type="number" id="stock" [(ngModel)]="formData.stock" name="stock" class="form-control" required />
       </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col"><label for="supplierId">Supplier</label><select id="supplierId" class="form-control" [(ngModel)]="formData.supplierId" name="supplierId"><option [ngValue]="null">-- None --</option><option *ngFor="let supplier of suppliers" [value]="supplier.id">{{ supplier.name }}</option></select></div>
+      <div class="form-group col"><label for="categoryId">Category</label><select id="categoryId" class="form-control" [(ngModel)]="formData.categoryId" name="categoryId"><option [ngValue]="null">-- None --</option><option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option></select></div>
     </div>
 
     <div class="form-group checkbox-group">

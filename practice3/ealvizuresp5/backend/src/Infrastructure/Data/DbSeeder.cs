@@ -75,6 +75,29 @@ public static class DbSeeder
 
         await db.SaveChangesAsync(ct);
 
+        // --- Suppliers ---
+        var supplierSeeds = new[]
+        {
+            new { Name = "Tech Distribution Guatemala", Email = "ventas@techdistribution.gt", Phone = "+502 2290-1000" },
+            new { Name = "CompuMayorista", Email = "pedidos@compumayorista.gt", Phone = "+502 2334-2000" },
+            new { Name = "Soluciones Empresariales GT", Email = "contacto@solucionesgt.com", Phone = "+502 2420-3000" }
+        };
+        foreach (var seed in supplierSeeds)
+        {
+            if (!await db.Suppliers.AnyAsync(s => s.Name == seed.Name, ct))
+                db.Suppliers.Add(new Supplier { Name = seed.Name, ContactEmail = seed.Email, Phone = seed.Phone });
+        }
+        await db.SaveChangesAsync(ct);
+
+        // --- Categories ---
+        string[] categoryNames = ["Laptops", "Monitors", "Keyboards", "Mice", "Networking", "Storage", "Printers", "Audio", "Tablets", "Accessories"];
+        foreach (var name in categoryNames)
+        {
+            if (!await db.Categories.AnyAsync(c => c.Name == name, ct))
+                db.Categories.Add(new Category { Name = name, Description = $"Products in the {name} category" });
+        }
+        await db.SaveChangesAsync(ct);
+
         // --- Products ---
         if (!await db.Products.AnyAsync(ct))
         {
@@ -216,5 +239,32 @@ public static class DbSeeder
             db.Products.AddRange(products);
             await db.SaveChangesAsync(ct);
         }
+
+        // Assign categories without deleting or replacing existing products.
+        var categories = await db.Categories.ToDictionaryAsync(c => c.Name, ct);
+        var uncategorized = await db.Products.Where(p => p.CategoryId == null).ToListAsync(ct);
+        foreach (var product in uncategorized)
+        {
+            var categoryName = product.Name.ToLowerInvariant() switch
+            {
+                var n when n.Contains("laptop") => "Laptops",
+                var n when n.Contains("monitor") => "Monitors",
+                var n when n.Contains("teclado") => "Keyboards",
+                var n when n.Contains("mouse") => "Mice",
+                var n when n.Contains("router") || n.Contains("switch") || n.Contains("red cat") => "Networking",
+                var n when n.Contains("ssd") || n.Contains("disco duro") || n.Contains("memoria usb") => "Storage",
+                var n when n.Contains("impresora") => "Printers",
+                var n when n.Contains("audifono") || n.Contains("bocina") || n.Contains("microfono") => "Audio",
+                var n when n.Contains("tablet") => "Tablets",
+                _ => "Accessories"
+            };
+            product.CategoryId = categories[categoryName].Id;
+        }
+
+        var suppliers = await db.Suppliers.OrderBy(s => s.Name).ToListAsync(ct);
+        var withoutSupplier = await db.Products.Where(p => p.SupplierId == null).OrderBy(p => p.Name).Take(30).ToListAsync(ct);
+        for (var index = 0; index < withoutSupplier.Count; index++)
+            withoutSupplier[index].SupplierId = suppliers[index % suppliers.Count].Id;
+        await db.SaveChangesAsync(ct);
     }
 }
