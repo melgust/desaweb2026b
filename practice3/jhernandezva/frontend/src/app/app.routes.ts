@@ -40,5 +40,63 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'suppliers',
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import(
+            './features/suppliers/pages/supplier-list/supplier-list.component'
+          ).then((m) => m.SupplierListComponent),
+      },
+      {
+        path: 'new',
+        canActivate: [roleGuard(['Admin', 'Manager'])],
+        loadComponent: () =>
+          import(
+            './features/suppliers/pages/supplier-form/supplier-form.component'
+          ).then((m) => m.SupplierFormComponent),
+      },
+      {
+        path: 'edit/:id',
+        canActivate: [roleGuard(['Admin', 'Manager'])],
+        loadComponent: () =>
+          import(
+            './features/suppliers/pages/supplier-form/supplier-form.component'
+          ).then((m) => m.SupplierFormComponent),
+      },
+    ],
+  },
+  {
+    path: 'categories',
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import(
+            './features/categories/pages/category-list/category-list.component'
+          ).then((m) => m.CategoryListComponent),
+      },
+      {
+        path: 'new',
+        canActivate: [roleGuard(['Admin', 'Manager'])],
+        loadComponent: () =>
+          import(
+            './features/categories/pages/category-form/category-form.component'
+          ).then((m) => m.CategoryFormComponent),
+      },
+      {
+        path: 'edit/:id',
+        canActivate: [roleGuard(['Admin', 'Manager'])],
+        loadComponent: () =>
+          import(
+            './features/categories/pages/category-form/category-form.component'
+          ).then((m) => m.CategoryFormComponent),
+      },
+    ],
+  },
   { path: '**', redirectTo: 'products' },
 ];

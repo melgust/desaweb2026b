@@ -1,105 +1,126 @@
-using Api.Application.DTOs;
+using Application.DTOs;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Api.Application.Services;
+namespace Application.Services;
 
-public class ProductService
+public interface IProductService
 {
-    private readonly AppDbContext _context;
+    Task<ProductPagedResult> GetProductsAsync(string? search, string? sortBy, string? sortDirection, int page, int pageSize, CancellationToken ct);
+    Task<ProductDto> GetByIdAsync(Guid id, CancellationToken ct);
+    Task<ProductDto> CreateAsync(CreateProductRequest request, CancellationToken ct);
+    Task<ProductDto> UpdateAsync(Guid id, UpdateProductRequest request, CancellationToken ct);
+    Task DeleteAsync(Guid id, CancellationToken ct);
+}
 
-    public ProductService(AppDbContext context)
+public class ProductService : IProductService
+{
+    private readonly AppDbContext _db;
+
+    public ProductService(AppDbContext db) => _db = db;
+
+    public async Task<ProductPagedResult> GetProductsAsync(string? search, string? sortBy, string? sortDirection, int page, int pageSize, CancellationToken ct)
     {
-        _context = context;
-    }
+        var query = _db.Products.AsNoTracking();
 
-    public async Task<PagedResultDto<ProductDto>> GetPagedProductsAsync(int page, int pageSize)
-    {
-        page = Math.Max(page, 1);
-        pageSize = Math.Clamp(pageSize, 1, 100);
-
-        var query = _context.Products.AsNoTracking();
-        var totalItems = await query.CountAsync();
-
-        var items = await query
-            .OrderBy(p => p.Id)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .Select(ToDtoExpression())
-            .ToListAsync();
-
-        return new PagedResultDto<ProductDto>
+        if (!string.IsNullOrWhiteSpace(search))
         {
-            Items = items,
-            Page = page,
-            PageSize = pageSize,
-            TotalItems = totalItems,
-            TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize)
+            var lower = search.ToLower();
+            query = query.Where(p => p.Name.ToLower().Contains(lower) || (p.Description != null && p.Description.ToLower().Contains(lower)));
+        }
+
+        bool isDesc = sortDirection?.ToLower() == "desc";
+        query = sortBy?.ToLower() switch
+        {
+            "price" => isDesc ? query.OrderByDescending(p => p.Price) : query.OrderBy(p => p.Price),
+            "stock" => isDesc ? query.OrderByDescending(p => p.Stock) : query.OrderBy(p => p.Stock),
+            "createdat" => isDesc ? query.OrderByDescending(p => p.CreatedAt) : query.OrderBy(p => p.CreatedAt),
+            "supplier" => isDesc ? query.OrderByDescending(p => p.Supplier!.Name) : query.OrderBy(p => p.Supplier!.Name),
+            "category" => isDesc ? query.OrderByDescending(p => p.Category!.Name) : query.OrderBy(p => p.Category!.Name),
+            _ => isDesc ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name),
         };
+
+        int totalItems = await query.CountAsync(ct);
+        int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+        var items = await query.Skip((page - 1) * pageSize).Take(pageSize)
+            .Select(p => new ProductDto(p.Id, p.Name, p.Description, p.Price, p.Stock, p.IsActive, p.CreatedAt,
+                p.SupplierId, p.Supplier != null ? p.Supplier.Name : null,
+                p.CategoryId, p.Category != null ? p.Category.Name : null))
+            .ToListAsync(ct);
+
+        return new ProductPagedResult(items, totalItems, page, pageSize, totalPages);
     }
 
-    public async Task<ProductDto?> GetByIdAsync(Guid id)
+    public async Task<ProductDto> GetByIdAsync(Guid id, CancellationToken ct)
     {
-        return await _context.Products
-            .AsNoTracking()
+        var dto = await _db.Products.AsNoTracking()
             .Where(p => p.Id == id)
-            .Select(ToDtoExpression())
-            .FirstOrDefaultAsync();
+            .Select(p => new ProductDto(p.Id, p.Name, p.Description, p.Price, p.Stock, p.IsActive, p.CreatedAt,
+                p.SupplierId, p.Supplier != null ? p.Supplier.Name : null,
+                p.CategoryId, p.Category != null ? p.Category.Name : null))
+            .FirstOrDefaultAsync(ct);
+
+        return dto ?? throw new KeyNotFoundException("Product not found.");
     }
 
-    public async Task<ProductDto> CreateAsync(ProductRequestDto request)
+    public async Task<ProductDto> CreateAsync(CreateProductRequest request, CancellationToken ct)
     {
-        var product = new Product
+        await ValidateSupplierAsync(request.SupplierId, ct);
+        await ValidateCategoryAsync(request.CategoryId, ct);
+
+        var p = new Product
         {
-            Name = request.Name.Trim(),
-            Description = request.Description?.Trim() ?? string.Empty,
+            Name = request.Name,
+            Description = request.Description,
             Price = request.Price,
             Stock = request.Stock,
-            IsActive = request.IsActive
+            IsActive = request.IsActive,
+            SupplierId = request.SupplierId,
+            CategoryId = request.CategoryId
         };
-
-        _context.Products.Add(product);
-        await _context.SaveChangesAsync();
-        return ToDto(product);
+        _db.Products.Add(p);
+        await _db.SaveChangesAsync(ct);
+        return await GetByIdAsync(p.Id, ct);
     }
 
-    public async Task<ProductDto?> UpdateAsync(Guid id, ProductRequestDto request)
+    public async Task<ProductDto> UpdateAsync(Guid id, UpdateProductRequest request, CancellationToken ct)
     {
-        var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
-        if (product == null) return null;
+        var p = await _db.Products.FindAsync(new object[] { id }, ct) ?? throw new KeyNotFoundException("Product not found.");
+        await ValidateSupplierAsync(request.SupplierId, ct);
+        await ValidateCategoryAsync(request.CategoryId, ct);
 
-        product.Name = request.Name.Trim();
-        product.Description = request.Description?.Trim() ?? string.Empty;
-        product.Price = request.Price;
-        product.Stock = request.Stock;
-        product.IsActive = request.IsActive;
-        product.UpdatedAt = DateTime.UtcNow;
-
-        await _context.SaveChangesAsync();
-        return ToDto(product);
+        p.Name = request.Name;
+        p.Description = request.Description;
+        p.Price = request.Price;
+        p.Stock = request.Stock;
+        p.IsActive = request.IsActive;
+        p.SupplierId = request.SupplierId;
+        p.CategoryId = request.CategoryId;
+        p.UpdatedAt = DateTime.UtcNow;
+        await _db.SaveChangesAsync(ct);
+        return await GetByIdAsync(p.Id, ct);
     }
 
-    private static ProductDto ToDto(Product p) => new()
+    public async Task DeleteAsync(Guid id, CancellationToken ct)
     {
-        Id = p.Id,
-        Name = p.Name,
-        Description = p.Description ?? string.Empty,
-        Price = p.Price,
-        Stock = p.Stock,
-        IsActive = p.IsActive,
-        CreatedAt = p.CreatedAt
-    };
+        var p = await _db.Products.FindAsync(new object[] { id }, ct) ?? throw new KeyNotFoundException("Product not found.");
+        _db.Products.Remove(p);
+        await _db.SaveChangesAsync(ct);
+    }
 
-    private static System.Linq.Expressions.Expression<Func<Product, ProductDto>> ToDtoExpression() =>
-        p => new ProductDto
-        {
-            Id = p.Id,
-            Name = p.Name,
-            Description = p.Description ?? string.Empty,
-            Price = p.Price,
-            Stock = p.Stock,
-            IsActive = p.IsActive,
-            CreatedAt = p.CreatedAt
-        };
+    private async Task ValidateSupplierAsync(Guid? supplierId, CancellationToken ct)
+    {
+        if (supplierId is null) return;
+        bool exists = await _db.Suppliers.AnyAsync(s => s.Id == supplierId, ct);
+        if (!exists) throw new KeyNotFoundException("Supplier not found.");
+    }
+
+    private async Task ValidateCategoryAsync(int? categoryId, CancellationToken ct)
+    {
+        if (categoryId is null) return;
+        bool exists = await _db.Categories.AnyAsync(c => c.Id == categoryId, ct);
+        if (!exists) throw new KeyNotFoundException("Category not found.");
+    }
 }

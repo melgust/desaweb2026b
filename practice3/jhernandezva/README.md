@@ -162,21 +162,3 @@ dotnet ef database update --project src/Api/Api.csproj
         ├── app/                    # components, services, guards, interceptors
         └── environments/           # environment.ts / environment.prod.ts
 ```
-
-
-## Práctica 3 — Paginación Offset y Scroll Infinito
-
-La pantalla de productos permite utilizar las dos estrategias solicitadas:
-
-- **Paginación Offset:** muestra una página a la vez con los botones Anterior/Siguiente.
-- **Scroll Infinito:** reutiliza la paginación `page/pageSize` del API y carga automáticamente la siguiente página cuando el usuario se acerca al final de la lista.
-- El scroll infinito utiliza `IntersectionObserver`, por lo que también funciona cuando la primera página no alcanza la altura completa de la ventana.
-- El API valida `page` y `pageSize` y mantiene la consulta ordenada por `Id` para que las páginas sean estables.
-
-Para probarlo con Docker:
-
-```bash
-docker compose up -d --build
-```
-
-Luego ingresar a `http://localhost:81`, autenticarse y entrar al catálogo de productos. En la parte superior se puede cambiar entre **Paginación Offset** y **Scroll Infinito**.

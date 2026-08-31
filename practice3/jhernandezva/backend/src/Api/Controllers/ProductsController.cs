@@ -1,5 +1,5 @@
-using Api.Application.DTOs;
-using Api.Application.Services;
+using Application.DTOs;
+using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,46 +10,44 @@ namespace Api.Controllers;
 [Authorize]
 public class ProductsController : ControllerBase
 {
-    private readonly ProductService _productService;
+    private readonly IProductService _productService;
 
-    public ProductsController(ProductService productService)
-    {
-        _productService = productService;
-    }
+    public ProductsController(IProductService productService) => _productService = productService;
 
     [HttpGet]
-    public async Task<IActionResult> GetProducts([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    [Authorize(Roles = "Admin,Manager,User")]
+    public async Task<ActionResult<ProductPagedResult>> GetProducts([FromQuery] string? search, [FromQuery] string? sortBy, [FromQuery] string? sortDirection, [FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
     {
-        var result = await _productService.GetPagedProductsAsync(page, pageSize);
-        return Ok(result);
+        return Ok(await _productService.GetProductsAsync(search, sortBy, sortDirection, page, pageSize, ct));
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetProduct(Guid id)
+    [Authorize(Roles = "Admin,Manager,User")]
+    public async Task<ActionResult<ProductDto>> GetById(Guid id, CancellationToken ct)
     {
-        var product = await _productService.GetByIdAsync(id);
-        return product == null ? NotFound() : Ok(product);
+        return Ok(await _productService.GetByIdAsync(id, ct));
     }
 
     [HttpPost]
     [Authorize(Roles = "Admin,Manager")]
-    public async Task<IActionResult> CreateProduct([FromBody] ProductRequestDto request)
+    public async Task<ActionResult<ProductDto>> Create([FromBody] CreateProductRequest request, CancellationToken ct)
     {
-        if (string.IsNullOrWhiteSpace(request.Name) || request.Price < 0 || request.Stock < 0)
-            return BadRequest("Invalid product data.");
-
-        var product = await _productService.CreateAsync(request);
-        return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
+        var created = await _productService.CreateAsync(request, ct);
+        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     [HttpPut("{id:guid}")]
     [Authorize(Roles = "Admin,Manager")]
-    public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] ProductRequestDto request)
+    public async Task<ActionResult<ProductDto>> Update(Guid id, [FromBody] UpdateProductRequest request, CancellationToken ct)
     {
-        if (string.IsNullOrWhiteSpace(request.Name) || request.Price < 0 || request.Stock < 0)
-            return BadRequest("Invalid product data.");
+        return Ok(await _productService.UpdateAsync(id, request, ct));
+    }
 
-        var product = await _productService.UpdateAsync(id, request);
-        return product == null ? NotFound() : Ok(product);
+    [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+    {
+        await _productService.DeleteAsync(id, ct);
+        return NoContent();
     }
 }
