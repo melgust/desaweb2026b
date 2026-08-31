@@ -1,45 +1,110 @@
-<div class="container">
-  <header class="header">
-    <h2>{{ isEditMode ? 'Edit Product' : 'Create New Product' }}</h2>
-    <a routerLink="/products" class="btn">Back to List</a>
-  </header>
+<div class="form-container">
+  <h2>{{ isEditMode ? 'Edit Product' : 'New Product' }}</h2>
 
-  <form (ngSubmit)="onSubmit()" *ngIf="!loading; else loadingTpl">
-    <div class="form-group">
-      <label for="name">Product Name</label>
-      <input type="text" id="name" [(ngModel)]="formData.name" name="name" class="form-control" required />
+  <form (ngSubmit)="onSubmit()">
+
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input
+        matInput
+        [(ngModel)]="formData.name"
+        name="name"
+        required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        [(ngModel)]="formData.description"
+        name="description">
+      </textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Price</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="formData.price"
+        name="price"
+        required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Stock</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="formData.stock"
+        name="stock"
+        required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Supplier</mat-label>
+
+      <mat-select
+        [(ngModel)]="formData.supplierId"
+        name="supplierId">
+
+        <mat-option [value]="null">
+          No supplier
+        </mat-option>
+
+        <mat-option
+          *ngFor="let supplier of suppliers()"
+          [value]="supplier.id">
+          {{ supplier.name }}
+        </mat-option>
+
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Category</mat-label>
+
+      <mat-select
+        [(ngModel)]="formData.categoryId"
+        name="categoryId">
+
+        <mat-option [value]="null">
+          No category
+        </mat-option>
+
+        <mat-option
+          *ngFor="let category of categories()"
+          [value]="category.id">
+          {{ category.name }}
+        </mat-option>
+
+      </mat-select>
+    </mat-form-field>
+
+    <mat-checkbox
+      [(ngModel)]="formData.isActive"
+      name="isActive">
+      Active
+    </mat-checkbox>
+
+    <div class="form-actions">
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="loading">
+        {{ isEditMode ? 'Update' : 'Create' }}
+      </button>
+
+      <button
+        mat-button
+        type="button"
+        routerLink="/products">
+        Cancel
+      </button>
+
     </div>
 
-    <div class="form-group">
-      <label for="description">Description</label>
-      <textarea id="description" [(ngModel)]="formData.description" name="description" class="form-control" rows="3"></textarea>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group col">
-        <label for="price">Price ($)</label>
-        <input type="number" id="price" [(ngModel)]="formData.price" name="price" class="form-control" step="0.01" required />
-      </div>
-
-      <div class="form-group col">
-        <label for="stock">Stock Quantity</label>
-        <input type="number" id="stock" [(ngModel)]="formData.stock" name="stock" class="form-control" required />
-      </div>
-    </div>
-
-    <div class="form-group checkbox-group">
-      <label>
-        <input type="checkbox" [(ngModel)]="formData.isActive" name="isActive" />
-        Is Active
-      </label>
-    </div>
-
-    <button type="submit" class="btn btn-primary">
-      {{ isEditMode ? 'Update Product' : 'Create Product' }}
-    </button>
   </form>
-
-  <ng-template #loadingTpl>
-    <div>Loading form data...</div>
-  </ng-template>
 </div>

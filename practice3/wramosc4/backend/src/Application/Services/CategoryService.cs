@@ -1,0 +1,218 @@
+using Application.DTOs;
+using Domain.Entities;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace Application.Services;
+
+public interface ICategoryService
+{
+    Task<CategoryPagedResult> GetCategoriesAsync(
+        string? search,
+        string? sortBy,
+        string? sortDirection,
+        int page,
+        int pageSize,
+        CancellationToken ct
+    );
+
+    Task<IEnumerable<CategoryDto>> GetAllAsync(CancellationToken ct);
+
+    Task<CategoryDto> GetByIdAsync(Guid id, CancellationToken ct);
+
+    Task<CategoryDto> CreateAsync(
+        CreateCategoryRequest request,
+        CancellationToken ct
+    );
+
+    Task<CategoryDto> UpdateAsync(
+        Guid id,
+        UpdateCategoryRequest request,
+        CancellationToken ct
+    );
+
+    Task DeleteAsync(Guid id, CancellationToken ct);
+}
+
+public class CategoryService : ICategoryService
+{
+    private readonly AppDbContext _db;
+
+    public CategoryService(AppDbContext db)
+    {
+        _db = db;
+    }
+
+    public async Task<CategoryPagedResult> GetCategoriesAsync(
+        string? search,
+        string? sortBy,
+        string? sortDirection,
+        int page,
+        int pageSize,
+        CancellationToken ct
+    )
+    {
+        var query = _db.Categories.AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var lower = search.ToLower();
+
+            query = query.Where(c =>
+                c.Name.ToLower().Contains(lower) ||
+                (c.Description != null &&
+                 c.Description.ToLower().Contains(lower))
+            );
+        }
+
+        bool isDesc = sortDirection?.ToLower() == "desc";
+
+        query = sortBy?.ToLower() switch
+        {
+            "createdat" => isDesc
+                ? query.OrderByDescending(c => c.CreatedAt)
+                : query.OrderBy(c => c.CreatedAt),
+
+            _ => isDesc
+                ? query.OrderByDescending(c => c.Name)
+                : query.OrderBy(c => c.Name)
+        };
+
+        int totalItems = await query.CountAsync(ct);
+
+        int totalPages =
+            (int)Math.Ceiling(totalItems / (double)pageSize);
+
+        var items = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(c => new CategoryDto(
+                c.Id,
+                c.Name,
+                c.Description,
+                c.IsActive,
+                c.CreatedAt
+            ))
+            .ToListAsync(ct);
+
+        return new CategoryPagedResult(
+            items,
+            totalItems,
+            page,
+            pageSize,
+            totalPages
+        );
+    }
+
+    public async Task<IEnumerable<CategoryDto>> GetAllAsync(
+        CancellationToken ct
+    )
+    {
+        return await _db.Categories
+            .AsNoTracking()
+            .Where(c => c.IsActive)
+            .OrderBy(c => c.Name)
+            .Select(c => new CategoryDto(
+                c.Id,
+                c.Name,
+                c.Description,
+                c.IsActive,
+                c.CreatedAt
+            ))
+            .ToListAsync(ct);
+    }
+
+    public async Task<CategoryDto> GetByIdAsync(
+        Guid id,
+        CancellationToken ct
+    )
+    {
+        var category = await _db.Categories
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == id, ct)
+            ?? throw new KeyNotFoundException("Category not found.");
+
+        return new CategoryDto(
+            category.Id,
+            category.Name,
+            category.Description,
+            category.IsActive,
+            category.CreatedAt
+        );
+    }
+
+    public async Task<CategoryDto> CreateAsync(
+        CreateCategoryRequest request,
+        CancellationToken ct
+    )
+    {
+        var category = new Category
+        {
+            Name = request.Name,
+            Description = request.Description,
+            IsActive = request.IsActive
+        };
+
+        _db.Categories.Add(category);
+
+        await _db.SaveChangesAsync(ct);
+
+        return new CategoryDto(
+            category.Id,
+            category.Name,
+            category.Description,
+            category.IsActive,
+            category.CreatedAt
+        );
+    }
+
+    public async Task<CategoryDto> UpdateAsync(
+        Guid id,
+        UpdateCategoryRequest request,
+        CancellationToken ct
+    )
+    {
+        var category = await _db.Categories
+            .FirstOrDefaultAsync(c => c.Id == id, ct)
+            ?? throw new KeyNotFoundException("Category not found.");
+
+        category.Name = request.Name;
+        category.Description = request.Description;
+        category.IsActive = request.IsActive;
+        category.UpdatedAt = DateTime.UtcNow;
+
+        await _db.SaveChangesAsync(ct);
+
+        return new CategoryDto(
+            category.Id,
+            category.Name,
+            category.Description,
+            category.IsActive,
+            category.CreatedAt
+        );
+    }
+
+    public async Task DeleteAsync(
+        Guid id,
+        CancellationToken ct
+    )
+    {
+        var category = await _db.Categories
+            .FirstOrDefaultAsync(c => c.Id == id, ct)
+            ?? throw new KeyNotFoundException("Category not found.");
+
+        bool hasProducts = await _db.Products
+            .AnyAsync(p => p.CategoryId == id, ct);
+
+        if (hasProducts)
+        {
+            throw new InvalidOperationException(
+                "Category cannot be deleted because it has products assigned."
+            );
+        }
+
+        _db.Categories.Remove(category);
+
+        await _db.SaveChangesAsync(ct);
+    }
+}
