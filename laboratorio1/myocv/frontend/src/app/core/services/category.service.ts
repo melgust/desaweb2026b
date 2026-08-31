@@ -1,0 +1,48 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { Category, CategoryPagedResult } from '../models/category';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CategoryService {
+  private readonly apiUrl = `${environment.apiUrl}/category`;
+
+  constructor(private http: HttpClient) {}
+
+  getCategories(
+    search?: string,
+    sortBy?: string,
+    sortDirection?: string,
+    page: number = 1,
+    pageSize: number = 10
+  ): Observable<CategoryPagedResult> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+
+    if (search) params = params.set('search', search);
+    if (sortBy) params = params.set('sortBy', sortBy);
+    if (sortDirection) params = params.set('sortDirection', sortDirection);
+
+    return this.http.get<CategoryPagedResult>(this.apiUrl, { params });
+  }
+
+  getCategoryById(id: string): Observable<Category> {
+    return this.http.get<Category>(`${this.apiUrl}/${id}`);
+  }
+
+  createCategory(category: Partial<Category>): Observable<Category> {
+    return this.http.post<Category>(this.apiUrl, category);
+  }
+
+  updateCategory(id: string, category: Partial<Category>): Observable<Category> {
+    return this.http.put<Category>(`${this.apiUrl}/${id}`, category);
+  }
+
+  deleteCategory(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+}

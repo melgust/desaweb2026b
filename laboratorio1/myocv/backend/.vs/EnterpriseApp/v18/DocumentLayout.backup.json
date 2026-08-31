@@ -1,0 +1,170 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|c:\\users\\mahue\\desktop\\2026\\umg\\semestre 2\\desarrollo web\\laboratorio 29-08-2026\\mahuerk\\backend\\src\\api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|solutionrelative:src\\api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|c:\\users\\mahue\\desktop\\2026\\umg\\semestre 2\\desarrollo web\\laboratorio 29-08-2026\\mahuerk\\backend\\src\\infrastructure\\data\\appdbcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|solutionrelative:src\\infrastructure\\data\\appdbcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|c:\\users\\mahue\\desktop\\2026\\umg\\semestre 2\\desarrollo web\\laboratorio 29-08-2026\\mahuerk\\backend\\src\\infrastructure\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|solutionrelative:src\\infrastructure\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|c:\\users\\mahue\\desktop\\2026\\umg\\semestre 2\\desarrollo web\\laboratorio 29-08-2026\\mahuerk\\backend\\src\\api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|solutionrelative:src\\api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|c:\\users\\mahue\\desktop\\2026\\umg\\semestre 2\\desarrollo web\\laboratorio 29-08-2026\\mahuerk\\backend\\src\\api\\controllers\\categoriescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|solutionrelative:src\\api\\controllers\\categoriescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|c:\\users\\mahue\\desktop\\2026\\umg\\semestre 2\\desarrollo web\\laboratorio 29-08-2026\\mahuerk\\backend\\src\\api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|solutionrelative:src\\api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|c:\\users\\mahue\\desktop\\2026\\umg\\semestre 2\\desarrollo web\\laboratorio 29-08-2026\\mahuerk\\backend\\src\\api\\controllers\\productscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|solutionrelative:src\\api\\controllers\\productscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|c:\\users\\mahue\\desktop\\2026\\umg\\semestre 2\\desarrollo web\\laboratorio 29-08-2026\\mahuerk\\backend\\src\\application\\services\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|solutionrelative:src\\application\\services\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|c:\\users\\mahue\\desktop\\2026\\umg\\semestre 2\\desarrollo web\\laboratorio 29-08-2026\\mahuerk\\backend\\src\\api\\data\\migrations\\20260830165748_addcategorytoproduct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A1B2C3D4-E5F6-7A8B-9C0D-1E2F3A4B5C6D}|src\\Api\\Api.csproj|solutionrelative:src\\api\\data\\migrations\\20260830165748_addcategorytoproduct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Api\\appsettings.json",
+              "RelativeDocumentMoniker": "src\\Api\\appsettings.json",
+              "ToolTip": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Api\\appsettings.json",
+              "RelativeToolTip": "src\\Api\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-08-31T01:12:27.867Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Infrastructure\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "src\\Infrastructure\\Data\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Infrastructure\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "src\\Infrastructure\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-31T00:49:02.093Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Api\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "src\\Api\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Api\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "src\\Api\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-30T23:04:22.061Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "CategoryService.cs",
+              "DocumentMoniker": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Application\\Services\\CategoryService.cs",
+              "RelativeDocumentMoniker": "src\\Application\\Services\\CategoryService.cs",
+              "ToolTip": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Application\\Services\\CategoryService.cs",
+              "RelativeToolTip": "src\\Application\\Services\\CategoryService.cs",
+              "ViewState": "AgIAADAAAAAAAAAAAAAIwD4AAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-30T18:52:03.98Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CategoriesController.cs",
+              "DocumentMoniker": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Api\\Controllers\\CategoriesController.cs",
+              "RelativeDocumentMoniker": "src\\Api\\Controllers\\CategoriesController.cs",
+              "ToolTip": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Api\\Controllers\\CategoriesController.cs",
+              "RelativeToolTip": "src\\Api\\Controllers\\CategoriesController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-30T18:36:15.68Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Api\\Program.cs",
+              "RelativeDocumentMoniker": "src\\Api\\Program.cs",
+              "ToolTip": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Api\\Program.cs",
+              "RelativeToolTip": "src\\Api\\Program.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABIAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-30T18:34:43.893Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ProductsController.cs",
+              "DocumentMoniker": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Api\\Controllers\\ProductsController.cs",
+              "RelativeDocumentMoniker": "src\\Api\\Controllers\\ProductsController.cs",
+              "ToolTip": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Api\\Controllers\\ProductsController.cs",
+              "RelativeToolTip": "src\\Api\\Controllers\\ProductsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-30T18:09:36.234Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "20260830165748_AddCategoryToProduct.cs",
+              "DocumentMoniker": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Api\\Data\\Migrations\\20260830165748_AddCategoryToProduct.cs",
+              "RelativeDocumentMoniker": "src\\Api\\Data\\Migrations\\20260830165748_AddCategoryToProduct.cs",
+              "ToolTip": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Api\\Data\\Migrations\\20260830165748_AddCategoryToProduct.cs",
+              "RelativeToolTip": "src\\Api\\Data\\Migrations\\20260830165748_AddCategoryToProduct.cs",
+              "ViewState": "AgIAADQAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-30T16:57:49.52Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AppDbContextFactory.cs",
+              "DocumentMoniker": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Infrastructure\\Data\\AppDbContextFactory.cs",
+              "RelativeDocumentMoniker": "src\\Infrastructure\\Data\\AppDbContextFactory.cs",
+              "ToolTip": "C:\\Users\\Mahue\\Desktop\\2026\\UMG\\Semestre 2\\Desarrollo web\\LABORATORIO 29-08-2026\\mahuerk\\backend\\src\\Infrastructure\\Data\\AppDbContextFactory.cs",
+              "RelativeToolTip": "src\\Infrastructure\\Data\\AppDbContextFactory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-29T18:32:04.931Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
