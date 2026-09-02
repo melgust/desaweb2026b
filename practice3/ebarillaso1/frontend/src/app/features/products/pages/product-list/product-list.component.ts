@@ -60,7 +60,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   sortBy = 'name';
   sortDirection: 'asc' | 'desc' = 'asc';
 
-  displayedColumns: string[] = ['name', 'description', 'price', 'stock', 'supplier'];
+  displayedColumns: string[] = ['name', 'description', 'price', 'stock', 'category', 'supplier'];
 
   private intersectionObserver?: IntersectionObserver;
 

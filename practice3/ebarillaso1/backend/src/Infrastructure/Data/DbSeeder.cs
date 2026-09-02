@@ -59,5 +59,21 @@ public static class DbSeeder
         }
 
         await db.SaveChangesAsync(ct);
+
+        // --- Categories ---
+        string[] defaultCategories =
+        {
+            "Electrónica", "Oficina", "Mobiliario", "Cómputo", "Accesorios"
+        };
+
+        foreach (var name in defaultCategories)
+        {
+            if (!await db.Categories.AnyAsync(c => c.Name == name, ct))
+            {
+                db.Categories.Add(new Category { Name = name, IsActive = true });
+            }
+        }
+
+        await db.SaveChangesAsync(ct);
     }
 }

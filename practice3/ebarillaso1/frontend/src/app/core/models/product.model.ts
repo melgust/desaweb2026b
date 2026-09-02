@@ -8,6 +8,8 @@ export interface Product {
   createdAt: string;
   supplierId?: string | null;
   supplierName?: string | null;
+  categoryId?: string | null;
+  categoryName?: string | null;
 }
 
 export interface ProductPagedResult {

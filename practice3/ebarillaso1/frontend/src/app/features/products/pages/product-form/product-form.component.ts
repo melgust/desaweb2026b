@@ -9,7 +9,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { ProductService } from '../../../../core/services/product.service';
 import { SupplierService } from '../../../../core/services/supplier.service';
+import { CategoryService } from '../../../../core/services/category.service';
 import { Supplier } from '../../../../core/models/supplier.model';
+import { Category } from '../../../../core/models/category.model';
 
 @Component({
   selector: 'app-product-form',
@@ -33,6 +35,7 @@ export class ProductFormComponent implements OnInit {
   loading = false;
 
   suppliers = signal<Supplier[]>([]);
+  categories = signal<Category[]>([]);
 
   formData = {
     name: '',
@@ -40,12 +43,14 @@ export class ProductFormComponent implements OnInit {
     price: 0,
     stock: 0,
     isActive: true,
-    supplierId: null as string | null
+    supplierId: null as string | null,
+    categoryId: null as string | null
   };
 
   constructor(
     private productService: ProductService,
     private supplierService: SupplierService,
+    private categoryService: CategoryService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -54,6 +59,11 @@ export class ProductFormComponent implements OnInit {
     this.supplierService.getAllSuppliers().subscribe({
       next: (list) => this.suppliers.set(list),
       error: () => this.suppliers.set([])
+    });
+
+    this.categoryService.getAllCategories().subscribe({
+      next: (list) => this.categories.set(list),
+      error: () => this.categories.set([])
     });
 
     this.productId = this.route.snapshot.paramMap.get('id');
@@ -73,7 +83,8 @@ export class ProductFormComponent implements OnInit {
           price: product.price,
           stock: product.stock,
           isActive: product.isActive,
-          supplierId: product.supplierId ?? null
+          supplierId: product.supplierId ?? null,
+          categoryId: product.categoryId ?? null
         };
         this.loading = false;
       },

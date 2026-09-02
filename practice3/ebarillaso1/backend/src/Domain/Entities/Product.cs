@@ -14,4 +14,8 @@ public class Product
     // Many products belong to one supplier (optional).
     public Guid? SupplierId { get; set; }
     public Supplier? Supplier { get; set; }
+
+    // Many products belong to one category (optional).
+    public Guid? CategoryId { get; set; }
+    public Category? Category { get; set; }
 }
