@@ -6,7 +6,7 @@ set -e
 echo "🚀 Creating Enterprise Solution directory structure..."
 
 # Set root project path
-ROOT_DIR="mcalic1"
+ROOT_DIR="emoralesm371"
 
 # -----------------------------------------------------------------------------
 # 1. Create Directory Hierarchy

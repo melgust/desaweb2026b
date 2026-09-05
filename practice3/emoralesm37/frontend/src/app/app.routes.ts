@@ -69,5 +69,53 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+  path: 'clients',
+  canActivate: [authGuard],
+  children: [
+    {
+      path: '',
+      loadComponent: () =>
+        import(
+          './features/clients/pages/client-list/client-list.component'
+        ).then(
+          (m) =>
+            m.ClientListComponent
+        )
+    },
+    {
+      path: 'new',
+      canActivate: [
+        roleGuard([
+          'Admin',
+          'Manager'
+        ])
+      ],
+      loadComponent: () =>
+        import(
+          './features/clients/pages/client-form/client-form.component'
+        ).then(
+          (m) =>
+            m.ClientFormComponent
+        )
+    },
+    {
+      path: 'edit/:id',
+      canActivate: [
+        roleGuard([
+          'Admin',
+          'Manager'
+        ])
+      ],
+      loadComponent: () =>
+        import(
+          './features/clients/pages/client-form/client-form.component'
+        ).then(
+          (m) =>
+            m.ClientFormComponent
+        )
+    }
+  ]
+  },
   { path: '**', redirectTo: 'products' },
 ];

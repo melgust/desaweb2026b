@@ -1,0 +1,132 @@
+<div class="card">
+
+  <div
+    class="card-header d-flex justify-content-between align-items-center">
+
+    <h3 class="card-title mb-0">
+
+      {{
+        isEditMode
+          ? 'Edit Client'
+          : 'Create Client'
+      }}
+
+    </h3>
+
+    <a
+      routerLink="/clients"
+      class="btn btn-secondary btn-sm">
+
+      Back to List
+
+    </a>
+
+  </div>
+
+
+  <div class="card-body">
+
+    <form
+      *ngIf="!loading"
+      (ngSubmit)="onSubmit()"
+      class="client-form">
+
+      <mat-form-field
+        appearance="outline"
+        class="full-width">
+
+        <mat-label>
+          Name
+        </mat-label>
+
+        <input
+          matInput
+          [(ngModel)]="formData.name"
+          name="name"
+          required>
+
+      </mat-form-field>
+
+
+      <mat-form-field
+        appearance="outline"
+        class="full-width">
+
+        <mat-label>
+          Email
+        </mat-label>
+
+        <input
+          matInput
+          type="email"
+          [(ngModel)]="formData.email"
+          name="email">
+
+      </mat-form-field>
+
+
+      <mat-form-field
+        appearance="outline"
+        class="full-width">
+
+        <mat-label>
+          Phone
+        </mat-label>
+
+        <input
+          matInput
+          [(ngModel)]="formData.phone"
+          name="phone">
+
+      </mat-form-field>
+
+
+      <mat-form-field
+        appearance="outline"
+        class="full-width">
+
+        <mat-label>
+          Address
+        </mat-label>
+
+        <textarea
+          matInput
+          [(ngModel)]="formData.address"
+          name="address"
+          rows="3">
+        </textarea>
+
+      </mat-form-field>
+
+
+      <mat-checkbox
+        [(ngModel)]="formData.isActive"
+        name="isActive">
+
+        Is Active
+
+      </mat-checkbox>
+
+
+      <div class="form-actions">
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit">
+
+          {{
+            isEditMode
+              ? 'Update Client'
+              : 'Create Client'
+          }}
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

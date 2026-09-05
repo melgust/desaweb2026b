@@ -19,4 +19,8 @@ public class Product
     // Many products belong to one category.
     public Guid? CategoriaId { get; set; }
     public Categoria? Categoria { get; set; }
+
+    // One product can appear in many invoice details.
+    public ICollection<Detail> Details { get; set; }
+    = new List<Detail>();
 }

@@ -1,0 +1,91 @@
+.form-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(220px, 1fr)
+    );
+  gap: 16px;
+}
+
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.detail-row {
+  display: grid;
+
+  grid-template-columns:
+    minmax(220px, 2fr)
+    minmax(100px, 0.7fr)
+    minmax(130px, 1fr)
+    minmax(130px, 1fr)
+    50px;
+
+  gap: 12px;
+
+  align-items: start;
+}
+
+.product-field {
+  width: 100%;
+}
+
+.remove-button {
+  margin-top: 8px;
+}
+
+.invoice-total {
+  display: flex;
+
+  justify-content:
+    flex-end;
+
+  gap: 30px;
+
+  align-items: center;
+
+  font-size: 1.4rem;
+
+  margin-top: 20px;
+
+  padding: 15px;
+
+  border-top:
+    2px solid #ddd;
+}
+
+.form-actions {
+  display: flex;
+
+  justify-content:
+    flex-end;
+
+  gap: 10px;
+
+  margin-top: 25px;
+}
+
+.empty-details {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+}
+
+@media (
+  max-width: 900px
+) {
+
+  .detail-row {
+
+    grid-template-columns:
+      1fr;
+  }
+
+  .remove-button {
+    margin-top: 0;
+  }
+}

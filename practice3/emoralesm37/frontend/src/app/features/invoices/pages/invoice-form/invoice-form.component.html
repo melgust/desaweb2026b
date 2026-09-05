@@ -1,0 +1,383 @@
+<div class="card">
+
+  <div
+    class="card-header d-flex justify-content-between align-items-center">
+
+    <h3 class="card-title mb-0">
+
+      {{
+        isEditMode
+          ? 'Edit Invoice'
+          : 'Create Invoice'
+      }}
+
+    </h3>
+
+    <a
+      routerLink="/invoices"
+      class="btn btn-secondary btn-sm">
+
+      Back to List
+
+    </a>
+
+  </div>
+
+
+  <mat-progress-bar
+    *ngIf="loading || saving"
+    mode="indeterminate">
+  </mat-progress-bar>
+
+
+  <div
+    class="card-body"
+    *ngIf="!loading">
+
+
+    <!-- Invoice general information -->
+
+    <div class="form-grid">
+
+      <mat-form-field
+        appearance="outline">
+
+        <mat-label>
+          Invoice Number
+        </mat-label>
+
+        <input
+          matInput
+          [(ngModel)]="
+            formData.invoiceNumber
+          "
+          name="invoiceNumber"
+          required>
+
+      </mat-form-field>
+
+
+      <mat-form-field
+        appearance="outline">
+
+        <mat-label>
+          Invoice Date
+        </mat-label>
+
+        <input
+          matInput
+          type="date"
+          [(ngModel)]="
+            formData.invoiceDate
+          "
+          name="invoiceDate"
+          required>
+
+      </mat-form-field>
+
+
+      <mat-form-field
+        appearance="outline">
+
+        <mat-label>
+          Client
+        </mat-label>
+
+        <mat-select
+          [(ngModel)]="
+            formData.clientId
+          "
+          name="clientId"
+          required>
+
+          <mat-option
+            value="">
+
+            Select client
+
+          </mat-option>
+
+          <mat-option
+            *ngFor="
+              let client
+              of clients
+            "
+            [value]="client.id">
+
+            {{ client.name }}
+
+          </mat-option>
+
+        </mat-select>
+
+      </mat-form-field>
+
+    </div>
+
+
+    <mat-checkbox
+      [(ngModel)]="
+        formData.isActive
+      "
+      name="isActive">
+
+      Active Invoice
+
+    </mat-checkbox>
+
+
+    <hr>
+
+
+    <!-- Details header -->
+
+    <div
+      class="details-header">
+
+      <h4>
+        Invoice Details
+      </h4>
+
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        (click)="addDetail()">
+
+        <mat-icon>
+          add
+        </mat-icon>
+
+        Add Product
+
+      </button>
+
+    </div>
+
+
+    <!-- Details -->
+
+    <div
+      class="detail-row"
+      *ngFor="
+        let detail
+        of formData.details;
+        let i = index
+      ">
+
+
+      <!-- Product -->
+
+      <mat-form-field
+        appearance="outline"
+        class="product-field">
+
+        <mat-label>
+          Product
+        </mat-label>
+
+        <mat-select
+          [(ngModel)]="
+            detail.productId
+          "
+          [name]="
+            'product-' + i
+          "
+          (selectionChange)="
+            onProductChange(detail)
+          "
+          required>
+
+          <mat-option
+            value="">
+
+            Select Product
+
+          </mat-option>
+
+          <mat-option
+            *ngFor="
+              let product
+              of products
+            "
+            [value]="product.id">
+
+            {{ product.name }}
+
+          </mat-option>
+
+        </mat-select>
+
+      </mat-form-field>
+
+
+      <!-- Quantity -->
+
+      <mat-form-field
+        appearance="outline">
+
+        <mat-label>
+          Quantity
+        </mat-label>
+
+        <input
+          matInput
+          type="number"
+          min="1"
+          [(ngModel)]="
+            detail.quantity
+          "
+          [name]="
+            'quantity-' + i
+          "
+          (ngModelChange)="
+            calculateSubtotal(detail)
+          "
+          required>
+
+      </mat-form-field>
+
+
+      <!-- Unit Price -->
+
+      <mat-form-field
+        appearance="outline">
+
+        <mat-label>
+          Unit Price
+        </mat-label>
+
+        <input
+          matInput
+          type="number"
+          min="0"
+          step="0.01"
+          [(ngModel)]="
+            detail.unitPrice
+          "
+          [name]="
+            'unitPrice-' + i
+          "
+          (ngModelChange)="
+            calculateSubtotal(detail)
+          "
+          required>
+
+      </mat-form-field>
+
+
+      <!-- Subtotal -->
+
+      <mat-form-field
+        appearance="outline">
+
+        <mat-label>
+          Subtotal
+        </mat-label>
+
+        <input
+          matInput
+          [value]="
+            detail.subtotal
+              | number:'1.2-2'
+          "
+          readonly>
+
+      </mat-form-field>
+
+
+      <!-- Delete detail -->
+
+      <button
+        mat-icon-button
+        color="warn"
+        type="button"
+        class="remove-button"
+        [disabled]="
+          formData.details.length === 1
+        "
+        (click)="removeDetail(i)">
+
+        <mat-icon>
+          delete
+        </mat-icon>
+
+      </button>
+
+    </div>
+
+
+    <!-- Empty -->
+
+    <div
+      *ngIf="
+        formData.details.length === 0
+      "
+      class="empty-details">
+
+      No products have been added.
+
+    </div>
+
+
+    <!-- Total -->
+
+    <div class="invoice-total">
+
+      <span>
+        TOTAL
+      </span>
+
+      <strong>
+
+        {{
+          formData.total
+            | currency:
+              'GTQ':
+              'symbol-narrow'
+        }}
+
+      </strong>
+
+    </div>
+
+
+    <!-- Actions -->
+
+    <div class="form-actions">
+
+      <a
+        routerLink="/invoices"
+        mat-button>
+
+        Cancel
+
+      </a>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        [disabled]="
+          saving ||
+          !isFormValid()
+        "
+        (click)="onSubmit()">
+
+        <mat-icon>
+          save
+        </mat-icon>
+
+        {{
+          isEditMode
+            ? 'Update Invoice'
+            : 'Create Invoice'
+        }}
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
