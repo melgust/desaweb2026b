@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Juan Pérez",
+    "birthday": "1998-06-15",
+    "email": "juan.perez@email.com"
+  },
+  {
+    "id": 2,
+    "name": "Ana López",
+    "birthday": "1992-10-20",
+    "email": "ana.lopez@email.com"
+  },
+  {
+    "id": 3,
+    "name": "Carlos Gómez",
+    "birthday": "2001-03-08",
+    "email": "carlos.gomez@email.com"
+  },
+  {
+    "id": 4,
+    "name": "María Rodríguez",
+    "birthday": "1995-12-01",
+    "email": "maria.rodriguez@email.com"
+  },
+  {
+    "id": 5,
+    "name": "Luis Hernández",
+    "birthday": "1989-07-25",
+    "email": "luis.hernandez@email.com"
+  }
+]
