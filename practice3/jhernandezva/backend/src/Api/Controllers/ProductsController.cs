@@ -21,6 +21,13 @@ public class ProductsController : ControllerBase
         return Ok(await _productService.GetProductsAsync(search, sortBy, sortDirection, page, pageSize, ct));
     }
 
+    [HttpGet("all")]
+    [Authorize(Roles = "Admin,Manager,User")]
+    public async Task<ActionResult<IEnumerable<ProductDto>>> GetAll(CancellationToken ct)
+    {
+        return Ok(await _productService.GetAllAsync(ct));
+    }
+
     [HttpGet("{id:guid}")]
     [Authorize(Roles = "Admin,Manager,User")]
     public async Task<ActionResult<ProductDto>> GetById(Guid id, CancellationToken ct)

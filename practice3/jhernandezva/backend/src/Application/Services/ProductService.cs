@@ -12,6 +12,7 @@ public interface IProductService
     Task<ProductDto> CreateAsync(CreateProductRequest request, CancellationToken ct);
     Task<ProductDto> UpdateAsync(Guid id, UpdateProductRequest request, CancellationToken ct);
     Task DeleteAsync(Guid id, CancellationToken ct);
+    Task<IEnumerable<ProductDto>> GetAllAsync(CancellationToken ct);
 }
 
 public class ProductService : IProductService
@@ -19,7 +20,17 @@ public class ProductService : IProductService
     private readonly AppDbContext _db;
 
     public ProductService(AppDbContext db) => _db = db;
-
+    
+     public async Task<IEnumerable<ProductDto>> GetAllAsync(CancellationToken ct)
+    {
+        return await _db.Products.AsNoTracking()
+            .Where(p => p.IsActive)
+            .OrderBy(p => p.Name)
+            .Select(p => new ProductDto(p.Id, p.Name, p.Description, p.Price, p.Stock, p.IsActive, p.CreatedAt,
+                p.SupplierId, p.Supplier != null ? p.Supplier.Name : null,
+                p.CategoryId, p.Category != null ? p.Category.Name : null))
+            .ToListAsync(ct);
+    }
     public async Task<ProductPagedResult> GetProductsAsync(string? search, string? sortBy, string? sortDirection, int page, int pageSize, CancellationToken ct)
     {
         var query = _db.Products.AsNoTracking();

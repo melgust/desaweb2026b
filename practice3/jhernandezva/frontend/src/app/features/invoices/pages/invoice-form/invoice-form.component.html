@@ -1,0 +1,71 @@
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h3 class="card-title mb-0">{{ isEditMode ? 'Edit Invoice' : 'Create Invoice' }}</h3>
+    <a routerLink="/invoices" class="btn btn-secondary btn-sm">Back to List</a>
+  </div>
+
+  <div class="card-body">
+    <form (ngSubmit)="onSubmit()" *ngIf="!loading; else loadingTpl" class="invoice-form">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Client</mat-label>
+          <mat-select [(ngModel)]="clientId" name="clientId" required>
+            <mat-option *ngFor="let c of clients()" [value]="c.id">{{ c.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Issue Date</mat-label>
+          <input matInput type="date" [(ngModel)]="issueDate" name="issueDate" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select [(ngModel)]="status" name="status" required>
+            <mat-option *ngFor="let s of statusOptions" [value]="s">{{ s }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <h4>Invoice Lines</h4>
+
+      <div class="invoice-line" *ngFor="let line of lines; let i = index">
+        <mat-form-field appearance="outline" class="product-field">
+          <mat-label>Product</mat-label>
+          <mat-select [(ngModel)]="line.productId" [name]="'product' + i" required>
+            <mat-option *ngFor="let p of products()" [value]="p.id">{{ p.name }} ({{ p.price | currency }})</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="qty-field">
+          <mat-label>Qty</mat-label>
+          <input matInput type="number" min="1" [(ngModel)]="line.quantity" [name]="'qty' + i" required />
+        </mat-form-field>
+
+        <span class="line-subtotal">{{ lineSubtotal(line) | currency }}</span>
+
+        <button mat-icon-button color="warn" type="button" (click)="removeLine(i)" [disabled]="lines.length === 1" title="Remove line">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
+      <button mat-stroked-button type="button" (click)="addLine()" class="add-line-btn">
+        + Add Line
+      </button>
+
+      <div class="invoice-total">
+        <strong>Total: {{ total | currency }}</strong>
+      </div>
+
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit">
+          {{ isEditMode ? 'Update Invoice' : 'Create Invoice' }}
+        </button>
+      </div>
+    </form>
+
+    <ng-template #loadingTpl>
+      <div>Loading form data...</div>
+    </ng-template>
+  </div>
+</div>
