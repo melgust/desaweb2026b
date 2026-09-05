@@ -12,6 +12,9 @@ public class AppDbContext : DbContext
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Supplier> Suppliers => Set<Supplier>();
     public DbSet<Category> Categories => Set<Category>();
+    public DbSet<Client> Clients => Set<Client>();
+    public DbSet<Invoice> Invoices => Set<Invoice>();
+    public DbSet<InvoiceDetail> InvoiceDetails => Set<InvoiceDetail>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -30,5 +33,18 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Product>().HasOne(p => p.Category).WithMany(c => c.Products).HasForeignKey(p => p.CategoryId).OnDelete(DeleteBehavior.SetNull);
         modelBuilder.Entity<Supplier>().HasIndex(s => s.Name);
         modelBuilder.Entity<Category>().HasIndex(c => c.Name);
+
+        modelBuilder.Entity<Client>().HasIndex(c => c.Name);
+        modelBuilder.Entity<Client>().HasIndex(c => c.Email).IsUnique();
+        modelBuilder.Entity<Invoice>().HasIndex(i => i.InvoiceNumber).IsUnique();
+        modelBuilder.Entity<Invoice>().HasIndex(i => new { i.ClientId, i.Date });
+        modelBuilder.Entity<Invoice>().Property(i => i.Total).HasPrecision(18, 2);
+        modelBuilder.Entity<Invoice>().HasOne(i => i.Client).WithMany(c => c.Invoices).HasForeignKey(i => i.ClientId).OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<InvoiceDetail>().HasIndex(d => d.InvoiceId);
+        modelBuilder.Entity<InvoiceDetail>().HasIndex(d => d.ProductId);
+        modelBuilder.Entity<InvoiceDetail>().Property(d => d.UnitPrice).HasPrecision(18, 2);
+        modelBuilder.Entity<InvoiceDetail>().Property(d => d.Subtotal).HasPrecision(18, 2);
+        modelBuilder.Entity<InvoiceDetail>().HasOne(d => d.Invoice).WithMany(i => i.Details).HasForeignKey(d => d.InvoiceId).OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<InvoiceDetail>().HasOne(d => d.Product).WithMany(p => p.InvoiceDetails).HasForeignKey(d => d.ProductId).OnDelete(DeleteBehavior.Restrict);
     }
 }

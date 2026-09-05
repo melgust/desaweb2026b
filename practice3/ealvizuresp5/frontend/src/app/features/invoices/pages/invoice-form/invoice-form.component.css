@@ -1,0 +1,1 @@
+.form-group { margin-bottom: 16px; } .form-group label { display: block; margin-bottom: 6px; font-weight: 500; } .detail-entry { display: flex; gap: 12px; align-items: end; } .detail-entry .product { flex: 1; } .detail-entry .quantity { width: 140px; } .detail-entry .btn { margin-bottom: 16px; } .error { color: #dc2626; margin: 12px 0; } tfoot th { font-size: 16px; }

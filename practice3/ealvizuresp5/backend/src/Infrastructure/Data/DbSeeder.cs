@@ -98,6 +98,15 @@ public static class DbSeeder
         }
         await db.SaveChangesAsync(ct);
 
+        // --- Clients ---
+        if (!await db.Clients.AnyAsync(ct))
+        {
+            db.Clients.AddRange(
+                new Client { Name = "Cliente Demostración", Email = "cliente@empresa.gt", Phone = "+502 5555-0101", Address = "Ciudad de Guatemala" },
+                new Client { Name = "Comercial Los Altos", Email = "compras@losaltos.gt", Phone = "+502 5555-0202", Address = "Quetzaltenango" });
+            await db.SaveChangesAsync(ct);
+        }
+
         // --- Products ---
         if (!await db.Products.AnyAsync(ct))
         {
@@ -241,7 +250,9 @@ public static class DbSeeder
         }
 
         // Assign categories without deleting or replacing existing products.
-        var categories = await db.Categories.ToDictionaryAsync(c => c.Name, ct);
+        var categories = (await db.Categories.AsNoTracking().ToListAsync(ct))
+            .GroupBy(c => c.Name)
+            .ToDictionary(group => group.Key, group => group.First());
         var uncategorized = await db.Products.Where(p => p.CategoryId == null).ToListAsync(ct);
         foreach (var product in uncategorized)
         {

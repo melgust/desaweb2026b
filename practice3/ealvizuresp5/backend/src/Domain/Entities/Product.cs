@@ -14,4 +14,5 @@ public class Product
     public Supplier? Supplier { get; set; }
     public Guid? CategoryId { get; set; }
     public Category? Category { get; set; }
+    public ICollection<InvoiceDetail> InvoiceDetails { get; set; } = new List<InvoiceDetail>();
 }
