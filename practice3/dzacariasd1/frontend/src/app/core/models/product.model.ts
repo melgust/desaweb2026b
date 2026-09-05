@@ -9,6 +9,9 @@ export interface Product {
   /** Categoria a la que pertenece. Puede venir vacia en productos antiguos. */
   categoryId?: string | null;
   categoryName?: string | null;
+  /** Proveedor que lo surte. Puede venir vacio. */
+  supplierId?: string | null;
+  supplierName?: string | null;
 }
 
 /** Respuesta de la paginacion clasica por offset (botones Anterior / Siguiente). */

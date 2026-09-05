@@ -1,0 +1,123 @@
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.hint {
+  display: block;
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: #94a3b8;
+}
+
+.alert-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.loading-block {
+  padding: 24px 0;
+  color: #64748b;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.col {
+  flex: 1 1 220px;
+}
+
+.section-title {
+  font-size: 16px;
+  color: #1e293b;
+  margin: 24px 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Fila para armar renglones: buscador, producto, cantidad y boton */
+.line-builder {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.line-builder .form-control {
+  margin-bottom: 0;
+}
+
+.line-builder__search { flex: 1 1 200px; }
+.line-builder__product { flex: 2 1 320px; cursor: pointer; }
+.line-builder__qty { flex: 0 0 90px; text-align: right; }
+
+.col-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.empty-row {
+  text-align: center;
+  color: #94a3b8;
+  padding: 20px 0;
+}
+
+/* Totales */
+.totals {
+  margin: 0 0 20px auto;
+  max-width: 340px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 16px;
+  background: #f8fafc;
+}
+
+.totals__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 4px 0;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.totals__row--grand {
+  border-top: 1px solid #cbd5e1;
+  margin-top: 6px;
+  padding-top: 8px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #12233d;
+}
+
+.totals__note {
+  margin-top: 8px;
+  text-align: right;
+}

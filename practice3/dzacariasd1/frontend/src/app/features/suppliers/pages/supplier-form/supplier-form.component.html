@@ -1,0 +1,46 @@
+<div class="container">
+  <header class="header">
+    <h2>{{ isEditMode ? 'Editar proveedor' : 'Nuevo proveedor' }}</h2>
+    <a routerLink="/suppliers" class="btn">Volver al listado</a>
+  </header>
+
+  <div class="alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <form (ngSubmit)="onSubmit()" *ngIf="!loading; else loadingTpl">
+    <div class="form-group">
+      <label for="name">Nombre del proveedor</label>
+      <input type="text" id="name" [(ngModel)]="formData.name" name="name"
+             class="form-control" maxlength="120" required />
+      <small class="hint">El nombre no se puede repetir.</small>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col">
+        <label for="contactEmail">Correo de contacto</label>
+        <input type="email" id="contactEmail" [(ngModel)]="formData.contactEmail"
+               name="contactEmail" class="form-control" />
+      </div>
+
+      <div class="form-group col">
+        <label for="phone">Teléfono</label>
+        <input type="text" id="phone" [(ngModel)]="formData.phone" name="phone" class="form-control" />
+      </div>
+    </div>
+
+    <div class="form-group checkbox-group">
+      <label>
+        <input type="checkbox" [(ngModel)]="formData.isActive" name="isActive" />
+        Proveedor activo
+      </label>
+      <small class="hint">Solo los proveedores activos aparecen al dar de alta un producto.</small>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+      {{ isEditMode ? 'Guardar cambios' : 'Crear proveedor' }}
+    </button>
+  </form>
+
+  <ng-template #loadingTpl>
+    <div class="loading-block">Procesando...</div>
+  </ng-template>
+</div>

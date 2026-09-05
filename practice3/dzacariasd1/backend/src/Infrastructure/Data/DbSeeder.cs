@@ -44,6 +44,37 @@ public static class DbSeeder
         ("General",        "Productos sin una categoria especifica asignada."),
     };
 
+    /// <summary>Proveedor que surte cada categoria de producto.</summary>
+    private static readonly (string Categoria, string Proveedor)[] ProveedorPorCategoria =
+    {
+        ("Computo",        "Distribuidora Tecnologica S.A."),
+        ("Perifericos",    "Importaciones Perifericos GT"),
+        ("Redes",          "Redes y Conectividad de Guatemala"),
+        ("Impresion",      "Suministros de Impresion Central"),
+        ("Almacenamiento", "Almacenamiento Digital S.A."),
+        ("Componentes",    "Almacenamiento Digital S.A."),
+        ("Audio y Video",  "Multimedia Corporativa"),
+    };
+
+    private static readonly (string Nombre, string Correo, string Telefono)[] Proveedores =
+    {
+        ("Distribuidora Tecnologica S.A.",     "ventas@distecgt.com",      "2234-5600"),
+        ("Importaciones Perifericos GT",       "contacto@perifgt.com",     "2245-1180"),
+        ("Redes y Conectividad de Guatemala",  "info@redesgt.com",         "2278-9040"),
+        ("Suministros de Impresion Central",   "pedidos@impcentral.com",   "2290-3312"),
+        ("Almacenamiento Digital S.A.",        "ventas@almadigital.com",   "2261-7725"),
+        ("Multimedia Corporativa",             "soporte@multicorp.com",    "2283-4419"),
+    };
+
+    private static readonly (string Nombre, string Nit, string Correo, string Telefono, string Direccion)[] Clientes =
+    {
+        ("Comercial San Miguel, S.A.", "1234567-8", "compras@sanmiguel.com.gt", "2360-1100", "7a. Avenida 12-45, Zona 9, Guatemala"),
+        ("Constructora El Roble",      "2345678-9", "admin@elroble.com.gt",     "2412-8890", "Calzada Roosevelt 22-10, Zona 11, Guatemala"),
+        ("Colegio Mixto La Esperanza", "3456789-0", "direccion@laesperanza.edu.gt", "2331-5570", "5a. Calle 3-20, Zona 1, Mixco"),
+        ("Farmacias del Centro",       "4567890-1", "gerencia@farmacentro.com.gt", "2288-4402", "Boulevard Liberacion 8-15, Zona 13, Guatemala"),
+        ("Transportes La Union",       "5678901-2", "operaciones@launion.com.gt",  "2455-9931", "Km 15.5 Carretera al Atlantico, Zona 18"),
+    };
+
     public static async Task SeedAsync(AppDbContext db, CancellationToken ct = default)
     {
         // --- Roles ---
@@ -95,10 +126,13 @@ public static class DbSeeder
 
         await db.SaveChangesAsync(ct);
 
-        // --- Categorias, productos y asignacion ---
+        // --- Categorias, proveedores, clientes y productos ---
         var categorias = await SeedCategoriesAsync(db, ct);
-        await SeedProductsAsync(db, categorias, ct);
+        var proveedores = await SeedSuppliersAsync(db, ct);
+        await SeedClientsAsync(db, ct);
+        await SeedProductsAsync(db, categorias, proveedores, ct);
         await AsignarCategoriaFaltanteAsync(db, categorias, ct);
+        await AsignarProveedorFaltanteAsync(db, categorias, proveedores, ct);
     }
 
     /// <summary>
@@ -130,7 +164,7 @@ public static class DbSeeder
     /// 10 productos no habria nada que paginar ni que cargar al hacer scroll.
     /// Es idempotente: si ya hay productos en la base no vuelve a insertar nada.
     /// </summary>
-    private static async Task SeedProductsAsync(AppDbContext db, Dictionary<string, Guid> categorias, CancellationToken ct)
+    private static async Task SeedProductsAsync(AppDbContext db, Dictionary<string, Guid> categorias, Dictionary<string, Guid> proveedores, CancellationToken ct)
     {
         if (await db.Products.AnyAsync(ct)) return;
 
@@ -165,7 +199,8 @@ public static class DbSeeder
                 IsActive = i % 17 != 0,
                 CreatedAt = createdBase.AddHours(i * 7),
                 UpdatedAt = createdBase.AddHours(i * 7),
-                CategoryId = ResolverCategoria(nombre, categorias)
+                CategoryId = ResolverCategoria(nombre, categorias),
+                SupplierId = ResolverProveedor(nombre, categorias, proveedores)
             });
         }
 
@@ -187,6 +222,91 @@ public static class DbSeeder
             p.CategoryId = ResolverCategoria(p.Name, categorias);
 
         await db.SaveChangesAsync(ct);
+    }
+
+    /// <summary>
+    /// Crea los proveedores que falten y devuelve un diccionario nombre -> Id.
+    /// </summary>
+    private static async Task<Dictionary<string, Guid>> SeedSuppliersAsync(AppDbContext db, CancellationToken ct)
+    {
+        var existentes = await db.Suppliers.ToDictionaryAsync(s => s.Name, s => s, ct);
+
+        foreach (var (nombre, correo, telefono) in Proveedores)
+        {
+            if (existentes.ContainsKey(nombre)) continue;
+
+            var nuevo = new Supplier { Name = nombre, ContactEmail = correo, Phone = telefono };
+            db.Suppliers.Add(nuevo);
+            existentes[nombre] = nuevo;
+        }
+
+        await db.SaveChangesAsync(ct);
+
+        return existentes.ToDictionary(kv => kv.Key, kv => kv.Value.Id);
+    }
+
+    /// <summary>
+    /// Crea los clientes de demostracion. Sin clientes no se puede emitir ninguna
+    /// factura, asi que hacen falta para poder probar el modulo de facturacion.
+    /// </summary>
+    private static async Task SeedClientsAsync(AppDbContext db, CancellationToken ct)
+    {
+        foreach (var (nombre, nit, correo, telefono, direccion) in Clientes)
+        {
+            if (await db.Clients.AnyAsync(c => c.Nit == nit, ct)) continue;
+
+            db.Clients.Add(new Client
+            {
+                Name = nombre,
+                Nit = nit,
+                Email = correo,
+                Phone = telefono,
+                Address = direccion
+            });
+        }
+
+        await db.SaveChangesAsync(ct);
+    }
+
+    /// <summary>
+    /// Asigna proveedor a los productos que quedaron sin el, igual que se hizo con
+    /// las categorias al agregar aquella tabla.
+    /// </summary>
+    private static async Task AsignarProveedorFaltanteAsync(AppDbContext db, Dictionary<string, Guid> categorias, Dictionary<string, Guid> proveedores, CancellationToken ct)
+    {
+        var sinProveedor = await db.Products.Where(p => p.SupplierId == null).ToListAsync(ct);
+        if (sinProveedor.Count == 0) return;
+
+        bool huboCambios = false;
+        foreach (var p in sinProveedor)
+        {
+            var id = ResolverProveedor(p.Name, categorias, proveedores);
+            if (id == null) continue;
+            p.SupplierId = id;
+            huboCambios = true;
+        }
+
+        if (huboCambios) await db.SaveChangesAsync(ct);
+    }
+
+    /// <summary>
+    /// El proveedor se deduce de la categoria del producto. Los productos de la
+    /// categoria General se quedan sin proveedor, porque no se sabe quien los surte.
+    /// </summary>
+    private static Guid? ResolverProveedor(string nombreProducto, Dictionary<string, Guid> categorias, Dictionary<string, Guid> proveedores)
+    {
+        foreach (var (prefijo, categoria) in MapaCategorias)
+        {
+            if (!nombreProducto.StartsWith(prefijo, StringComparison.OrdinalIgnoreCase)) continue;
+
+            foreach (var (cat, proveedor) in ProveedorPorCategoria)
+            {
+                if (cat == categoria && proveedores.TryGetValue(proveedor, out var id))
+                    return id;
+            }
+        }
+
+        return null;
     }
 
     /// <summary>

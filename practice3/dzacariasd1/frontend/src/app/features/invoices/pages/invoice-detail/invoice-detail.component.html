@@ -1,0 +1,77 @@
+<div class="container" *ngIf="invoice as f; else loadingTpl">
+  <header class="header">
+    <h2>Factura {{ f.number }}</h2>
+    <div class="header-actions">
+      <a routerLink="/invoices" class="btn">Volver al listado</a>
+      <button *ngIf="auth.isAdmin()" (click)="anular()" class="btn btn-danger">Anular factura</button>
+    </div>
+  </header>
+
+  <div class="alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <!-- Encabezado del documento -->
+  <div class="invoice-head">
+    <div class="invoice-head__block">
+      <span class="label">Cliente</span>
+      <strong>{{ f.clientName }}</strong>
+      <div class="sub-line">NIT {{ f.clientNit }}</div>
+      <div class="sub-line" *ngIf="f.clientAddress">{{ f.clientAddress }}</div>
+    </div>
+
+    <div class="invoice-head__block invoice-head__block--right">
+      <span class="label">Emitida</span>
+      <strong>{{ f.issuedAt | date:'dd/MM/yyyy HH:mm' }}</strong>
+      <div class="sub-line">{{ f.details.length }} renglón(es)</div>
+    </div>
+  </div>
+
+  <!-- Renglones -->
+  <table class="grid-table">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th class="col-num">Precio unitario</th>
+        <th class="col-num">Cantidad</th>
+        <th class="col-num">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let d of f.details">
+        <td>{{ d.productName }}</td>
+        <td class="col-num">Q {{ d.unitPrice | number:'1.2-2' }}</td>
+        <td class="col-num">{{ d.quantity }}</td>
+        <td class="col-num">Q {{ d.lineTotal | number:'1.2-2' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Totales -->
+  <div class="totals">
+    <div class="totals__row">
+      <span>Subtotal</span>
+      <span>Q {{ f.subtotal | number:'1.2-2' }}</span>
+    </div>
+    <div class="totals__row">
+      <span>IVA (12%)</span>
+      <span>Q {{ f.tax | number:'1.2-2' }}</span>
+    </div>
+    <div class="totals__row totals__row--grand">
+      <span>Total</span>
+      <span>Q {{ f.total | number:'1.2-2' }}</span>
+    </div>
+  </div>
+
+  <div class="notes" *ngIf="f.notes">
+    <span class="label">Observaciones</span>
+    <p>{{ f.notes }}</p>
+  </div>
+
+  <p class="hint">
+    El precio de cada renglón quedó guardado tal como estaba el día de la emisión:
+    si el producto cambia de precio después, esta factura no se altera.
+  </p>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="container"><div class="loading-block">Cargando factura...</div></div>
+</ng-template>

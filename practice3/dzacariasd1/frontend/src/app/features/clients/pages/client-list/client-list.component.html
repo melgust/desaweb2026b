@@ -1,0 +1,60 @@
+<div class="container">
+  <header class="header">
+    <h2>Clientes</h2>
+    <a *ngIf="auth.canManageProducts()" routerLink="/clients/new" class="btn btn-primary">+ Nuevo cliente</a>
+  </header>
+
+  <p class="results-summary" *ngIf="!loading()">
+    {{ clients().length }} clientes · {{ totalInvoices() }} facturas emitidas
+  </p>
+
+  <div class="alert-error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+
+  <table class="grid-table" *ngIf="!loading(); else loadingTpl">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>NIT</th>
+        <th>Contacto</th>
+        <th class="col-num">Facturas</th>
+        <th>Estado</th>
+        <th *ngIf="auth.canManageProducts()">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of clients()">
+        <td>
+          <strong>{{ c.name }}</strong>
+          <div class="sub-line" *ngIf="c.address">{{ c.address }}</div>
+        </td>
+        <td><span class="badge">{{ c.nit }}</span></td>
+        <td>
+          <div>{{ c.email || '-' }}</div>
+          <div class="sub-line" *ngIf="c.phone">{{ c.phone }}</div>
+        </td>
+        <td class="col-num">{{ c.invoiceCount }}</td>
+        <td>
+          <span class="state" [class.state--off]="!c.isActive">
+            {{ c.isActive ? 'Activo' : 'Inactivo' }}
+          </span>
+        </td>
+        <td *ngIf="auth.canManageProducts()">
+          <a [routerLink]="['/clients/edit', c.id]">Editar</a>
+          <button *ngIf="auth.isAdmin()" (click)="deleteClient(c)" class="text-danger">Eliminar</button>
+        </td>
+      </tr>
+      <tr *ngIf="clients().length === 0">
+        <td [attr.colspan]="auth.canManageProducts() ? 6 : 5" class="empty-row">
+          No hay clientes registrados.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="hint">
+    Un cliente con facturas emitidas no se puede eliminar, porque dejaría documentos
+    sin titular. En ese caso se marca como inactivo.
+  </p>
+
+  <ng-template #loadingTpl><div class="loading-block">Cargando clientes...</div></ng-template>
+</div>

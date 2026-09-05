@@ -1,0 +1,60 @@
+<div class="container">
+  <header class="header">
+    <h2>{{ isEditMode ? 'Editar cliente' : 'Nuevo cliente' }}</h2>
+    <a routerLink="/clients" class="btn">Volver al listado</a>
+  </header>
+
+  <div class="alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <form (ngSubmit)="onSubmit()" *ngIf="!loading; else loadingTpl">
+    <div class="form-row">
+      <div class="form-group col">
+        <label for="name">Nombre o razón social</label>
+        <input type="text" id="name" [(ngModel)]="formData.name" name="name"
+               class="form-control" maxlength="120" required />
+      </div>
+
+      <div class="form-group col">
+        <label for="nit">NIT</label>
+        <input type="text" id="nit" [(ngModel)]="formData.nit" name="nit"
+               class="form-control" maxlength="20" required />
+        <small class="hint">No se puede repetir entre clientes.</small>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" [(ngModel)]="formData.email" name="email" class="form-control" />
+      </div>
+
+      <div class="form-group col">
+        <label for="phone">Teléfono</label>
+        <input type="text" id="phone" [(ngModel)]="formData.phone" name="phone" class="form-control" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="address">Dirección</label>
+      <textarea id="address" [(ngModel)]="formData.address" name="address"
+                class="form-control" rows="2"></textarea>
+      <small class="hint">Aparece en la factura.</small>
+    </div>
+
+    <div class="form-group checkbox-group">
+      <label>
+        <input type="checkbox" [(ngModel)]="formData.isActive" name="isActive" />
+        Cliente activo
+      </label>
+      <small class="hint">Solo se puede facturar a clientes activos.</small>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+      {{ isEditMode ? 'Guardar cambios' : 'Crear cliente' }}
+    </button>
+  </form>
+
+  <ng-template #loadingTpl>
+    <div class="loading-block">Procesando...</div>
+  </ng-template>
+</div>

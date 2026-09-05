@@ -17,4 +17,12 @@ public class Product
     // obligatorio al dar de alta o editar un producto.
     public Guid? CategoryId { get; set; }
     public Category? Category { get; set; }
+
+    // --- Relacion con Proveedor ---
+    // Tambien opcional, por la misma razon: los productos ya existian antes.
+    public Guid? SupplierId { get; set; }
+    public Supplier? Supplier { get; set; }
+
+    // Renglones de factura en los que aparece este producto.
+    public ICollection<InvoiceDetail> InvoiceDetails { get; set; } = new List<InvoiceDetail>();
 }

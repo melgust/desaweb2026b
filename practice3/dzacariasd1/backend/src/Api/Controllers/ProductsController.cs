@@ -20,9 +20,9 @@ public class ProductsController : ControllerBase
     /// </summary>
     [HttpGet]
     [Authorize(Roles = "Admin,Manager,User")]
-    public async Task<ActionResult<ProductPagedResult>> GetProducts([FromQuery] string? search, [FromQuery] string? sortBy, [FromQuery] string? sortDirection, [FromQuery] Guid? categoryId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
+    public async Task<ActionResult<ProductPagedResult>> GetProducts([FromQuery] string? search, [FromQuery] string? sortBy, [FromQuery] string? sortDirection, [FromQuery] Guid? categoryId, [FromQuery] Guid? supplierId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
     {
-        return Ok(await _productService.GetProductsAsync(search, sortBy, sortDirection, categoryId, page, pageSize, ct));
+        return Ok(await _productService.GetProductsAsync(search, sortBy, sortDirection, categoryId, supplierId, page, pageSize, ct));
     }
 
     /// <summary>
@@ -34,9 +34,9 @@ public class ProductsController : ControllerBase
     /// </summary>
     [HttpGet("scroll")]
     [Authorize(Roles = "Admin,Manager,User")]
-    public async Task<ActionResult<ProductScrollResult>> GetProductsScroll([FromQuery] string? search, [FromQuery] string? sortBy, [FromQuery] string? sortDirection, [FromQuery] Guid? categoryId, [FromQuery] int offset = 0, [FromQuery] int limit = 12, CancellationToken ct = default)
+    public async Task<ActionResult<ProductScrollResult>> GetProductsScroll([FromQuery] string? search, [FromQuery] string? sortBy, [FromQuery] string? sortDirection, [FromQuery] Guid? categoryId, [FromQuery] Guid? supplierId, [FromQuery] int offset = 0, [FromQuery] int limit = 12, CancellationToken ct = default)
     {
-        return Ok(await _productService.GetProductsScrollAsync(search, sortBy, sortDirection, categoryId, offset, limit, ct));
+        return Ok(await _productService.GetProductsScrollAsync(search, sortBy, sortDirection, categoryId, supplierId, offset, limit, ct));
     }
 
     [HttpGet("{id:guid}")]
@@ -77,5 +77,6 @@ public class ProductsController : ControllerBase
             return NoContent();
         }
         catch (KeyNotFoundException e) { return NotFound(new { message = e.Message }); }
+        catch (InvalidOperationException e) { return Conflict(new { message = e.Message }); }
     }
 }

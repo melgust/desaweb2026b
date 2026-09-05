@@ -1,0 +1,81 @@
+<div class="container">
+  <header class="header">
+    <h2>Facturas</h2>
+    <a *ngIf="auth.canManageProducts()" routerLink="/invoices/new" class="btn btn-primary">+ Nueva factura</a>
+  </header>
+
+  <div class="filters">
+    <input type="text"
+           placeholder="Buscar por número, cliente o NIT... (presione Enter)"
+           [(ngModel)]="searchTerm"
+           (keyup.enter)="onFilterChange()"
+           class="search-bar" />
+
+    <label class="category-filter">
+      <span class="category-filter__label">Cliente:</span>
+      <select [(ngModel)]="clientFilter" (ngModelChange)="onFilterChange()" class="form-control">
+        <option value="">Todos los clientes</option>
+        <option *ngFor="let c of clients()" [value]="c.id">
+          {{ c.name }} ({{ c.invoiceCount }})
+        </option>
+      </select>
+    </label>
+  </div>
+
+  <p class="results-summary" *ngIf="!loading()">
+    Página {{ page() }} de {{ totalPages() }} — {{ totalItems() }} facturas en total
+  </p>
+
+  <div class="alert-error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+
+  <table class="grid-table" *ngIf="!loading(); else loadingTpl">
+    <thead>
+      <tr>
+        <th>Número</th>
+        <th>Cliente</th>
+        <th>Fecha</th>
+        <th class="col-num">Renglones</th>
+        <th class="col-num">Subtotal</th>
+        <th class="col-num">IVA</th>
+        <th class="col-num">Total</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let i of invoices()">
+        <td><span class="badge badge--invoice">{{ i.number }}</span></td>
+        <td>
+          <strong>{{ i.clientName }}</strong>
+          <div class="sub-line">NIT {{ i.clientNit }}</div>
+        </td>
+        <td>{{ i.issuedAt | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td class="col-num">{{ i.lineCount }}</td>
+        <td class="col-num">{{ i.subtotal | number:'1.2-2' }}</td>
+        <td class="col-num">{{ i.tax | number:'1.2-2' }}</td>
+        <td class="col-num"><strong>Q {{ i.total | number:'1.2-2' }}</strong></td>
+        <td>
+          <a [routerLink]="['/invoices', i.id]">Ver</a>
+          <button *ngIf="auth.isAdmin()" (click)="deleteInvoice(i)" class="text-danger">Anular</button>
+        </td>
+      </tr>
+      <tr *ngIf="invoices().length === 0">
+        <td colspan="8" class="empty-row">No hay facturas emitidas.</td>
+      </tr>
+    </tbody>
+    <tfoot *ngIf="invoices().length > 0">
+      <tr>
+        <td colspan="6" class="col-num"><strong>Total de esta página</strong></td>
+        <td class="col-num"><strong>Q {{ pageTotal() | number:'1.2-2' }}</strong></td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div class="pagination" *ngIf="!loading()">
+    <button [disabled]="page() <= 1" (click)="setPage(page() - 1)">Anterior</button>
+    <span>Página {{ page() }} de {{ totalPages() }}</span>
+    <button [disabled]="page() >= totalPages()" (click)="setPage(page() + 1)">Siguiente</button>
+  </div>
+
+  <ng-template #loadingTpl><div class="loading-block">Cargando facturas...</div></ng-template>
+</div>

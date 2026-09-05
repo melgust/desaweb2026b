@@ -9,10 +9,12 @@ public record ProductDto(
     bool IsActive,
     DateTime CreatedAt,
     Guid? CategoryId,
-    string? CategoryName);
+    string? CategoryName,
+    Guid? SupplierId,
+    string? SupplierName);
 
-public record CreateProductRequest(string Name, string? Description, decimal Price, int Stock, bool IsActive, Guid? CategoryId);
-public record UpdateProductRequest(string Name, string? Description, decimal Price, int Stock, bool IsActive, Guid? CategoryId);
+public record CreateProductRequest(string Name, string? Description, decimal Price, int Stock, bool IsActive, Guid? CategoryId, Guid? SupplierId);
+public record UpdateProductRequest(string Name, string? Description, decimal Price, int Stock, bool IsActive, Guid? CategoryId, Guid? SupplierId);
 
 /// <summary>
 /// Resultado de la paginacion clasica por offset (pagina / tamanio de pagina).

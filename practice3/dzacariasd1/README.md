@@ -1,4 +1,4 @@
-# Práctica 3 — Paginación offset + Scroll infinito + Categorías
+# Práctica 3 — Paginación, Categorías y Facturación
 
 **Usuario / Rama:** `dzacariasd1`
 **Universidad Mariano Gálvez de Guatemala** — Desarrollo Web 2026-2
@@ -177,6 +177,81 @@ con el motivo, en lugar de dejar que falle la restricción de MySQL.
 
 Los endpoints de productos aceptan además el parámetro `categoryId` para filtrar,
 y `sortBy=category` para ordenar por nombre de categoría.
+
+---
+
+## Entrega 3: Proveedores, Clientes, Facturas y Detalle
+
+Se completó el modelo de datos con las cuatro tablas restantes.
+
+### Modelo relacional
+
+```
+Suppliers                Categories
+    |1                       |1
+    |                        |
+    +----------N Products N--+
+                   |1
+                   |
+                   N
+              InvoiceDetails
+                   N
+                   |
+                   |1
+               Invoices
+                   N
+                   |
+                   |1
+                Clients
+```
+
+| Relación | Cardinalidad | Al eliminar el padre |
+|----------|--------------|----------------------|
+| `Supplier` → `Product` | 1 : N | `SetNull` — el producto se conserva sin proveedor |
+| `Category` → `Product` | 1 : N | `Restrict` — hay que reasignar los productos primero |
+| `Client` → `Invoice` | 1 : N | `Restrict` — no se borra un cliente con facturas |
+| `Invoice` → `InvoiceDetail` | 1 : N | `Cascade` — los renglones no existen sin su factura |
+| `Product` → `InvoiceDetail` | 1 : N | `Restrict` — no se borra un producto ya facturado |
+
+Cada comportamiento responde a una regla distinta: el proveedor es un dato de
+contacto que se puede perder, pero una factura emitida no se puede alterar.
+
+### Reglas de negocio de la facturación
+
+- El correlativo (`FAC-000001`) lo genera el servidor; la columna tiene índice único.
+- **Los precios no vienen del navegador.** La petición solo lleva el cliente y
+  pares producto/cantidad; el servidor lee el precio vigente de la base y calcula
+  subtotal, IVA (12%) y total. Así no se puede manipular el importe desde el cliente.
+- Se valida **todo** el stock antes de descontar nada, para no dejar una factura a
+  medio emitir.
+- Emitir descuenta inventario; **anular lo devuelve**.
+- El renglón guarda el nombre y el precio del producto al momento de facturar, de
+  modo que un cambio de precio posterior no altera facturas ya emitidas.
+- No se factura a un cliente inactivo.
+- Un mismo producto repetido en dos renglones se acumula en uno solo.
+
+### Endpoints nuevos
+
+| Método | Endpoint | Roles | Descripción |
+|--------|----------|-------|-------------|
+| GET | `/api/suppliers` | Todos | Listar (`?onlyActive=true`) |
+| POST · PUT | `/api/suppliers[/{id}]` | Admin, Manager | Crear / actualizar |
+| DELETE | `/api/suppliers/{id}` | Admin | Eliminar |
+| GET | `/api/clients` | Todos | Listar (`?onlyActive=true`) |
+| POST · PUT | `/api/clients[/{id}]` | Admin, Manager | Crear / actualizar (409 si el NIT se repite) |
+| DELETE | `/api/clients/{id}` | Admin | Eliminar (409 si tiene facturas) |
+| GET | `/api/invoices` | Todos | Listado paginado (`search`, `clientId`) |
+| GET | `/api/invoices/{id}` | Todos | Factura con sus renglones |
+| POST | `/api/invoices` | Admin, Manager | Emitir (409 si falta stock) |
+| DELETE | `/api/invoices/{id}` | Admin | Anular y devolver stock |
+
+Los endpoints de productos aceptan además `supplierId` para filtrar y
+`sortBy=supplier` para ordenar.
+
+### Pantallas nuevas
+
+`/suppliers`, `/clients`, `/invoices` (listado), `/invoices/new` (armado de la
+factura con sus renglones y totales en vivo) y `/invoices/:id` (documento emitido).
 
 ---
 

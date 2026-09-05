@@ -16,6 +16,9 @@ import { AuthService } from './core/services/auth.service';
         <span style="font-weight: bold;">Enterprise Management</span>
         <a routerLink="/products" routerLinkActive="nav-active" style="color: #cbd5e1; text-decoration: none;">Productos</a>
         <a routerLink="/categories" routerLinkActive="nav-active" style="color: #cbd5e1; text-decoration: none;">Categorías</a>
+        <a routerLink="/suppliers" routerLinkActive="nav-active" style="color: #cbd5e1; text-decoration: none;">Proveedores</a>
+        <a routerLink="/clients" routerLinkActive="nav-active" style="color: #cbd5e1; text-decoration: none;">Clientes</a>
+        <a routerLink="/invoices" routerLinkActive="nav-active" style="color: #cbd5e1; text-decoration: none;">Facturas</a>
       </div>
       <div style="display: flex; align-items: center; gap: 16px;">
         <span>{{ auth.currentUser()?.name }} (<strong>{{ auth.role() }}</strong>)</span>

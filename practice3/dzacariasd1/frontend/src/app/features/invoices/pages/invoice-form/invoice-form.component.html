@@ -1,0 +1,92 @@
+<div class="container">
+  <header class="header">
+    <h2>Nueva factura</h2>
+    <a routerLink="/invoices" class="btn">Volver al listado</a>
+  </header>
+
+  <div class="alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <!-- Encabezado de la factura -->
+  <div class="form-group">
+    <label for="client">Cliente</label>
+    <select id="client" [(ngModel)]="clientId" name="clientId" class="form-control" required>
+      <option value="" disabled>Seleccione un cliente</option>
+      <option *ngFor="let c of clients" [value]="c.id">{{ c.name }} — NIT {{ c.nit }}</option>
+    </select>
+    <small class="hint">Solo aparecen los clientes activos.</small>
+  </div>
+
+  <!-- Agregar renglones -->
+  <h3 class="section-title">Detalle de la factura</h3>
+
+  <div class="line-builder">
+    <input type="text"
+           placeholder="Buscar producto... (Enter)"
+           [(ngModel)]="productSearch"
+           (keyup.enter)="buscarProductos()"
+           class="form-control line-builder__search" />
+
+    <select [(ngModel)]="productoSeleccionado" class="form-control line-builder__product">
+      <option value="" disabled>Seleccione un producto</option>
+      <option *ngFor="let p of products" [value]="p.id" [disabled]="p.stock === 0">
+        {{ p.name }} — Q{{ p.price | number:'1.2-2' }} (stock: {{ p.stock }})
+      </option>
+    </select>
+
+    <input type="number" min="1" [(ngModel)]="cantidad" class="form-control line-builder__qty" />
+
+    <button type="button" class="btn btn-primary" (click)="agregarLinea()">Agregar</button>
+  </div>
+
+  <table class="grid-table">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th class="col-num">Precio unitario</th>
+        <th class="col-num">Cantidad</th>
+        <th class="col-num">Total</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let l of lineas; let i = index">
+        <td>{{ l.productName }}</td>
+        <td class="col-num">Q {{ l.unitPrice | number:'1.2-2' }}</td>
+        <td class="col-num">{{ l.quantity }}</td>
+        <td class="col-num">Q {{ totalLinea(l) | number:'1.2-2' }}</td>
+        <td><button type="button" (click)="quitarLinea(i)" class="text-danger">Quitar</button></td>
+      </tr>
+      <tr *ngIf="lineas.length === 0">
+        <td colspan="5" class="empty-row">Todavía no se ha agregado ningún producto.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Totales -->
+  <div class="totals" *ngIf="lineas.length > 0">
+    <div class="totals__row">
+      <span>Subtotal</span>
+      <span>Q {{ subtotal() | number:'1.2-2' }}</span>
+    </div>
+    <div class="totals__row">
+      <span>IVA (12%)</span>
+      <span>Q {{ iva() | number:'1.2-2' }}</span>
+    </div>
+    <div class="totals__row totals__row--grand">
+      <span>Total</span>
+      <span>Q {{ total() | number:'1.2-2' }}</span>
+    </div>
+    <p class="hint totals__note">
+      Vista previa. El servidor vuelve a calcular precios y totales al emitir.
+    </p>
+  </div>
+
+  <div class="form-group">
+    <label for="notes">Observaciones</label>
+    <textarea id="notes" [(ngModel)]="notes" name="notes" class="form-control" rows="2"></textarea>
+  </div>
+
+  <button type="button" class="btn btn-primary" (click)="emitir()" [disabled]="loading">
+    {{ loading ? 'Emitiendo...' : 'Emitir factura' }}
+  </button>
+</div>

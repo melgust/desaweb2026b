@@ -69,5 +69,91 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'suppliers',
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import(
+            './features/suppliers/pages/supplier-list/supplier-list.component'
+          ).then((m) => m.SupplierListComponent),
+      },
+      {
+        path: 'new',
+        canActivate: [roleGuard(['Admin', 'Manager'])],
+        loadComponent: () =>
+          import(
+            './features/suppliers/pages/supplier-form/supplier-form.component'
+          ).then((m) => m.SupplierFormComponent),
+      },
+      {
+        path: 'edit/:id',
+        canActivate: [roleGuard(['Admin', 'Manager'])],
+        loadComponent: () =>
+          import(
+            './features/suppliers/pages/supplier-form/supplier-form.component'
+          ).then((m) => m.SupplierFormComponent),
+      },
+    ],
+  },
+  {
+    path: 'clients',
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import(
+            './features/clients/pages/client-list/client-list.component'
+          ).then((m) => m.ClientListComponent),
+      },
+      {
+        path: 'new',
+        canActivate: [roleGuard(['Admin', 'Manager'])],
+        loadComponent: () =>
+          import(
+            './features/clients/pages/client-form/client-form.component'
+          ).then((m) => m.ClientFormComponent),
+      },
+      {
+        path: 'edit/:id',
+        canActivate: [roleGuard(['Admin', 'Manager'])],
+        loadComponent: () =>
+          import(
+            './features/clients/pages/client-form/client-form.component'
+          ).then((m) => m.ClientFormComponent),
+      },
+    ],
+  },
+  {
+    path: 'invoices',
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import(
+            './features/invoices/pages/invoice-list/invoice-list.component'
+          ).then((m) => m.InvoiceListComponent),
+      },
+      {
+        path: 'new',
+        canActivate: [roleGuard(['Admin', 'Manager'])],
+        loadComponent: () =>
+          import(
+            './features/invoices/pages/invoice-form/invoice-form.component'
+          ).then((m) => m.InvoiceFormComponent),
+      },
+      {
+        path: ':id',
+        loadComponent: () =>
+          import(
+            './features/invoices/pages/invoice-detail/invoice-detail.component'
+          ).then((m) => m.InvoiceDetailComponent),
+      },
+    ],
+  },
   { path: '**', redirectTo: 'products' },
 ];

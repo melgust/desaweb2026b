@@ -1,0 +1,54 @@
+<div class="container">
+  <header class="header">
+    <h2>Proveedores</h2>
+    <a *ngIf="auth.canManageProducts()" routerLink="/suppliers/new" class="btn btn-primary">+ Nuevo proveedor</a>
+  </header>
+
+  <p class="results-summary" *ngIf="!loading()">
+    {{ suppliers().length }} proveedores · {{ totalProducts() }} productos surtidos
+  </p>
+
+  <div class="alert-error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+
+  <table class="grid-table" *ngIf="!loading(); else loadingTpl">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Correo de contacto</th>
+        <th>Teléfono</th>
+        <th class="col-num">Productos</th>
+        <th>Estado</th>
+        <th *ngIf="auth.canManageProducts()">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let s of suppliers()">
+        <td><span class="badge">{{ s.name }}</span></td>
+        <td>{{ s.contactEmail || '-' }}</td>
+        <td>{{ s.phone || '-' }}</td>
+        <td class="col-num">{{ s.productCount }}</td>
+        <td>
+          <span class="state" [class.state--off]="!s.isActive">
+            {{ s.isActive ? 'Activo' : 'Inactivo' }}
+          </span>
+        </td>
+        <td *ngIf="auth.canManageProducts()">
+          <a [routerLink]="['/suppliers/edit', s.id]">Editar</a>
+          <button *ngIf="auth.isAdmin()" (click)="deleteSupplier(s)" class="text-danger">Eliminar</button>
+        </td>
+      </tr>
+      <tr *ngIf="suppliers().length === 0">
+        <td [attr.colspan]="auth.canManageProducts() ? 6 : 5" class="empty-row">
+          No hay proveedores registrados.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="hint">
+    Al eliminar un proveedor sus productos se conservan y quedan sin proveedor
+    asignado, porque el dato que se pierde es de contacto, no el producto.
+  </p>
+
+  <ng-template #loadingTpl><div class="loading-block">Cargando proveedores...</div></ng-template>
+</div>

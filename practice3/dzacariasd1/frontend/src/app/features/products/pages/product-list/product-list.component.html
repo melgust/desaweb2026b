@@ -37,6 +37,16 @@
         </option>
       </select>
     </label>
+
+    <label class="category-filter">
+      <span class="category-filter__label">Proveedor:</span>
+      <select [(ngModel)]="supplierFilter" (ngModelChange)="onSupplierChange()" class="form-control">
+        <option value="">Todos los proveedores</option>
+        <option *ngFor="let s of suppliers()" [value]="s.id">
+          {{ s.name }} ({{ s.productCount }})
+        </option>
+      </select>
+    </label>
   </div>
 
   <p class="results-summary" *ngIf="!loading()">
@@ -49,6 +59,9 @@
     <span *ngIf="categoryFilter" class="filter-chip">
       Categoría: {{ selectedCategoryName() }}
     </span>
+    <span *ngIf="supplierFilter" class="filter-chip">
+      Proveedor: {{ selectedSupplierName() }}
+    </span>
   </p>
 
   <div class="alert-error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
@@ -58,6 +71,7 @@
       <tr>
         <th (click)="toggleSort('name')">Name {{ sortIcon('name') }}</th>
         <th (click)="toggleSort('category')">Categoría {{ sortIcon('category') }}</th>
+        <th (click)="toggleSort('supplier')">Proveedor {{ sortIcon('supplier') }}</th>
         <th>Description</th>
         <th (click)="toggleSort('price')">Price {{ sortIcon('price') }}</th>
         <th (click)="toggleSort('stock')">Stock {{ sortIcon('stock') }}</th>
@@ -71,6 +85,10 @@
           <span class="badge" *ngIf="item.categoryName; else sinCategoria">{{ item.categoryName }}</span>
           <ng-template #sinCategoria><span class="badge badge--empty">Sin categoría</span></ng-template>
         </td>
+        <td>
+          <span class="badge badge--supplier" *ngIf="item.supplierName; else sinProveedor">{{ item.supplierName }}</span>
+          <ng-template #sinProveedor><span class="badge badge--empty">Sin proveedor</span></ng-template>
+        </td>
         <td>{{ item.description || '-' }}</td>
         <td>${{ item.price | number:'1.2-2' }}</td>
         <td>{{ item.stock }}</td>
@@ -80,7 +98,7 @@
         </td>
       </tr>
       <tr *ngIf="products().length === 0">
-        <td [attr.colspan]="auth.canManageProducts() ? 6 : 5" class="empty-row">
+        <td [attr.colspan]="auth.canManageProducts() ? 7 : 6" class="empty-row">
           No se encontraron productos.
         </td>
       </tr>

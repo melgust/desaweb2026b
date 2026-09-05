@@ -4,9 +4,11 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../../core/services/product.service';
 import { CategoryService } from '../../../../core/services/category.service';
+import { SupplierService } from '../../../../core/services/supplier.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Product } from '../../../../core/models/product.model';
 import { Category } from '../../../../core/models/category.model';
+import { Supplier } from '../../../../core/models/supplier.model';
 
 /** Estrategia de paginacion activa en la pantalla. */
 export type PaginationMode = 'offset' | 'infinite';
@@ -24,6 +26,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   products = signal<Product[]>([]);
   categories = signal<Category[]>([]);
+  suppliers = signal<Supplier[]>([]);
   totalItems = signal(0);
   totalPages = signal(0);
   page = signal(1);
@@ -46,6 +49,8 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   sortDirection: 'asc' | 'desc' = 'asc';
   /** Id de la categoria por la que se filtra. Cadena vacia = todas. */
   categoryFilter = '';
+  /** Id del proveedor por el que se filtra. Cadena vacia = todos. */
+  supplierFilter = '';
 
   /** Elemento centinela: cuando entra en pantalla se pide el siguiente bloque. */
   @ViewChild('scrollAnchor') scrollAnchor?: ElementRef<HTMLElement>;
@@ -54,11 +59,13 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     public auth: AuthService,
     private productService: ProductService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private supplierService: SupplierService
   ) {}
 
   ngOnInit(): void {
     this.loadCategories();
+    this.loadSuppliers();
     this.reload();
   }
 
@@ -110,7 +117,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   private loadPage(): void {
     this.loading.set(true);
     this.productService
-      .getProducts(this.searchTerm, this.sortBy, this.sortDirection, this.page(), this.pageSize, this.categoryFilter)
+      .getProducts(this.searchTerm, this.sortBy, this.sortDirection, this.page(), this.pageSize, this.categoryFilter, this.supplierFilter)
       .subscribe({
         next: (res) => {
           this.products.set(res.items);
@@ -135,7 +142,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isFirstBlock) this.loading.set(true);
 
     this.productService
-      .getProductsScroll(this.searchTerm, this.sortBy, this.sortDirection, this.nextOffset(), this.scrollLimit, this.categoryFilter)
+      .getProductsScroll(this.searchTerm, this.sortBy, this.sortDirection, this.nextOffset(), this.scrollLimit, this.categoryFilter, this.supplierFilter)
       .subscribe({
         next: (res) => {
           this.products.update((current) => [...current, ...res.items]);
@@ -194,6 +201,24 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
       next: (res) => this.categories.set(res),
       error: () => this.categories.set([])
     });
+  }
+
+  /** Alimenta el desplegable de proveedores. */
+  private loadSuppliers(): void {
+    this.supplierService.getSuppliers(true).subscribe({
+      next: (res) => this.suppliers.set(res),
+      error: () => this.suppliers.set([])
+    });
+  }
+
+  /** Al cambiar de proveedor se reinicia el listado, igual que con la categoria. */
+  onSupplierChange(): void {
+    this.page.set(1);
+    this.reload();
+  }
+
+  selectedSupplierName(): string {
+    return this.suppliers().find((s) => s.id === this.supplierFilter)?.name ?? '';
   }
 
   /** Al cambiar de categoria se reinicia el listado en cualquiera de los dos modos. */
