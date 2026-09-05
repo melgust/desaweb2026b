@@ -3,15 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
 
-/// <summary>
-/// Seeds initial roles, users, and categories if they don't exist yet.
-/// Idempotent: safe to run on every startup.
-/// </summary>
 public static class DbSeeder
 {
     public static async Task SeedAsync(AppDbContext db, CancellationToken ct = default)
     {
-        // --- Roles ---
+        // --- 1. Roles ---
         var adminRole = await db.Roles.FirstOrDefaultAsync(r => r.Name == "Admin", ct);
         if (adminRole == null)
         {
@@ -35,7 +31,7 @@ public static class DbSeeder
 
         await db.SaveChangesAsync(ct);
 
-        // --- Users ---
+        // --- 2. Users ---
         if (!await db.Users.AnyAsync(u => u.Email == "admin@enterprise.com", ct))
         {
             db.Users.Add(new User
@@ -60,15 +56,71 @@ public static class DbSeeder
 
         await db.SaveChangesAsync(ct);
 
-        // --- Categories ---
-        var defaultCategory = await db.Categories.FirstOrDefaultAsync(c => c.Name == "General", ct);
-        if (defaultCategory == null)
+        // --- 3. Categories ---
+        if (!await db.Set<Category>().AnyAsync(ct))
         {
-            db.Categories.Add(new Category
-            {
-                Name = "General",
-                Description = "Default system category"
-            });
+            db.Set<Category>().AddRange(
+                new Category { Name = "Electrónica", Description = "Dispositivos y gadgets" },
+                new Category { Name = "Cómputo", Description = "Equipos de cómputo y accesorios" }
+            );
+            await db.SaveChangesAsync(ct);
+        }
+
+        // --- 4. Suppliers ---
+        if (!await db.Set<Supplier>().AnyAsync(ct))
+        {
+            db.Set<Supplier>().AddRange(
+                new Supplier { Name = "Distribuidora Tech SA", ContactEmail = "contacto@tech.com", Phone = "5550192" },
+                new Supplier { Name = "Global Import", ContactEmail = "ventas@globalimport.com", Phone = "5559821" }
+            );
+            await db.SaveChangesAsync(ct);
+        }
+
+        // --- 5. Products ---
+        if (!await db.Set<Product>().AnyAsync(ct))
+        {
+            var category = await db.Set<Category>().FirstOrDefaultAsync(ct);
+            var supplier = await db.Set<Supplier>().FirstOrDefaultAsync(ct);
+
+            db.Set<Product>().AddRange(
+                new Product 
+                { 
+                    Name = "Laptop Dell XPS 15", 
+                    Description = "Laptop de alto rendimiento 16GB RAM", 
+                    Price = 12500.00m, 
+                    Stock = 10,
+                    CategoryId = category?.Id,
+                    SupplierId = supplier?.Id
+                },
+                new Product 
+                { 
+                    Name = "Teclado Mecánico RGB", 
+                    Description = "Switch Red silencioso", 
+                    Price = 450.00m, 
+                    Stock = 25,
+                    CategoryId = category?.Id,
+                    SupplierId = supplier?.Id
+                },
+                new Product 
+                { 
+                    Name = "Monitor 27 IPS 4K", 
+                    Description = "Monitor para diseño y desarrollo", 
+                    Price = 3200.00m, 
+                    Stock = 15,
+                    CategoryId = category?.Id,
+                    SupplierId = supplier?.Id
+                }
+            );
+            await db.SaveChangesAsync(ct);
+        }
+
+        // --- 6. Clients ---
+        if (!await db.Set<Client>().AnyAsync(ct))
+        {
+            db.Set<Client>().AddRange(
+                new Client { Name = "Carlos Gómez", Email = "carlos.gomez@gmail.com", Phone = "55512345" },
+                new Client { Name = "María Rodríguez", Email = "maria.rodriguez@gmail.com", Phone = "55598765" }
+            );
             await db.SaveChangesAsync(ct);
         }
     }
