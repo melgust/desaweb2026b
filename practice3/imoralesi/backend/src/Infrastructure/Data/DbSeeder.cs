@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Data;
 
 /// <summary>
-/// Seeds initial roles and users (admin + standard user) if they don't exist yet.
+/// Seeds initial roles, users, categories, and suppliers if they don't exist yet.
 /// Idempotent: safe to run on every startup.
 /// </summary>
 public static class DbSeeder
@@ -34,6 +34,24 @@ public static class DbSeeder
         }
 
         await db.SaveChangesAsync(ct);
+
+        // --- Categories ---
+        var defaultCategory = await db.Categories.FirstOrDefaultAsync(c => c.Name == "General", ct);
+        if (defaultCategory == null)
+        {
+            defaultCategory = new Category { Name = "General", Description = "Default general category" };
+            db.Categories.Add(defaultCategory);
+            await db.SaveChangesAsync(ct);
+        }
+
+        // --- Suppliers ---
+        var defaultSupplier = await db.Suppliers.FirstOrDefaultAsync(s => s.Name == "General Supplier", ct);
+        if (defaultSupplier == null)
+        {
+            defaultSupplier = new Supplier { Name = "General Supplier", ContactEmail = "supplier@enterprise.com" };
+            db.Suppliers.Add(defaultSupplier);
+            await db.SaveChangesAsync(ct);
+        }
 
         // --- Users ---
         if (!await db.Users.AnyAsync(u => u.Email == "admin@enterprise.com", ct))

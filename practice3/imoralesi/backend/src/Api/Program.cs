@@ -15,6 +15,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Application services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ISupplierService, SupplierService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 // JWT authentication
 var jwtKey = builder.Configuration["Jwt:Key"]!;
@@ -40,7 +42,7 @@ const string CorsPolicy = "AllowFrontend";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(CorsPolicy, policy =>
-        policy.AllowAnyOrigin()
+        policy.WithOrigins("http://localhost:81", "http://localhost")
               .AllowAnyHeader()
               .AllowAnyMethod());
 });

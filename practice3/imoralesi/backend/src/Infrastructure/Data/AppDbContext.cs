@@ -10,6 +10,8 @@ public class AppDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Product> Products => Set<Product>();
+    public DbSet<Supplier> Suppliers => Set<Supplier>();
+    public DbSet<Category> Categories => Set<Category>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -23,5 +25,22 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
         modelBuilder.Entity<Role>().HasIndex(r => r.Name).IsUnique();
+
+        // One supplier -> many products. Deleting a supplier sets products' SupplierId to null.
+        modelBuilder.Entity<Product>()
+            .HasOne(p => p.Supplier)
+            .WithMany(s => s.Products)
+            .HasForeignKey(p => p.SupplierId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        // One category -> many products
+        modelBuilder.Entity<Product>()
+            .HasOne(p => p.Category)
+            .WithMany(c => c.Products)
+            .HasForeignKey(p => p.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Supplier>().HasIndex(s => s.Name);
+        modelBuilder.Entity<Category>().HasIndex(c => c.Name);
     }
 }
