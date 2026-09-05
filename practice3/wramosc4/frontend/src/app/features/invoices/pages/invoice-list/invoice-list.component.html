@@ -1,0 +1,315 @@
+<section class="invoices-page">
+
+  <div class="page-header">
+
+    <div>
+      <span class="section-label">
+        BILLING
+      </span>
+
+      <h1>Invoices</h1>
+
+      <p>
+        Manage customer invoices and product details.
+      </p>
+    </div>
+
+    <a
+      *ngIf="auth.canManageProducts()"
+      routerLink="/invoices/new"
+      class="add-invoice-btn">
+
+      <mat-icon>receipt_long</mat-icon>
+
+      New Invoice
+    </a>
+
+  </div>
+
+
+  <div class="summary-row">
+
+    <div class="summary-card">
+
+      <div class="summary-icon">
+        <mat-icon>receipt</mat-icon>
+      </div>
+
+      <div>
+        <span>Total invoices</span>
+        <strong>{{ totalItems() }}</strong>
+      </div>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <div class="summary-icon">
+        <mat-icon>view_list</mat-icon>
+      </div>
+
+      <div>
+        <span>Current page</span>
+
+        <strong>
+          {{ totalItems() > 0 ? pageIndex + 1 : 0 }}
+          /
+          {{ getTotalPages() }}
+        </strong>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="invoices-panel">
+
+    <div class="toolbar">
+
+      <div class="search-wrapper">
+
+        <mat-icon>search</mat-icon>
+
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="search()"
+          placeholder="Search by client or status... (press Enter)" />
+
+        <button
+          *ngIf="searchTerm"
+          type="button"
+          class="clear-search"
+          (click)="clearSearch()">
+
+          <mat-icon>close</mat-icon>
+
+        </button>
+
+      </div>
+
+
+      <div class="results-info">
+
+        Page
+
+        <strong>
+          {{ totalItems() > 0 ? pageIndex + 1 : 0 }}
+        </strong>
+
+        of
+
+        <strong>
+          {{ getTotalPages() }}
+        </strong>
+
+        <span>•</span>
+
+        <strong>{{ totalItems() }}</strong>
+        invoices
+
+      </div>
+
+    </div>
+
+
+    <mat-progress-bar
+      *ngIf="loading()"
+      mode="indeterminate">
+    </mat-progress-bar>
+
+
+    <div class="table-wrapper">
+
+      <table
+        mat-table
+        [dataSource]="invoices()">
+
+
+        <ng-container matColumnDef="date">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Date
+          </th>
+
+          <td mat-cell *matCellDef="let invoice">
+            {{ invoice.invoiceDate | date:'mediumDate' }}
+          </td>
+
+        </ng-container>
+
+
+        <ng-container matColumnDef="client">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Client
+          </th>
+
+          <td mat-cell *matCellDef="let invoice">
+
+            <strong class="client-name">
+              {{ invoice.clientName }}
+            </strong>
+
+          </td>
+
+        </ng-container>
+
+
+        <ng-container matColumnDef="status">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Status
+          </th>
+
+          <td mat-cell *matCellDef="let invoice">
+
+            <span
+              class="status-badge"
+              [class.completed]="invoice.status === 'Completed'"
+              [class.cancelled]="invoice.status === 'Cancelled'">
+
+              {{ invoice.status }}
+
+            </span>
+
+          </td>
+
+        </ng-container>
+
+
+        <ng-container matColumnDef="items">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Details
+          </th>
+
+          <td mat-cell *matCellDef="let invoice">
+
+            <span class="items-badge">
+              {{ invoice.details.length }}
+              item(s)
+            </span>
+
+          </td>
+
+        </ng-container>
+
+
+        <ng-container matColumnDef="total">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Total
+          </th>
+
+          <td mat-cell *matCellDef="let invoice">
+
+            <strong class="invoice-total">
+              {{ invoice.total | currency }}
+            </strong>
+
+          </td>
+
+        </ng-container>
+
+
+        <ng-container matColumnDef="actions">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Actions
+          </th>
+
+          <td mat-cell *matCellDef="let invoice">
+
+            <div class="actions">
+
+              <a
+                mat-icon-button
+                class="edit-action"
+                [routerLink]="[
+                  '/invoices/edit',
+                  invoice.id
+                ]"
+                title="Edit">
+
+                <mat-icon>edit</mat-icon>
+
+              </a>
+
+
+              <button
+                *ngIf="auth.canDeleteProducts()"
+                mat-icon-button
+                type="button"
+                class="delete-action"
+                (click)="deleteInvoice(invoice.id)"
+                title="Delete">
+
+                <mat-icon>delete_outline</mat-icon>
+
+              </button>
+
+            </div>
+
+          </td>
+
+        </ng-container>
+
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns">
+        </tr>
+
+        <tr
+          mat-row
+          *matRowDef="
+            let row;
+            columns: displayedColumns;
+          ">
+        </tr>
+
+
+        <tr class="mat-row" *matNoDataRow>
+
+          <td
+            class="mat-cell"
+            [attr.colspan]="displayedColumns.length">
+
+            <div class="empty-state">
+
+              <div class="empty-icon">
+                <mat-icon>receipt_long</mat-icon>
+              </div>
+
+              <h3>No invoices found</h3>
+
+              <p>
+                Create an invoice to begin recording sales.
+              </p>
+
+            </div>
+
+          </td>
+
+        </tr>
+
+      </table>
+
+
+      <mat-paginator
+        [length]="totalItems()"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="pageChanged($event)"
+        showFirstLastButtons>
+      </mat-paginator>
+
+    </div>
+
+  </div>
+
+</section>

@@ -1,0 +1,32 @@
+namespace Application.DTOs;
+
+public record ClientDto(
+    Guid Id,
+    string Name,
+    string? Email,
+    string? Phone,
+    bool IsActive,
+    DateTime CreatedAt
+);
+
+public record CreateClientRequest(
+    string Name,
+    string? Email,
+    string? Phone,
+    bool IsActive
+);
+
+public record UpdateClientRequest(
+    string Name,
+    string? Email,
+    string? Phone,
+    bool IsActive
+);
+
+public record ClientPagedResult(
+    IEnumerable<ClientDto> Items,
+    int TotalItems,
+    int Page,
+    int PageSize,
+    int TotalPages
+);

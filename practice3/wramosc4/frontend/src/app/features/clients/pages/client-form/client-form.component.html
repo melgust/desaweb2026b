@@ -1,0 +1,112 @@
+<section class="client-form-page">
+
+  <div class="form-card">
+
+    <div class="form-header">
+
+      <div class="form-icon">
+        <mat-icon>person</mat-icon>
+      </div>
+
+      <div>
+        <h1>
+          {{
+            isEditMode
+              ? 'Edit Client'
+              : 'New Client'
+          }}
+        </h1>
+
+        <p>
+          Enter the client's contact information.
+        </p>
+      </div>
+
+    </div>
+
+
+    <form
+      (ngSubmit)="onSubmit()"
+      class="client-form">
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>Name</mat-label>
+
+        <input
+          matInput
+          [(ngModel)]="formData.name"
+          name="name"
+          required />
+
+      </mat-form-field>
+
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>Email</mat-label>
+
+        <input
+          matInput
+          type="email"
+          [(ngModel)]="formData.email"
+          name="email" />
+
+      </mat-form-field>
+
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>Phone</mat-label>
+
+        <input
+          matInput
+          [(ngModel)]="formData.phone"
+          name="phone" />
+
+      </mat-form-field>
+
+
+      <mat-checkbox
+        [(ngModel)]="formData.isActive"
+        name="isActive">
+
+        Active client
+
+      </mat-checkbox>
+
+
+      <div class="form-actions">
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="loading">
+
+          <mat-icon>save</mat-icon>
+
+          {{
+            isEditMode
+              ? 'Update Client'
+              : 'Create Client'
+          }}
+
+        </button>
+
+
+        <a
+          mat-button
+          routerLink="/clients">
+
+          Cancel
+
+        </a>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</section>

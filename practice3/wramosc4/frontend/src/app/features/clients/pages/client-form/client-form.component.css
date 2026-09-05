@@ -1,0 +1,55 @@
+.client-form-page {
+  display: flex;
+  justify-content: center;
+  padding: 35px 20px;
+}
+
+.form-card {
+  width: 100%;
+  max-width: 720px;
+  padding: 28px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow:
+    0 6px 20px rgba(15, 23, 42, 0.07);
+}
+
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.form-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.form-header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.form-header p {
+  margin: 5px 0 0;
+  color: #64748b;
+}
+
+.client-form {
+  display: grid;
+  gap: 16px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}

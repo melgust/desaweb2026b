@@ -1,0 +1,245 @@
+<section class="invoice-form-page">
+
+  <div class="invoice-card">
+
+    <div class="form-header">
+
+      <div>
+
+        <span class="section-label">
+          BILLING
+        </span>
+
+        <h1>
+          {{
+            isEditMode
+              ? 'Edit Invoice'
+              : 'New Invoice'
+          }}
+        </h1>
+
+        <p>
+          Select a client and add products to the invoice.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <form (ngSubmit)="onSubmit()">
+
+      <div class="invoice-info">
+
+        <mat-form-field appearance="outline">
+
+          <mat-label>Client</mat-label>
+
+          <mat-select
+            [(ngModel)]="clientId"
+            name="clientId"
+            required>
+
+            <mat-option
+              *ngFor="let client of clients()"
+              [value]="client.id">
+
+              {{ client.name }}
+
+            </mat-option>
+
+          </mat-select>
+
+        </mat-form-field>
+
+
+        <mat-form-field
+          *ngIf="isEditMode"
+          appearance="outline">
+
+          <mat-label>Status</mat-label>
+
+          <mat-select
+            [(ngModel)]="status"
+            name="status">
+
+            <mat-option value="Pending">
+              Pending
+            </mat-option>
+
+            <mat-option value="Completed">
+              Completed
+            </mat-option>
+
+            <mat-option value="Cancelled">
+              Cancelled
+            </mat-option>
+
+          </mat-select>
+
+        </mat-form-field>
+
+      </div>
+
+
+      <div class="details-header">
+
+        <div>
+          <h2>Invoice Details</h2>
+
+          <p>
+            Add the products included in this invoice.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="add-line-btn"
+          (click)="addLine()">
+
+          <mat-icon>add</mat-icon>
+
+          Add Product
+        </button>
+
+      </div>
+
+
+      <div class="detail-table">
+
+        <div class="detail-head">
+
+          <span>Product</span>
+          <span>Price</span>
+          <span>Quantity</span>
+          <span>Subtotal</span>
+          <span></span>
+
+        </div>
+
+
+        <div
+          class="detail-row"
+          *ngFor="
+            let line of lines;
+            let i = index
+          ">
+
+          <mat-form-field appearance="outline">
+
+            <mat-label>Product</mat-label>
+
+            <mat-select
+              [(ngModel)]="line.productId"
+              [name]="'product' + i">
+
+              <mat-option
+                *ngFor="let product of products()"
+                [value]="product.id">
+
+                {{ product.name }}
+
+              </mat-option>
+
+            </mat-select>
+
+          </mat-form-field>
+
+
+          <div class="money-value">
+
+            {{
+              (getProduct(line.productId)?.price || 0)
+                | currency
+            }}
+
+          </div>
+
+
+          <mat-form-field appearance="outline">
+
+            <mat-label>Quantity</mat-label>
+
+            <input
+              matInput
+              type="number"
+              min="1"
+              [(ngModel)]="line.quantity"
+              [name]="'quantity' + i" />
+
+          </mat-form-field>
+
+
+          <div class="subtotal">
+
+            {{
+              getLineSubtotal(line)
+                | currency
+            }}
+
+          </div>
+
+
+          <button
+            type="button"
+            mat-icon-button
+            class="remove-btn"
+            (click)="removeLine(i)"
+            [disabled]="lines.length === 1">
+
+            <mat-icon>
+              delete_outline
+            </mat-icon>
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="invoice-total">
+
+        <span>Total</span>
+
+        <strong>
+          {{ getTotal() | currency }}
+        </strong>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="loading">
+
+          <mat-icon>save</mat-icon>
+
+          {{
+            isEditMode
+              ? 'Update Invoice'
+              : 'Create Invoice'
+          }}
+
+        </button>
+
+
+        <a
+          mat-button
+          routerLink="/invoices">
+
+          Cancel
+
+        </a>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</section>

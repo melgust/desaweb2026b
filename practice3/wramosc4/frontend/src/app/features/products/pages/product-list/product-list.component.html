@@ -1,86 +1,539 @@
-<div class="card">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <h3 class="card-title mb-0">Enterprise Products</h3>
-    <a *ngIf="auth.canManageProducts()" routerLink="/products/new" class="btn btn-primary btn-sm">
-      + Add Product
+<section class="products-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <span class="section-label">INVENTORY</span>
+
+      <h1>Enterprise Products</h1>
+
+      <p>
+        Manage products, categories, suppliers and stock.
+      </p>
+    </div>
+
+    <a
+      *ngIf="auth.canManageProducts()"
+      routerLink="/products/new"
+      class="add-product-btn">
+
+      <mat-icon>add</mat-icon>
+      Add Product
     </a>
   </div>
 
-  <div class="card-body">
-    <mat-form-field appearance="outline" class="search-field">
-      <mat-label>Search products</mat-label>
-      <input matInput placeholder="Type and press Enter"
-             [(ngModel)]="searchTerm" (keyup.enter)="onSearchChange()" />
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
 
-    <mat-progress-bar *ngIf="loading()" mode="indeterminate"></mat-progress-bar>
+  <!-- SUMMARY CARDS -->
+  <div class="summary-row">
 
-    <div class="mat-elevation-z1 table-container">
-      <table mat-table [dataSource]="products()" matSort (matSortChange)="onSortChange($event)"
-             [matSortActive]="sortBy" [matSortDirection]="sortDirection">
+    <div class="summary-card">
+      <div class="summary-icon">
+        <mat-icon>inventory_2</mat-icon>
+      </div>
 
-        <!-- Name -->
+      <div>
+        <span>Total products</span>
+        <strong>{{ totalItems() }}</strong>
+      </div>
+    </div>
+
+
+    <div class="summary-card">
+      <div class="summary-icon">
+        <mat-icon>view_list</mat-icon>
+      </div>
+
+      <div>
+        <span>Current page</span>
+
+        <strong>
+          {{ totalItems() > 0 ? pageIndex + 1 : 0 }}
+          /
+          {{ getTotalPages() }}
+        </strong>
+      </div>
+    </div>
+
+
+    <div class="summary-card">
+      <div class="summary-icon">
+        <mat-icon>visibility</mat-icon>
+      </div>
+
+      <div>
+        <span>Showing</span>
+        <strong>{{ products().length }}</strong>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- PAGINATION MODE -->
+  <div class="pagination-mode-bar">
+
+    <span class="pagination-label">
+      Pagination:
+    </span>
+
+    <div class="pagination-toggle">
+
+      <button
+        type="button"
+        [class.active]="paginationMode === 'offset'"
+        (click)="changePaginationMode('offset')">
+
+        <mat-icon>view_list</mat-icon>
+
+        Offset Pagination
+      </button>
+
+
+      <button
+        type="button"
+        [class.active]="paginationMode === 'infinite'"
+        (click)="changePaginationMode('infinite')">
+
+        <mat-icon>swap_vert</mat-icon>
+
+        Infinite Scroll
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- MAIN PANEL -->
+  <div class="products-panel">
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+
+      <div class="search-wrapper">
+        <mat-icon>search</mat-icon>
+
+        <input
+          type="text"
+          placeholder="Search products... (press Enter)"
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="onSearchChange()" />
+
+        <button
+          *ngIf="searchTerm"
+          type="button"
+          class="clear-search"
+          (click)="clearSearch()">
+
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+
+      <div class="results-info">
+
+        <ng-container *ngIf="paginationMode === 'offset'">
+
+          Page
+
+          <strong>
+            {{ totalItems() > 0 ? pageIndex + 1 : 0 }}
+          </strong>
+
+          of
+
+          <strong>
+            {{ getTotalPages() }}
+          </strong>
+
+          <span class="separator">•</span>
+
+        </ng-container>
+
+
+        <ng-container *ngIf="paginationMode === 'infinite'">
+
+          Showing
+
+          <strong>
+            {{ products().length }}
+          </strong>
+
+          of
+
+        </ng-container>
+
+        <strong>{{ totalItems() }}</strong>
+        products
+
+      </div>
+
+    </div>
+
+
+    <!-- LOADING -->
+    <mat-progress-bar
+      *ngIf="loading()"
+      mode="indeterminate">
+    </mat-progress-bar>
+
+
+    <!-- TABLE -->
+    <div class="table-wrapper">
+
+      <table
+        mat-table
+        [dataSource]="products()"
+        matSort
+        (matSortChange)="onSortChange($event)"
+        [matSortActive]="sortBy"
+        [matSortDirection]="sortDirection">
+
+
+        <!-- PRODUCT NAME -->
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-          <td mat-cell *matCellDef="let item">{{ item.name }}</td>
+
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header>
+
+            Product
+          </th>
+
+          <td
+            mat-cell
+            *matCellDef="let item">
+
+            <div class="product-name">
+              {{ item.name }}
+            </div>
+
+          </td>
+
         </ng-container>
 
-        <!-- Description -->
-        <ng-container matColumnDef="description">
-          <th mat-header-cell *matHeaderCellDef>Description</th>
-          <td mat-cell *matCellDef="let item">{{ item.description || '-' }}</td>
+
+        <!-- CATEGORY -->
+        <ng-container matColumnDef="category">
+
+          <th
+            mat-header-cell
+            *matHeaderCellDef>
+
+            Category
+          </th>
+
+          <td
+            mat-cell
+            *matCellDef="let item">
+
+            <span
+              class="category-badge"
+              *ngIf="item.categoryName; else noCategory">
+
+              {{ item.categoryName }}
+
+            </span>
+
+            <ng-template #noCategory>
+              <span class="empty-value">
+                No category
+              </span>
+            </ng-template>
+
+          </td>
+
         </ng-container>
 
-        <!-- Price -->
-        <ng-container matColumnDef="price">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
-          <td mat-cell *matCellDef="let item">{{ item.price | currency }}</td>
-        </ng-container>
 
-        <!-- Stock -->
-        <ng-container matColumnDef="stock">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock</th>
-          <td mat-cell *matCellDef="let item">{{ item.stock }}</td>
-        </ng-container>
-
-        <!-- Supplier -->
+        <!-- SUPPLIER -->
         <ng-container matColumnDef="supplier">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Supplier</th>
-          <td mat-cell *matCellDef="let item">{{ item.supplierName || '-' }}</td>
+
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header>
+
+            Supplier
+          </th>
+
+          <td
+            mat-cell
+            *matCellDef="let item">
+
+            <span
+              class="supplier-badge"
+              *ngIf="item.supplierName; else noSupplier">
+
+              {{ item.supplierName }}
+
+            </span>
+
+            <ng-template #noSupplier>
+              <span class="empty-value">
+                No supplier
+              </span>
+            </ng-template>
+
+          </td>
+
         </ng-container>
 
-        <!-- Actions -->
+
+        <!-- DESCRIPTION -->
+        <ng-container matColumnDef="description">
+
+          <th
+            mat-header-cell
+            *matHeaderCellDef>
+
+            Description
+          </th>
+
+          <td
+            mat-cell
+            *matCellDef="let item">
+
+            <span class="description-text">
+              {{ item.description || '-' }}
+            </span>
+
+          </td>
+
+        </ng-container>
+
+
+        <!-- PRICE -->
+        <ng-container matColumnDef="price">
+
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header>
+
+            Price
+          </th>
+
+          <td
+            mat-cell
+            *matCellDef="let item">
+
+            <strong class="price">
+              {{ item.price | currency }}
+            </strong>
+
+          </td>
+
+        </ng-container>
+
+
+        <!-- STOCK -->
+        <ng-container matColumnDef="stock">
+
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header>
+
+            Stock
+          </th>
+
+          <td
+            mat-cell
+            *matCellDef="let item">
+
+            <span
+              class="stock-badge"
+              [class.low-stock]="item.stock <= 10">
+
+              {{ item.stock }}
+
+            </span>
+
+          </td>
+
+        </ng-container>
+
+
+        <!-- ACTIONS -->
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td mat-cell *matCellDef="let item">
-            <a mat-icon-button color="primary" [routerLink]="['/products/edit', item.id]" title="Edit">
-              <mat-icon>edit</mat-icon>
-            </a>
-            <button *ngIf="auth.canDeleteProducts()" mat-icon-button color="warn"
-                    (click)="deleteProduct(item.id)" title="Delete">
-              <mat-icon>delete</mat-icon>
-            </button>
+
+          <th
+            mat-header-cell
+            *matHeaderCellDef>
+
+            Actions
+          </th>
+
+          <td
+            mat-cell
+            *matCellDef="let item">
+
+            <div class="actions">
+
+              <a
+                mat-icon-button
+                [routerLink]="[
+                  '/products/edit',
+                  item.id
+                ]"
+                class="edit-action"
+                title="Edit">
+
+                <mat-icon>edit</mat-icon>
+
+              </a>
+
+
+              <button
+                *ngIf="auth.canDeleteProducts()"
+                mat-icon-button
+                type="button"
+                class="delete-action"
+                (click)="deleteProduct(item.id)"
+                title="Delete">
+
+                <mat-icon>delete_outline</mat-icon>
+
+              </button>
+
+            </div>
+
           </td>
+
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-        <tr class="mat-row" *matNoDataRow>
-          <td class="mat-cell text-center py-3" [attr.colspan]="displayedColumns.length">
-            {{ loading() ? 'Loading data...' : 'No products found.' }}
-          </td>
+        <!-- ROWS -->
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns">
         </tr>
+
+
+        <tr
+          mat-row
+          *matRowDef="
+            let row;
+            columns: displayedColumns;
+          ">
+        </tr>
+
+
+        <!-- EMPTY STATE -->
+        <tr
+          class="mat-row"
+          *matNoDataRow>
+
+          <td
+            class="mat-cell"
+            [attr.colspan]="displayedColumns.length">
+
+            <div class="empty-state">
+
+              <div class="empty-icon">
+                <mat-icon>
+                  inventory_2
+                </mat-icon>
+              </div>
+
+              <h3>
+                {{
+                  loading()
+                    ? 'Loading products...'
+                    : 'No products found'
+                }}
+              </h3>
+
+              <p *ngIf="!loading()">
+                Try another search or add a new product.
+              </p>
+
+            </div>
+
+          </td>
+
+        </tr>
+
       </table>
 
-      <mat-paginator [length]="totalItems()"
-                     [pageIndex]="pageIndex"
-                     [pageSize]="pageSize"
-                     [pageSizeOptions]="pageSizeOptions"
-                     (page)="onPageChange($event)"
-                     showFirstLastButtons>
+
+      <!-- OFFSET PAGINATION -->
+      <mat-paginator
+        *ngIf="paginationMode === 'offset'"
+        [length]="totalItems()"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="onPageChange($event)"
+        showFirstLastButtons>
       </mat-paginator>
+
+
+      <!-- INFINITE SCROLL STATUS -->
+      <div
+        class="infinite-status"
+        *ngIf="paginationMode === 'infinite'">
+
+        <div *ngIf="loading()">
+
+          <mat-icon>sync</mat-icon>
+
+          Loading more products...
+
+        </div>
+
+
+        <div
+          *ngIf="
+            !loading() &&
+            products().length < totalItems()
+          ">
+
+          <mat-icon>south</mat-icon>
+
+          Scroll down to load more products
+
+        </div>
+
+
+        <div
+          *ngIf="
+            !loading() &&
+            products().length >= totalItems() &&
+            totalItems() > 0
+          ">
+
+          <mat-icon>check_circle</mat-icon>
+
+          All products loaded
+
+        </div>
+
+
+        <small>
+
+          Showing
+
+          <strong>
+            {{ products().length }}
+          </strong>
+
+          of
+
+          <strong>
+            {{ totalItems() }}
+          </strong>
+
+          products
+
+        </small>
+
+      </div>
+
     </div>
+
   </div>
-</div>
+
+</section>
