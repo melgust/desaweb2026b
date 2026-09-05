@@ -1,0 +1,29 @@
+.invoice-detail-card {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.invoice-info {
+  display: grid;
+  gap: 8px;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.total {
+  font-size: 18px;
+}

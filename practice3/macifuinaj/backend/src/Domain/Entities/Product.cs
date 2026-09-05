@@ -17,4 +17,10 @@ public class Product
     // Muchos productos pertenecen a una categoría
     public Guid? CategoryId { get; set; }
     public Category? Category { get; set; }
+
+    public ICollection<InvoiceDetail> InvoiceDetails{
+        get; 
+        set;
+    }
+    =new List<InvoiceDetail>();
 }

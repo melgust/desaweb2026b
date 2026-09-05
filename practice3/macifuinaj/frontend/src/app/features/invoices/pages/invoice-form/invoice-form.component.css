@@ -1,0 +1,60 @@
+.invoice-card {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.product-row {
+  display: flex;
+  gap: 15px;
+  align-items: end;
+  flex-wrap: wrap;
+}
+
+.product-field {
+  flex: 1;
+  min-width: 250px;
+}
+
+.quantity-field {
+  width: 140px;
+}
+
+.add-button-container {
+  margin-bottom: 16px;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.empty-message {
+  padding: 25px;
+  color: #777;
+}
+
+.total {
+  font-size: 18px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}

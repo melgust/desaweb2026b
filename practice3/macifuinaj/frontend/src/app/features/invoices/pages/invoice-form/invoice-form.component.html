@@ -1,0 +1,224 @@
+<div class="card invoice-card">
+
+  <div class="card-header">
+    <h3 class="card-title mb-0">
+      New Invoice
+    </h3>
+  </div>
+
+  <div class="card-body">
+
+    <!-- CLIENT -->
+    <div class="form-group">
+      <label for="client">
+        Client
+      </label>
+
+      <select
+        id="client"
+        name="client"
+        class="form-control"
+        [(ngModel)]="clientId">
+
+        <option value="">
+          Select a client
+        </option>
+
+        <option
+          *ngFor="let client of clients"
+          [value]="client.id">
+
+          {{ client.name }}
+          <ng-container *ngIf="client.nit">
+            - {{ client.nit }}
+          </ng-container>
+
+        </option>
+
+      </select>
+    </div>
+
+    <hr />
+
+    <!-- ADD PRODUCT -->
+    <h5>Add Product</h5>
+
+    <div class="product-row">
+
+      <div class="form-group product-field">
+
+        <label for="product">
+          Product
+        </label>
+
+        <select
+          id="product"
+          name="product"
+          class="form-control"
+          [(ngModel)]="selectedProductId">
+
+          <option value="">
+            Select a product
+          </option>
+
+          <option
+            *ngFor="let product of products"
+            [value]="product.id">
+
+            {{ product.name }}
+            - Q {{ product.price | number:'1.2-2' }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="form-group quantity-field">
+
+        <label for="quantity">
+          Quantity
+        </label>
+
+        <input
+          id="quantity"
+          name="quantity"
+          type="number"
+          min="1"
+          class="form-control"
+          [(ngModel)]="quantity" />
+
+      </div>
+
+      <div class="add-button-container">
+
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="addProduct()">
+
+          Add
+
+        </button>
+
+      </div>
+
+    </div>
+
+    <hr />
+
+    <!-- DETAIL -->
+    <h5>Invoice Detail</h5>
+
+    <div class="table-responsive">
+
+      <table class="table table-bordered table-striped">
+
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th class="text-center">Quantity</th>
+            <th class="text-right">Unit Price</th>
+            <th class="text-right">Subtotal</th>
+            <th class="text-center">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let detail of details; let i = index">
+
+            <td>
+              {{ detail.productName }}
+            </td>
+
+            <td class="text-center">
+              {{ detail.quantity }}
+            </td>
+
+            <td class="text-right">
+              Q {{ detail.unitPrice | number:'1.2-2' }}
+            </td>
+
+            <td class="text-right">
+              Q {{ detail.subtotal | number:'1.2-2' }}
+            </td>
+
+            <td class="text-center">
+
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                (click)="removeProduct(i)">
+
+                Remove
+
+              </button>
+
+            </td>
+
+          </tr>
+
+          <tr *ngIf="details.length === 0">
+
+            <td
+              colspan="5"
+              class="text-center empty-message">
+
+              No products added.
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+        <tfoot *ngIf="details.length > 0">
+
+          <tr>
+
+            <th colspan="3" class="text-right">
+              TOTAL
+            </th>
+
+            <th class="text-right total">
+              Q {{ total | number:'1.2-2' }}
+            </th>
+
+            <th></th>
+
+          </tr>
+
+        </tfoot>
+
+      </table>
+
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="loading"
+        (click)="save()">
+
+        {{ loading ? 'Saving...' : 'Create Invoice' }}
+
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-secondary"
+        [disabled]="loading"
+        (click)="cancel()">
+
+        Cancel
+
+      </button>
+
+    </div>
+
+  </div>
+</div>

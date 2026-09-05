@@ -1,0 +1,13 @@
+.table-container {
+  width: 100%;
+  overflow: auto;
+  background: #fff;
+}
+
+table {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
