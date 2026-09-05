@@ -75,5 +75,23 @@ public static class DbSeeder
         }
 
         await db.SaveChangesAsync(ct);
+
+        // --- Clients ---
+        (string Name, string Email, string Phone)[] defaultClients =
+        {
+            ("Juan Pérez", "juan.perez@example.com", "5555-1001"),
+            ("María López", "maria.lopez@example.com", "5555-1002"),
+            ("Carlos Ramírez", "carlos.ramirez@example.com", "5555-1003"),
+        };
+
+        foreach (var (name, email, phone) in defaultClients)
+        {
+            if (!await db.Clients.AnyAsync(c => c.Email == email, ct))
+            {
+                db.Clients.Add(new Client { Name = name, Email = email, Phone = phone, IsActive = true });
+            }
+        }
+
+        await db.SaveChangesAsync(ct);
     }
 }

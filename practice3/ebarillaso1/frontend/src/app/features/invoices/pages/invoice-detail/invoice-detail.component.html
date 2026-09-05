@@ -1,0 +1,65 @@
+<div class="card" *ngIf="!loading(); else loadingTpl">
+  <ng-container *ngIf="invoice() as inv; else notFoundTpl">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3 class="card-title mb-0">Invoice {{ inv.invoiceNumber }}</h3>
+      <a routerLink="/invoices" class="btn btn-secondary btn-sm">Back to List</a>
+    </div>
+
+    <div class="card-body">
+      <div *ngIf="errorMessage()" class="alert alert-danger">{{ errorMessage() }}</div>
+
+      <div class="summary-grid">
+        <div><strong>Client:</strong> {{ inv.clientName }}</div>
+        <div><strong>Date:</strong> {{ inv.invoiceDate | date:'medium' }}</div>
+        <div>
+          <strong>Status:</strong>
+          <select [ngModel]="inv.status" (ngModelChange)="onStatusChange($event)"
+                  [disabled]="!auth.canManageProducts() || updatingStatus" class="status-select">
+            <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+        <div><strong>Total:</strong> {{ inv.total | currency }}</div>
+      </div>
+
+      <h4>Detail Lines</h4>
+      <div class="mat-elevation-z1 table-container">
+        <table mat-table [dataSource]="inv.details">
+          <ng-container matColumnDef="product">
+            <th mat-header-cell *matHeaderCellDef>Product</th>
+            <td mat-cell *matCellDef="let line">{{ line.productName }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="unitPrice">
+            <th mat-header-cell *matHeaderCellDef>Unit Price</th>
+            <td mat-cell *matCellDef="let line">{{ line.unitPrice | currency }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef>Quantity</th>
+            <td mat-cell *matCellDef="let line">{{ line.quantity }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="subtotal">
+            <th mat-header-cell *matHeaderCellDef>Subtotal</th>
+            <td mat-cell *matCellDef="let line">{{ line.subtotal | currency }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="detailColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: detailColumns;"></tr>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #notFoundTpl>
+    <div class="card-body">
+      <div class="alert alert-danger">{{ errorMessage() || 'Invoice not found.' }}</div>
+    </div>
+  </ng-template>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="card">
+    <div class="card-body">Loading invoice...</div>
+  </div>
+</ng-template>

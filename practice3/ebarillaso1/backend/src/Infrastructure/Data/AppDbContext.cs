@@ -12,6 +12,9 @@ public class AppDbContext : DbContext
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Supplier> Suppliers => Set<Supplier>();
     public DbSet<Category> Categories => Set<Category>();
+    public DbSet<Client> Clients => Set<Client>();
+    public DbSet<Invoice> Invoices => Set<Invoice>();
+    public DbSet<Detail> Details => Set<Detail>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -43,5 +46,28 @@ public class AppDbContext : DbContext
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<Category>().HasIndex(c => c.Name);
+
+        // One client -> many invoices. A client with invoices cannot be deleted (enforced in ClientService too).
+        modelBuilder.Entity<Invoice>()
+            .HasOne(i => i.Client)
+            .WithMany(c => c.Invoices)
+            .HasForeignKey(i => i.ClientId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Invoice>().HasIndex(i => i.InvoiceNumber).IsUnique();
+
+        // One invoice -> many detail lines. Deleting an invoice deletes its details.
+        modelBuilder.Entity<Detail>()
+            .HasOne(d => d.Invoice)
+            .WithMany(i => i.Details)
+            .HasForeignKey(d => d.InvoiceId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // One product -> many detail lines. A product referenced by a detail cannot be hard-deleted.
+        modelBuilder.Entity<Detail>()
+            .HasOne(d => d.Product)
+            .WithMany(p => p.Details)
+            .HasForeignKey(d => d.ProductId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

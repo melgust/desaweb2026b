@@ -18,4 +18,7 @@ public class Product
     // Many products belong to one category (optional).
     public Guid? CategoryId { get; set; }
     public Category? Category { get; set; }
+
+    // One product can appear in many invoice detail lines.
+    public ICollection<Detail> Details { get; set; } = new List<Detail>();
 }
