@@ -40,6 +40,8 @@ services:
     restart: always
     ports:
       - "81:80"
+    volumes:
+      - ./frontend/src:/app/src
     depends_on:
       - backend
 

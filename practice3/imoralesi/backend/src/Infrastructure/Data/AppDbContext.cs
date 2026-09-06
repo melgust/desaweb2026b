@@ -12,6 +12,9 @@ public class AppDbContext : DbContext
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Supplier> Suppliers => Set<Supplier>();
     public DbSet<Category> Categories => Set<Category>();
+    public DbSet<Client> Clients => Set<Client>();
+    public DbSet<Invoice> Invoices => Set<Invoice>();
+    public DbSet<InvoiceDetail> InvoiceDetails => Set<InvoiceDetail>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -42,5 +45,28 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Supplier>().HasIndex(s => s.Name);
         modelBuilder.Entity<Category>().HasIndex(c => c.Name);
+
+        // Client configurations
+        modelBuilder.Entity<Client>().HasIndex(c => c.Email).IsUnique();
+
+        // Invoice configurations
+        modelBuilder.Entity<Invoice>()
+            .HasOne(i => i.Client)
+            .WithMany(c => c.Invoices)
+            .HasForeignKey(i => i.ClientId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // InvoiceDetail configurations
+        modelBuilder.Entity<InvoiceDetail>()
+            .HasOne(id => id.Invoice)
+            .WithMany(i => i.Details)
+            .HasForeignKey(id => id.InvoiceId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<InvoiceDetail>()
+            .HasOne(id => id.Product)
+            .WithMany()
+            .HasForeignKey(id => id.ProductId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

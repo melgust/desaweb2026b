@@ -1,0 +1,40 @@
+<div class="container-fluid px-4 py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-dark m-0">Enterprise Invoices</h2>
+    <a routerLink="/invoices/new" class="btn btn-primary btn-sm">
+      + Create Invoice
+    </a>
+  </div>
+
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th class="px-4 py-3">Invoice ID</th>
+              <th class="px-4 py-3">Client</th>
+              <th class="px-4 py-3">Date</th>
+              <th class="px-4 py-3">Total</th>
+              <th class="px-4 py-3 text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let invoice of invoices()">
+              <td class="px-4 py-3 fw-semibold text-dark">#{{ invoice.id }}</td>
+              <td class="px-4 py-3 text-muted">{{ invoice.clientName || 'N/A' }}</td>
+              <td class="px-4 py-3 text-muted">{{ invoice.date | date:'shortDate' }}</td>
+              <td class="px-4 py-3 text-muted">{{ invoice.total | currency }}</td>
+              <td class="px-4 py-3 text-end">
+                <a [routerLink]="['/invoices', invoice.id]" class="btn btn-sm btn-outline-secondary me-2">View Details</a>
+              </td>
+            </tr>
+            <tr *ngIf="invoices().length === 0">
+              <td colspan="5" class="text-center py-4 text-muted">No invoices found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

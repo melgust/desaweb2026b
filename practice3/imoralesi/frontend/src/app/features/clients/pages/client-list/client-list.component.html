@@ -1,0 +1,49 @@
+<div class="container-fluid px-4 py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-dark m-0">Enterprise Clients</h2>
+    <a routerLink="/clients/new" class="btn btn-primary btn-sm">
+      + Add Client
+    </a>
+  </div>
+
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-light py-3">
+      <input 
+        type="text" 
+        placeholder="Search clients..." 
+        class="form-control w-25"
+      />
+    </div>
+
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th class="px-4 py-3">Name</th>
+              <th class="px-4 py-3">Email</th>
+              <th class="px-4 py-3">Phone</th>
+              <th class="px-4 py-3">Address</th>
+              <th class="px-4 py-3 text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let client of clients">
+              <td class="px-4 py-3 fw-semibold text-dark">{{ client.name }}</td>
+              <td class="px-4 py-3 text-muted">{{ client.email }}</td>
+              <td class="px-4 py-3 text-muted">{{ client.phone }}</td>
+              <td class="px-4 py-3 text-muted">{{ client.address }}</td>
+              <td class="px-4 py-3 text-end">
+                <button class="btn btn-sm btn-outline-primary me-2">Edit</button>
+                <button class="btn btn-sm btn-outline-danger">Delete</button>
+              </td>
+            </tr>
+            <tr *ngIf="clients.length === 0">
+              <td colspan="5" class="text-center py-4 text-muted">No clients found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
