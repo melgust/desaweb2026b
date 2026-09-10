@@ -1,301 +1,516 @@
-# catalog-service
+# Práctica 4 — Catalog Service con Spring Boot
 
-A production-quality **Catalog microservice** for an online store, built with
-**Java 25**, **Spring Boot 4.1.x** and **PostgreSQL 18**, following a clean
-layered architecture designed to evolve without rewriting business logic.
+**Universidad Mariano Gálvez de Guatemala**  
+**Facultad de Ingeniería en Sistemas**  
+**Curso:** Desarrollo Web  
+**Docente:** Ing. Melvín Cali  
 
----
-
-## Current state
-
-```
-CURRENT STATE
-
-Authentication:    OFF
-OAuth2:            OFF
-OIDC:              OFF
-JWT:               OFF
-Identity Provider: NONE
-API Gateway:       NONE
-Roles:             NOT ENFORCED
-Scopes:            NOT ENFORCED
-
-Architecture:
-
-Client
-   |
-   v
-catalog-service
-   |
-   v
-PostgreSQL
-```
-
-Every endpoint is directly reachable **without any `Authorization` header**.
-
-```bash
-curl http://localhost:8080/api/v1/products   # works, no token required
-```
+**Estudiante:** Maryori Elizabeth Acifuina Juárez  
+**Carné:** 7690 23 6640  
 
 ---
 
-## 1. Project purpose
+## 1. Descripción
 
-Provide the catalog capability (products) for an online store as an independent,
-testable and extensible microservice. This is the first stage of a larger
-system; authentication and an API Gateway are intentionally deferred.
+Esta práctica consiste en la implementación de un **Catalog Service** utilizando **Spring Boot**, encargado de administrar el catálogo de productos de una tienda mediante una API REST.
 
-## 2. Current architecture
+El servicio permite realizar operaciones de:
 
-The client (Postman, frontend, curl) calls the service directly, which talks to
-PostgreSQL. There is no gateway and no identity provider.
+- Creación de productos.
+- Consulta de productos.
+- Consulta de un producto por identificador.
+- Actualización de productos.
+- Eliminación de productos.
+- Paginación y ordenamiento.
+- Filtrado y búsqueda de productos.
 
-## 3. Future architecture
+La información se almacena en una base de datos **PostgreSQL** y el esquema de la base de datos se administra mediante **Flyway**.
 
+---
+
+## 2. Base utilizada
+
+Para el desarrollo de esta práctica se tomó como referencia la estructura de Catalog Service proporcionada por el docente durante el curso.
+
+A partir de dicha estructura se realizó una implementación dentro de la carpeta personal:
+
+```text
+practice4/macifuinaj/
 ```
-FUTURE STATE
 
-Client
-   |
-   v
-API Gateway
-   |
-   v
-catalog-service
-   |
-   v
+La aplicación fue adaptada, configurada y validada de forma independiente para esta entrega.
+
+---
+
+## 3. Tecnologías utilizadas
+
+- Java 25
+- Spring Boot
+- Spring Data JPA
+- PostgreSQL
+- Flyway
+- Maven
+- Docker
+- Docker Compose
+- Swagger / OpenAPI
+- JUnit
+- Mockito
+- Testcontainers
+
+---
+
+## 4. Arquitectura
+
+El proyecto utiliza una organización por capas:
+
+```text
+Cliente / Swagger
+       |
+       v
+ProductController
+       |
+       v
+ProductService
+       |
+       v
+ProductServiceImpl
+       |
+       v
+ProductRepository
+       |
+       v
 PostgreSQL
-
-Identity Provider
-   |
-   +-- OAuth2 / OIDC
-   |
-   +-- JWT access tokens
 ```
 
-The code is structured so this evolution requires **no changes to business
-logic** — only added security configuration and gateway infrastructure.
+Cada capa posee una responsabilidad específica.
 
-## 4. Package structure
+### Controller
 
+`ProductController` recibe las solicitudes HTTP y expone los endpoints REST del catálogo.
+
+### Service
+
+`ProductService` define las operaciones disponibles para la administración de productos.
+
+`ProductServiceImpl` contiene la lógica necesaria para ejecutar dichas operaciones.
+
+### Repository
+
+`ProductRepository` utiliza Spring Data JPA para realizar las operaciones de persistencia sobre PostgreSQL.
+
+### DTO
+
+Los datos recibidos y enviados por la API se manejan mediante DTOs, evitando exponer directamente la entidad de persistencia.
+
+Se utilizan:
+
+```text
+ProductRequest
+ProductResponse
+ProductSummaryResponse
 ```
-com.example.catalog
-├── CatalogApplication.java        # entry point
-├── config/
-│   └── OpenApiConfig.java         # OpenAPI/Swagger (no security scheme yet)
-├── catalog/
-│   ├── controller/                # thin HTTP layer
-│   ├── dto/                       # HTTP contract (records)
-│   ├── entity/                    # JPA entities + enum
-│   ├── mapper/                    # entity <-> DTO conversions
-│   ├── repository/                # persistence
-│   └── service/                   # business logic + transactions
-└── common/
-    └── exception/                 # business exceptions + handler
+
+### Mapper
+
+`ProductMapper` se encarga de transformar los datos entre entidades y DTOs.
+
+---
+
+## 5. Estructura principal
+
+```text
+practice4/macifuinaj/
+|
+├── Dockerfile
+├── compose.yml
+├── pom.xml
+├── README.md
+|
+└── src/
+    ├── main/
+    │   ├── java/
+    │   │   └── com/macifuinaj/catalog/
+    │   │       ├── CatalogApplication.java
+    │   │       ├── catalog/
+    │   │       │   ├── controller/
+    │   │       │   ├── dto/
+    │   │       │   ├── entity/
+    │   │       │   ├── mapper/
+    │   │       │   ├── repository/
+    │   │       │   └── service/
+    │   │       ├── common/
+    │   │       │   └── exception/
+    │   │       └── config/
+    │   │
+    │   └── resources/
+    │       ├── application.yml
+    │       ├── application-dev.yml
+    │       ├── application-test.yml
+    │       └── db/migration/
+    │           └── V1__create_products.sql
+    │
+    └── test/
+        └── java/
+            └── com/macifuinaj/catalog/
 ```
 
-## 5. Controller responsibilities
+---
 
-`ProductController` only: receives HTTP requests, validates DTOs, calls the
-service, returns DTOs and appropriate status codes. It never touches the
-repository, contains no business logic and performs no mapping.
+## 6. Modelo de producto
 
-## 6. DTO responsibilities
+El catálogo administra productos con información como:
 
-DTOs define the HTTP contract. Entities are **never** exposed:
-- `ProductRequest` — create/update payload with Jakarta Bean Validation.
-- `ProductResponse` — full representation for single-resource endpoints.
-- `ProductSummaryResponse` — compact representation for list responses.
+- SKU
+- Nombre
+- Slug
+- Descripción
+- Precio
+- Moneda
+- Estado
 
-## 7. Service responsibilities
+Los estados disponibles para un producto son:
 
-`ProductService` / `ProductServiceImpl` hold all business rules: SKU/slug
-uniqueness, existence checks, transaction boundaries (`@Transactional`),
-repository coordination and mapper invocation.
+```text
+DRAFT
+ACTIVE
+INACTIVE
+```
 
-## 8. Repository responsibilities
+---
 
-`ProductRepository` (`JpaRepository` + `JpaSpecificationExecutor`) handles only
-persistence, including derived queries (`existsBySku`, `findBySlug`, …) and
-dynamic filter specifications.
+## 7. Endpoints
 
-## 9. Entity responsibilities
+La API utiliza como ruta base:
 
-`Product` represents persistence/domain state: UUID primary key, optimistic
-locking via `@Version`, audit timestamps and `ProductStatus` persisted as text.
-No JPA relationships exist at this stage.
+```text
+/api/v1/products
+```
 
-## 10. Mapper responsibilities
+### Crear producto
 
-`ProductMapper` performs explicit conversions:
-`ProductRequest -> Product`, `Product -> ProductResponse`,
-`Product -> ProductSummaryResponse`. Mapping never happens in controllers.
+```http
+POST /api/v1/products
+```
 
-## 11. PostgreSQL
+Ejemplo:
 
-PostgreSQL 18 is the only datastore. The database contains exactly one business
-table: `products`. There are no user, role, permission or auth tables.
+```json
+{
+  "sku": "LAP-001",
+  "name": "Laptop Lenovo",
+  "slug": "laptop-lenovo",
+  "description": "Laptop para oficina y estudio",
+  "price": 4500.00,
+  "currency": "GTQ",
+  "status": "ACTIVE"
+}
+```
 
-## 12. Flyway
+Respuesta esperada:
 
-Flyway owns the schema via `src/main/resources/db/migration/V1__create_products.sql`.
-Hibernate runs with `ddl-auto: validate` and never creates or modifies schema.
+```text
+201 Created
+```
 
-## 13. Docker
+---
 
-Multi-stage `Dockerfile`: builds with `maven:3.9-eclipse-temurin-25`, runs on
-`eclipse-temurin:25-jre` as a **non-root** user, exposes port `8080` and is
-configured entirely through environment variables.
+### Listar productos
 
-## 14. Docker Compose
+```http
+GET /api/v1/products
+```
 
-`compose.yml` defines exactly two services — `catalog-service` and `postgres`
-(18-alpine) — with a persistent volume, a PostgreSQL healthcheck and a
-dependency on a healthy database.
+Permite utilizar paginación:
+
+```text
+?page=0&size=10
+```
+
+También permite ordenamiento:
+
+```text
+?page=0&size=10&sort=name,asc
+```
+
+Respuesta esperada:
+
+```text
+200 OK
+```
+
+---
+
+### Consultar producto por ID
+
+```http
+GET /api/v1/products/{id}
+```
+
+Respuesta esperada cuando existe:
+
+```text
+200 OK
+```
+
+Si el producto no existe:
+
+```text
+404 Not Found
+```
+
+---
+
+### Actualizar producto
+
+```http
+PUT /api/v1/products/{id}
+```
+
+Respuesta esperada:
+
+```text
+200 OK
+```
+
+---
+
+### Eliminar producto
+
+```http
+DELETE /api/v1/products/{id}
+```
+
+Respuesta esperada:
+
+```text
+204 No Content
+```
+
+---
+
+## 8. Base de datos y migraciones
+
+El servicio utiliza **PostgreSQL** como motor de base de datos.
+
+La estructura inicial se crea mediante Flyway utilizando:
+
+```text
+src/main/resources/db/migration/V1__create_products.sql
+```
+
+Hibernate se utiliza para validar el modelo existente, mientras que Flyway mantiene el control de las migraciones.
+
+La configuración utilizada mantiene:
+
+```yaml
+ddl-auto: validate
+```
+
+---
+
+## 9. Ejecución con Docker
+
+Desde:
+
+```text
+practice4/macifuinaj/
+```
+
+ejecutar:
 
 ```bash
 docker compose up --build
 ```
 
-## 15. Local development
+Se levantan los contenedores correspondientes al servicio y PostgreSQL.
 
-Prerequisites: JDK 25, Maven, Docker.
+Los contenedores de esta implementación fueron identificados como:
 
-Start only PostgreSQL and run the app from your IDE/CLI with the `dev` profile:
-
-```bash
-docker compose up -d postgres
-SPRING_PROFILES_ACTIVE=dev ./mvnw spring-boot:run   # or: mvn spring-boot:run
+```text
+macifuinaj-catalog-service
+macifuinaj-catalog-postgres
 ```
 
-Database configuration is read from environment variables (with local defaults):
+La aplicación queda disponible en:
 
+```text
+http://localhost:8080
 ```
-DATABASE_URL=jdbc:postgresql://localhost:5432/catalog
-DATABASE_USERNAME=catalog
-DATABASE_PASSWORD=catalog
-```
-
-Swagger UI: `http://localhost:8080/swagger-ui.html`
-OpenAPI JSON: `http://localhost:8080/v3/api-docs`
-Health: `http://localhost:8080/actuator/health`
-
-## 16. Running tests
-
-```bash
-mvn test
-```
-
-Tests use **PostgreSQL via Testcontainers** (never H2), so a running Docker
-daemon is required.
-
-- `ProductServiceTest` — unit tests with Mockito.
-- `ProductControllerTest` — `@WebMvcTest` + MockMvc, service mocked, no DB.
-- `ProductRepositoryTest` — `@DataJpaTest` against a PostgreSQL container.
-- `ProductIntegrationTest` — `@SpringBootTest` full HTTP → DB flow, verifies
-  Flyway migrations run and the API works without authentication.
-
-## 17. REST endpoints
-
-| Method | Path                     | Description        | Success |
-|--------|--------------------------|--------------------|---------|
-| POST   | `/api/v1/products`       | Create product     | 201     |
-| GET    | `/api/v1/products`       | List (paged)       | 200     |
-| GET    | `/api/v1/products/{id}`  | Get by id          | 200     |
-| PUT    | `/api/v1/products/{id}`  | Update product     | 200     |
-| DELETE | `/api/v1/products/{id}`  | Delete product     | 204     |
-
-## 18. Pagination
-
-`GET /api/v1/products` uses Spring Data `Pageable`:
-
-```
-GET /api/v1/products?page=0&size=20&sort=name,asc
-```
-
-List responses use the dedicated `ProductSummaryResponse`; collections are never
-returned unbounded.
-
-## 19. Filtering
-
-Optional filters (combinable):
-
-```
-GET /api/v1/products?status=ACTIVE
-GET /api/v1/products?sku=ABC-123
-GET /api/v1/products?search=iphone     # case-insensitive over name/description
-```
-
-## 20. Error handling
-
-`GlobalExceptionHandler` (`@RestControllerAdvice`) returns **RFC 9457 Problem
-Details** and never exposes stack traces.
-
-| Situation                          | Status |
-|------------------------------------|--------|
-| Validation error                   | 400    |
-| Product not found                  | 404    |
-| Duplicate SKU/slug                 | 409    |
-| DB integrity violation             | 409    |
-
-Note: `401`/`403` are **not** part of the current API — they belong to the
-future security stage.
-
-## 21. Current security state
-
-Authentication is completely disabled: no OAuth2, OIDC, JWT, identity provider,
-roles, scopes or API gateway. The service is used directly.
-
-## 22. Future OAuth2/OIDC architecture
-
-The service will later act as an **OAuth2 Resource Server** validating **JWT
-access tokens** issued by an external Identity Provider. This will be added via
-`SecurityFilterChain` + JWT decoder configuration — the business logic will not
-change.
-
-## 23. Future roles and scopes
-
-Scopes represent API permissions; roles represent user profiles.
-
-```
-Scopes: catalog:read, catalog:write, catalog:admin
-
-CUSTOMER         -> catalog:read
-CATALOG_MANAGER  -> catalog:read, catalog:write
-ADMIN            -> catalog:read, catalog:write, catalog:admin
-```
-
-None of this is implemented yet.
-
-## 24. Future API Gateway
-
-An API Gateway will later handle routing, global security, rate limiting, CORS
-and request correlation. The service will remain independently executable and
-must not depend on the gateway.
-
-## 25. How to add future entities
-
-Every new business entity (e.g. `Category`, `Brand`, `ProductImage`) follows the
-same pattern:
-
-```
-Controller -> DTO -> Service -> Repository -> Entity -> Mapper -> Tests -> Flyway migration
-```
-
-1. Add the entity + enum(s) under `catalog/entity`.
-2. Add request/response DTOs (records) under `catalog/dto`.
-3. Add a mapper under `catalog/mapper`.
-4. Add a repository under `catalog/repository`.
-5. Add a service interface + impl under `catalog/service`.
-6. Add a thin controller under `catalog/controller`.
-7. Add a new Flyway migration `V2__...sql` (never edit `V1`).
-8. Add unit, slice and integration tests.
 
 ---
 
-## Technology stack
+## 10. Swagger
 
-Java 25 · Spring Boot 4.1.x · Spring Web MVC · Spring Data JPA / Hibernate ·
-PostgreSQL 18 · Flyway · Jakarta Bean Validation · Spring Boot Actuator ·
-OpenAPI/Swagger (springdoc) · JUnit 5 · Mockito · Testcontainers · Docker ·
-Docker Compose.
+La documentación de la API puede consultarse desde:
+
+```text
+http://localhost:8080/swagger-ui.html
+```
+
+La documentación OpenAPI fue personalizada para identificar esta implementación como:
+
+```text
+Catalog Service API - Maryori Acifuina
+```
+
+Desde Swagger es posible probar directamente todas las operaciones CRUD.
+
+---
+
+## 11. Actuator
+
+La información de la aplicación puede consultarse mediante:
+
+```text
+http://localhost:8080/actuator/info
+```
+
+La aplicación se identifica como:
+
+```text
+catalog-service-macifuinaj
+```
+
+---
+
+## 12. Corrección realizada en Swagger
+
+Durante las pruebas del endpoint paginado se detectó que Swagger documentaba incorrectamente el parámetro `Pageable`, generando valores inválidos para el campo de ordenamiento.
+
+Inicialmente Swagger enviaba un valor similar a:
+
+```json
+{
+  "page": 0,
+  "size": 1,
+  "sort": [
+    "string"
+  ]
+}
+```
+
+Spring Data intentaba interpretar dicho valor como una propiedad de la entidad, provocando una respuesta:
+
+```text
+500 Internal Server Error
+```
+
+Para corregir la documentación del parámetro se agregó:
+
+```java
+@ParameterObject Pageable pageable
+```
+
+utilizando:
+
+```java
+import org.springdoc.core.annotations.ParameterObject;
+```
+
+Después de esta modificación Swagger permite enviar correctamente parámetros como:
+
+```text
+page=0
+size=10
+sort=name,asc
+```
+
+y el endpoint responde correctamente con:
+
+```text
+200 OK
+```
+
+---
+
+## 13. Pruebas realizadas
+
+Se verificó manualmente el CRUD completo mediante Swagger.
+
+| Operación | Endpoint | Resultado |
+|---|---|---|
+| Crear | `POST /api/v1/products` | `201 Created` |
+| Listar | `GET /api/v1/products` | `200 OK` |
+| Consultar | `GET /api/v1/products/{id}` | `200 OK` |
+| Actualizar | `PUT /api/v1/products/{id}` | `200 OK` |
+| Eliminar | `DELETE /api/v1/products/{id}` | `204 No Content` |
+| Consultar eliminado | `GET /api/v1/products/{id}` | `404 Not Found` |
+
+También se verificó que los productos creados fueran almacenados correctamente en PostgreSQL y posteriormente recuperados mediante la API.
+
+---
+
+## 14. Pruebas automatizadas
+
+El proyecto contiene pruebas para:
+
+```text
+ProductController
+ProductService
+ProductRepository
+ProductIntegrationTest
+```
+
+También se utiliza **Testcontainers** para realizar pruebas de integración utilizando PostgreSQL dentro de Docker.
+
+Debido a que Maven no se encuentra instalado directamente en el equipo utilizado para la práctica, las pruebas se ejecutaron mediante una imagen oficial de Maven dentro de Docker.
+
+Ejemplo:
+
+```powershell
+docker run --rm `
+  -v "${PWD}:/workspace" `
+  -w /workspace `
+  -v /var/run/docker.sock:/var/run/docker.sock `
+  -e TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal `
+  maven:3.9-eclipse-temurin-25 `
+  mvn test
+```
+
+Resultado obtenido:
+
+```text
+BUILD SUCCESS
+Failures: 0
+Errors: 0
+```
+
+---
+
+## 15. Adaptaciones realizadas
+
+Sobre la estructura utilizada como referencia para la práctica se realizaron las siguientes adaptaciones:
+
+- Creación de una implementación propia dentro de `practice4/macifuinaj`.
+- Cambio del package base a:
+
+```text
+com.macifuinaj.catalog
+```
+
+- Actualización de los packages tanto del código principal como de las pruebas.
+- Personalización de la información del proyecto en Maven.
+- Personalización de la metadata de Spring Boot.
+- Personalización de la documentación OpenAPI.
+- Personalización de los nombres de los contenedores Docker.
+- Corrección de la representación de `Pageable` en Swagger mediante `@ParameterObject`.
+- Validación manual del CRUD completo.
+- Verificación de persistencia en PostgreSQL.
+- Ejecución satisfactoria de las pruebas automatizadas.
+- Validación de la ejecución completa mediante Docker Compose.
+
+---
+
+## 16. Resultado
+
+Se obtuvo un Catalog Service funcional capaz de administrar productos mediante una API REST desarrollada con Spring Boot.
+
+La aplicación funciona de forma integrada con PostgreSQL, Flyway, Spring Data JPA, Swagger, Docker y Testcontainers.
+
+Las operaciones CRUD y las pruebas automatizadas fueron ejecutadas correctamente.
+
+---
+
+**Maryori Elizabeth Acifuina Juárez**  
+**7690 23 6640**  
+**Desarrollo Web — 2026**
