@@ -1,0 +1,40 @@
+services:
+  mongo:
+    image: mongo:8
+    container_name: catalog-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: catalog
+      MONGO_INITDB_ROOT_PASSWORD: catalog
+      MONGO_INITDB_DATABASE: catalog
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      # Equivalente de pg_isready: responde solo cuando el servidor acepta comandos.
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  catalog-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: catalog-service
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      # authSource=admin porque el usuario lo crea MONGO_INITDB_ROOT_* en la
+      # base admin, no en la base catalog.
+      MONGODB_URI: mongodb://catalog:catalog@mongo:27017/catalog?authSource=admin
+      SERVER_PORT: 8080
+    ports:
+      # El puerto del host es configurable por si el 8080 ya esta ocupado por
+      # otro proyecto en la misma maquina. Por omision sigue siendo 8080.
+      - "${CATALOG_PORT:-8080}:8080"
+
+volumes:
+  mongo-data:

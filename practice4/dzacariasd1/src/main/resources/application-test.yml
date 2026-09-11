@@ -1,0 +1,13 @@
+spring:
+  data:
+    mongodb:
+      # Los indices tambien deben crearse en las pruebas: sin ellos, la prueba de
+      # SKU duplicado no fallaria y daria un falso positivo.
+      auto-index-creation: true
+      representation:
+        big-decimal: decimal128
+
+# La URI de conexion la inyecta Testcontainers (ver AbstractMongoIntegrationTest,
+# con @ServiceConnection), por eso aqui no se declara spring.mongodb.uri. Se usa
+# MongoDB real en contenedor; nunca una base embebida, igual que el ejemplo usaba
+# PostgreSQL y nunca H2.

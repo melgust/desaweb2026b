@@ -1,0 +1,104 @@
+package com.example.catalog.catalog.service;
+
+import com.example.catalog.catalog.dto.ProductRequest;
+import com.example.catalog.catalog.dto.ProductResponse;
+import com.example.catalog.catalog.dto.ProductSummaryResponse;
+import com.example.catalog.catalog.entity.Product;
+import com.example.catalog.catalog.entity.ProductStatus;
+import com.example.catalog.catalog.mapper.ProductMapper;
+import com.example.catalog.catalog.repository.ProductRepository;
+import com.example.catalog.common.exception.DuplicateProductException;
+import com.example.catalog.common.exception.ProductNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.UUID;
+
+/**
+ * Implementacion por omision de {@link ProductService}. Concentra las reglas de
+ * negocio: unicidad de SKU y slug, comprobaciones de existencia y coordinacion
+ * del repositorio y el mapeador.
+ *
+ * <p><b>Sobre las transacciones.</b> La version con PostgreSQL anotaba la clase
+ * con {@code @Transactional}. Aqui no se usa, y es una decision deliberada:
+ * MongoDB garantiza atomicidad a nivel de documento, y cada operacion de este
+ * servicio escribe exactamente un documento, de modo que ya es atomica. Las
+ * transacciones de varios documentos existen en MongoDB pero exigen un
+ * {@code replica set}; declararlas sobre una instancia suelta como la de
+ * {@code compose.yml} provocaria un error en tiempo de ejecucion.</p>
+ */
+@Service
+public class ProductServiceImpl implements ProductService {
+
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
+
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
+        this.productRepository = productRepository;
+        this.productMapper = productMapper;
+    }
+
+    @Override
+    public ProductResponse create(ProductRequest request) {
+        if (productRepository.existsBySku(request.sku())) {
+            throw DuplicateProductException.forSku(request.sku());
+        }
+        if (productRepository.existsBySlug(request.slug())) {
+            throw DuplicateProductException.forSlug(request.slug());
+        }
+
+        Product product = productMapper.toEntity(request);
+        product.setId(UUID.randomUUID());
+
+        // Si dos peticiones simultaneas superan la comprobacion anterior, el
+        // indice unico de MongoDB rechaza la segunda y el manejador global la
+        // traduce a 409. La comprobacion previa es por claridad del mensaje;
+        // la garantia real la da el indice.
+        Product saved = productRepository.save(product);
+        return productMapper.toResponse(saved);
+    }
+
+    @Override
+    public ProductResponse getById(UUID id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
+        return productMapper.toResponse(product);
+    }
+
+    @Override
+    public Page<ProductSummaryResponse> findAll(
+            ProductStatus status,
+            String sku,
+            String search,
+            Pageable pageable) {
+
+        return productRepository.search(status, sku, search, pageable)
+                .map(productMapper::toSummaryResponse);
+    }
+
+    @Override
+    public ProductResponse update(UUID id, ProductRequest request) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
+
+        if (!product.getSku().equals(request.sku()) && productRepository.existsBySku(request.sku())) {
+            throw DuplicateProductException.forSku(request.sku());
+        }
+        if (!product.getSlug().equals(request.slug()) && productRepository.existsBySlug(request.slug())) {
+            throw DuplicateProductException.forSlug(request.slug());
+        }
+
+        productMapper.applyRequest(product, request);
+        Product saved = productRepository.save(product);
+        return productMapper.toResponse(saved);
+    }
+
+    @Override
+    public void delete(UUID id) {
+        if (!productRepository.existsById(id)) {
+            throw new ProductNotFoundException(id);
+        }
+        productRepository.deleteById(id);
+    }
+}

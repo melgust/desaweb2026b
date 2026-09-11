@@ -1,0 +1,15 @@
+spring:
+  mongodb:
+    uri: ${MONGODB_URI:mongodb://catalog:catalog@localhost:27017/catalog?authSource=admin}
+  data:
+    mongodb:
+      auto-index-creation: true
+      representation:
+        big-decimal: decimal128
+
+logging:
+  level:
+    # Equivalente a show-sql de Hibernate: registra los comandos que se envian a
+    # MongoDB (find, insert, update) con su documento de filtro.
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    org.springframework.web: DEBUG

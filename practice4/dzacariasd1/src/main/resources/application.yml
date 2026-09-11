@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: catalog-service
+
+  # --- Conexion del driver de MongoDB ---
+  # Una sola cadena de conexion sustituye a url + username + password del
+  # datasource JDBC de la version con PostgreSQL.
+  #
+  # OJO: en Spring Boot 4 la conexion se configura bajo "spring.mongodb". La
+  # antigua "spring.data.mongodb.uri" quedo obsoleta a nivel de error desde la
+  # version 4.0.0 y ya no se enlaza: usarla hace que la aplicacion intente
+  # conectarse en silencio a localhost:27017.
+  mongodb:
+    uri: ${MONGODB_URI:mongodb://catalog:catalog@localhost:27017/catalog?authSource=admin}
+
+  # --- Comportamiento de Spring Data MongoDB ---
+  data:
+    mongodb:
+      # MongoDB no tiene esquema, asi que no hay migraciones que ejecutar. Lo que
+      # si hay que crear son los indices (unicos de sku y slug, y los de apoyo al
+      # listado): se declaran con @Indexed en el documento y se crean al arrancar.
+      auto-index-creation: true
+      representation:
+        # El precio es BigDecimal. Por omision Spring Data lo guardaria como texto
+        # y ordenar por precio seria alfabetico: el "9" quedaria despues del "10".
+        # Decimal128 es el decimal exacto de BSON, lo correcto para dinero.
+        # En PostgreSQL esto venia dado por el tipo de columna NUMERIC(19,4).
+        big-decimal: decimal128
+
+server:
+  port: ${SERVER_PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # Solo lo necesario; nunca "*".
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: when_authorized
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: catalog-service
+    description: Catalog microservice for an online store (MongoDB)
+    datastore: "MongoDB 8 (documental)"
+    security: "DISABLED (no OAuth2/OIDC/JWT, no API Gateway) - current stage"
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
