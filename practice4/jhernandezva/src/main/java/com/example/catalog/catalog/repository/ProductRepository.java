@@ -1,20 +1,15 @@
 package com.example.catalog.catalog.repository;
 
 import com.example.catalog.catalog.entity.Product;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Persistence access for {@link Product}. Contains only persistence concerns.
- *
- * <p>Extends {@link JpaSpecificationExecutor} so the service can build dynamic
- * filter queries (status / sku / search) without writing SQL.</p>
+ * Persistence access for {@link Product} using MongoDB.
  */
-public interface ProductRepository
-        extends JpaRepository<Product, UUID>, JpaSpecificationExecutor<Product> {
+public interface ProductRepository extends MongoRepository<Product, UUID> {
 
     boolean existsBySku(String sku);
 

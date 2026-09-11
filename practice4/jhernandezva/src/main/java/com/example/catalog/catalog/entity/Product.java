@@ -1,69 +1,53 @@
 package com.example.catalog.catalog.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Version;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
 /**
- * Product domain/persistence entity.
- *
- * <p>This entity is never exposed through REST endpoints; DTOs define the HTTP
- * contract. No JPA relationships are defined at this stage.</p>
+ * Product domain/persistence document for MongoDB.
  */
-@Entity
-@Table(name = "products")
+@Document(collection = "products")
 public class Product {
 
     @Id
-    @Column(nullable = false, updatable = false)
     private UUID id;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Indexed(unique = true)
     private String sku;
 
-    @Column(nullable = false, length = 200)
     private String name;
 
-    @Column(nullable = false, unique = true, length = 200)
+    @Indexed(unique = true)
     private String slug;
 
-    @Column(length = 5000)
     private String description;
 
-    @Column(nullable = false, precision = 19, scale = 4)
     private BigDecimal price;
 
-    @Column(nullable = false, length = 3)
     private String currency;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Indexed
     private ProductStatus status;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreatedDate
     private Instant createdAt;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
+    @LastModifiedDate
     private Instant updatedAt;
 
     @Version
-    @Column(nullable = false)
     private Long version;
 
     public Product() {
-        // Required by JPA.
+        // Required by Spring Data
     }
 
     public UUID getId() {
@@ -134,11 +118,23 @@ public class Product {
         return createdAt;
     }
 
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public Instant getUpdatedAt() {
         return updatedAt;
     }
 
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     public Long getVersion() {
         return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }
