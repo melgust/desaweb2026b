@@ -1,0 +1,623 @@
+/* ==================================================
+   1. VARIABLES GLOBALES
+================================================== */
+
+:root {
+
+    --color-primary: #7370ad;
+
+    --color-header-1: #0d132c;
+    --color-header-2: #3e2a98;
+    --color-header-3: #9499d9;
+
+    --background-main: #eef2ff;
+
+    --white: #ffffff;
+    --dark-bg: #111827;
+    --dark-card: #1f2937;
+
+    --text-color: #1f2937;
+    --text-light: #f9fafb;
+
+    --shadow-light:
+    0 15px 35px rgba(0,0,0,.08);
+
+    --shadow-hover:
+    0 25px 50px rgba(0,0,0,.15);
+
+    --radius-card:25px;
+
+    --transition:.35s ease;
+
+}
+
+
+
+
+
+/* ==================================================
+   2. RESET Y CONFIGURACIÓN GENERAL
+================================================== */
+
+
+* {
+
+    box-sizing:border-box;
+
+}
+
+
+
+body {
+
+    background:
+    linear-gradient(
+        135deg,
+        #eef2ff,
+        #f8fafc,
+        #e0f2fe
+    );
+
+    min-height:100vh;
+
+    font-family:
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+    color:var(--text-color);
+
+}
+
+
+
+.container {
+
+    max-width:1100px;
+
+}
+
+
+
+
+
+/* ==================================================
+   3. HEADER / PRESENTACIÓN
+================================================== */
+
+
+.header-personalizado {
+
+    background:
+    linear-gradient(
+        135deg,
+        var(--color-header-1),
+        var(--color-header-2),
+        var(--color-header-3)
+    );
+
+    color:white;
+
+    border-radius:
+    0 0 35px 35px;
+
+}
+
+
+
+.profile-img {
+
+    width:220px;
+
+    height:220px;
+
+    object-fit:cover;
+
+    border:
+    8px solid rgba(255,255,255,.4);
+
+}
+
+
+
+
+
+/* ==================================================
+   4. TÍTULOS Y SECCIONES
+================================================== */
+
+
+.section-title {
+
+    text-align:center;
+
+    font-size:2rem;
+
+    font-weight:700;
+
+    margin-bottom:40px;
+
+    color:var(--color-primary);
+
+}
+
+
+
+.section-title::after {
+
+    content:"";
+
+    display:block;
+
+    width:80px;
+
+    height:4px;
+
+    background:#2d426e;
+
+    border-radius:20px;
+
+    margin:15px auto;
+
+}
+
+
+
+
+
+section {
+
+    margin-top:70px;
+
+    margin-bottom:70px;
+
+}
+
+
+
+
+
+/* ==================================================
+   5. SOBRE MÍ
+================================================== */
+
+
+.about-card {
+
+    border-radius:
+    var(--radius-card);
+
+    background:
+    rgba(255,255,255,.85);
+
+    backdrop-filter:
+    blur(10px);
+
+    box-shadow:
+    0 20px 40px rgba(0,0,0,.08);
+
+}
+
+
+
+.about-text {
+
+    font-size:1.05rem;
+
+    line-height:1.8;
+
+    text-align:justify;
+
+}
+
+
+
+
+
+/* ==================================================
+   6. TARJETAS
+================================================== */
+
+
+.info-card,
+.project-card {
+
+    border-radius:
+    var(--radius-card)!important;
+
+    background:
+    var(--white);
+
+    box-shadow:
+    var(--shadow-light);
+
+    transition:
+    var(--transition);
+
+}
+
+
+
+.info-card:hover,
+.project-card:hover {
+
+    transform:
+    translateY(-12px);
+
+    box-shadow:
+    var(--shadow-hover);
+
+}
+
+
+
+
+
+/* ==================================================
+   7. ICONOS
+================================================== */
+
+
+.icon-circle {
+
+    width:85px;
+
+    height:85px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    margin:auto;
+
+}
+
+
+
+.icon-circle i {
+
+    font-size:2.3rem;
+
+}
+
+
+
+
+
+/* ==================================================
+   8. PROYECTOS
+================================================== */
+
+
+.project-card h4 {
+
+    color:var(--color-primary);
+
+    font-weight:700;
+
+}
+
+
+
+.project-card p {
+
+    color:#555;
+
+    line-height:1.7;
+
+}
+
+
+
+.project-card button {
+
+    border-radius:20px;
+
+    padding:10px 25px;
+
+}
+
+
+
+
+
+/* ==================================================
+   9. HABILIDADES
+================================================== */
+
+
+.progress {
+
+    height:22px;
+
+    border-radius:20px;
+
+    background:#e5e7eb;
+
+    overflow:hidden;
+
+}
+
+
+
+.progress-bar {
+
+    font-weight:600;
+
+    border-radius:20px;
+
+    transition:.5s ease;
+
+}
+
+
+
+.progress-bar:hover {
+
+    filter:brightness(1.1);
+
+}
+
+
+
+
+
+/* ==================================================
+   10. FORMULARIO CONTACTO
+================================================== */
+
+
+.form-control {
+
+    border-radius:15px;
+
+    padding:12px;
+
+}
+
+
+
+.form-control:focus {
+
+    border-color:
+    var(--color-primary);
+
+    box-shadow:
+    0 0 0 .25rem rgba(115,112,173,.25);
+
+}
+
+
+
+#mensajeFormulario {
+
+    min-height:25px;
+
+}
+
+
+
+
+
+/* ==================================================
+   11. BOTONES
+================================================== */
+
+
+.btn {
+
+    transition:.3s ease;
+
+}
+
+
+
+.btn:hover {
+
+    transform:
+    translateY(-3px);
+
+}
+
+
+
+
+
+/* ==================================================
+   12. MODAL
+================================================== */
+
+
+.modal-content {
+
+    border-radius:25px;
+
+    border:none;
+
+    box-shadow:
+    0 20px 50px rgba(0,0,0,.2);
+
+}
+
+
+
+.modal-header {
+
+    background:
+    var(--color-header-1);
+
+    color:white;
+
+    border-radius:
+    25px 25px 0 0;
+
+}
+
+
+
+.btn-close {
+
+    filter:invert(1);
+
+}
+
+
+
+
+
+/* ==================================================
+   13. FOOTER
+================================================== */
+
+
+.footer-personalizado {
+
+    background:
+    linear-gradient(
+        135deg,
+        var(--color-header-1),
+        var(--color-header-2),
+        var(--color-header-3)
+    );
+
+    color:white;
+
+    border-radius:
+    35px 35px 0 0;
+
+    box-shadow:
+    0 -10px 30px rgba(0,0,0,.15);
+
+}
+
+
+
+.footer-personalizado p {
+
+    line-height:1.6;
+
+}
+
+
+
+
+
+/* ==================================================
+   14. MODO OSCURO
+================================================== */
+
+
+body.dark-mode {
+
+    background:
+    linear-gradient(
+        135deg,
+        #111827,
+        #1f2937
+    );
+
+    color:
+    var(--text-light);
+
+}
+
+
+
+body.dark-mode .about-card,
+body.dark-mode .info-card,
+body.dark-mode .project-card {
+
+    background:
+    var(--dark-card);
+
+    color:white;
+
+}
+
+
+
+body.dark-mode .project-card p,
+body.dark-mode .about-text {
+
+    color:#e5e7eb;
+
+}
+
+
+
+body.dark-mode .section-title {
+
+    color:#93c5fd;
+
+}
+
+
+
+body.dark-mode .form-control {
+
+    background:#374151;
+
+    color:white;
+
+    border-color:#4b5563;
+
+}
+
+
+
+body.dark-mode .form-control::placeholder {
+
+    color:#d1d5db;
+
+}
+
+
+
+
+
+/* ==================================================
+   15. RESPONSIVE
+================================================== */
+
+
+@media(max-width:768px){
+
+
+.header-personalizado {
+
+    text-align:center;
+
+}
+
+
+
+.profile-img {
+
+    width:160px;
+
+    height:160px;
+
+}
+
+
+
+.about-text {
+
+    text-align:left;
+
+}
+
+
+
+.section-title {
+
+    font-size:1.6rem;
+
+}
+
+
+}
