@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: catalog-service
+
+  mongodb:
+    uri: ${MONGODB_URI:mongodb://localhost:27017/catalog}
+    representation:
+      uuid: standard
+
+server:
+  port: ${SERVER_PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: when_authorized
+
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: catalog-service
+    description: Catalog microservice using MongoDB
+    database: MongoDB
+    security: "DISABLED - current stage"
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+  api-docs:
+    path: /v3/api-docs
