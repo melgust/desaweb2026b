@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Entry point for the Catalog microservice.
+ * Catalog Service application.
  *
- * <p>Current stage: no authentication and no API Gateway. The service is
- * directly reachable and talks straight to PostgreSQL.</p>
+ * The service is currently unauthenticated, directly reachable
+ * and talks straight to MongoDB.
  */
 @SpringBootApplication
 public class CatalogApplication {

@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springdoc.core.annotations.ParameterObject;
 
 import java.net.URI;
-import java.util.UUID;
 
 /**
  * REST endpoints for products under {@code /api/v1/products}.
@@ -68,7 +67,7 @@ public class ProductController {
             @ApiResponse(responseCode = "200", description = "Product found"),
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
-    public ResponseEntity<ProductResponse> getById(@PathVariable UUID id) {
+    public ResponseEntity<ProductResponse> getById(@PathVariable String id) {
         return ResponseEntity.ok(productService.getById(id));
     }
 
@@ -97,7 +96,7 @@ public class ProductController {
             @ApiResponse(responseCode = "409", description = "Duplicate SKU or slug")
     })
     public ResponseEntity<ProductResponse> update(
-            @PathVariable UUID id,
+            @PathVariable String id,
             @Valid @RequestBody ProductRequest request) {
         return ResponseEntity.ok(productService.update(id, request));
     }
@@ -108,7 +107,7 @@ public class ProductController {
             @ApiResponse(responseCode = "204", description = "Product deleted"),
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         productService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

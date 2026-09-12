@@ -4,13 +4,12 @@ import com.macifuinaj.catalog.catalog.entity.ProductStatus;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.UUID;
 
 /**
  * Full product representation returned by single-resource endpoints.
  */
 public record ProductResponse(
-        UUID id,
+        String id,
         String sku,
         String name,
         String slug,

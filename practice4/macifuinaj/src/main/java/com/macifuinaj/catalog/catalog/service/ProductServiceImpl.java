@@ -9,55 +9,66 @@ import com.macifuinaj.catalog.catalog.mapper.ProductMapper;
 import com.macifuinaj.catalog.catalog.repository.ProductRepository;
 import com.macifuinaj.catalog.common.exception.DuplicateProductException;
 import com.macifuinaj.catalog.common.exception.ProductNotFoundException;
-import jakarta.persistence.criteria.Predicate;
+
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
- * Default implementation of {@link ProductService}. Holds all business rules:
- * SKU/slug uniqueness, existence checks and transaction boundaries.
+ * Default implementation of ProductService.
+ *
+ * Uses MongoDB for persistence and keeps the business rules for
+ * SKU/slug uniqueness, existence checks, filtering and pagination.
  */
 @Service
-@Transactional(readOnly = true)
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final MongoTemplate mongoTemplate;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
+    public ProductServiceImpl(
+            ProductRepository productRepository,
+            ProductMapper productMapper,
+            MongoTemplate mongoTemplate) {
+
         this.productRepository = productRepository;
         this.productMapper = productMapper;
+        this.mongoTemplate = mongoTemplate;
     }
 
     @Override
-    @Transactional
     public ProductResponse create(ProductRequest request) {
+
         if (productRepository.existsBySku(request.sku())) {
             throw DuplicateProductException.forSku(request.sku());
         }
+
         if (productRepository.existsBySlug(request.slug())) {
             throw DuplicateProductException.forSlug(request.slug());
         }
 
         Product product = productMapper.toEntity(request);
-        product.setId(UUID.randomUUID());
 
         Product saved = productRepository.save(product);
+
         return productMapper.toResponse(saved);
     }
 
     @Override
-    public ProductResponse getById(UUID id) {
+    public ProductResponse getById(String id) {
+
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
+
         return productMapper.toResponse(product);
     }
 
@@ -68,62 +79,79 @@ public class ProductServiceImpl implements ProductService {
             String search,
             Pageable pageable) {
 
-        Specification<Product> spec = buildSpecification(status, sku, search);
-        return productRepository.findAll(spec, pageable)
-                .map(productMapper::toSummaryResponse);
+        Query query = new Query();
+
+        if (status != null) {
+            query.addCriteria(
+                    Criteria.where("status").is(status)
+            );
+        }
+
+        if (StringUtils.hasText(sku)) {
+            query.addCriteria(
+                    Criteria.where("sku").is(sku)
+            );
+        }
+
+        if (StringUtils.hasText(search)) {
+
+            String searchPattern = Pattern.quote(search.trim());
+
+            query.addCriteria(
+                    new Criteria().orOperator(
+                            Criteria.where("name")
+                                    .regex(searchPattern, "i"),
+                            Criteria.where("description")
+                                    .regex(searchPattern, "i")
+                    )
+            );
+        }
+
+        long total = mongoTemplate.count(query, Product.class);
+
+        query.with(pageable);
+
+        List<ProductSummaryResponse> products =
+                mongoTemplate.find(query, Product.class)
+                        .stream()
+                        .map(productMapper::toSummaryResponse)
+                        .toList();
+
+        return new PageImpl<>(products, pageable, total);
     }
 
     @Override
-    @Transactional
-    public ProductResponse update(UUID id, ProductRequest request) {
+    public ProductResponse update(String id, ProductRequest request) {
+
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
 
-        if (!product.getSku().equals(request.sku()) && productRepository.existsBySku(request.sku())) {
+        if (!product.getSku().equals(request.sku())
+                && productRepository.existsBySku(request.sku())) {
+
             throw DuplicateProductException.forSku(request.sku());
         }
-        if (!product.getSlug().equals(request.slug()) && productRepository.existsBySlug(request.slug())) {
+
+        if (!product.getSlug().equals(request.slug())
+                && productRepository.existsBySlug(request.slug())) {
+
             throw DuplicateProductException.forSlug(request.slug());
         }
 
         productMapper.applyRequest(product, request);
+
         Product saved = productRepository.save(product);
+
         return productMapper.toResponse(saved);
     }
 
     @Override
-    @Transactional
-    public void delete(UUID id) {
+    public void delete(String id) {
+
         if (!productRepository.existsById(id)) {
             throw new ProductNotFoundException(id);
         }
+
         productRepository.deleteById(id);
-    }
-
-    /**
-     * Builds a dynamic filter combining the optional status, sku and free-text
-     * search parameters. Search matches against name or description
-     * (case-insensitive).
-     */
-    private Specification<Product> buildSpecification(ProductStatus status, String sku, String search) {
-        return (root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-
-            if (status != null) {
-                predicates.add(cb.equal(root.get("status"), status));
-            }
-            if (StringUtils.hasText(sku)) {
-                predicates.add(cb.equal(root.get("sku"), sku));
-            }
-            if (StringUtils.hasText(search)) {
-                String like = "%" + search.toLowerCase() + "%";
-                predicates.add(cb.or(
-                        cb.like(cb.lower(root.get("name")), like),
-                        cb.like(cb.lower(root.get("description")), like)
-                ));
-            }
-
-            return cb.and(predicates.toArray(Predicate[]::new));
-        };
     }
 }

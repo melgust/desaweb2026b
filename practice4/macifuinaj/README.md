@@ -1,54 +1,30 @@
-# Práctica 4 — Catalog Service con Spring Boot
+# Práctica 4 — Catalog Service con MongoDB
 
 **Universidad Mariano Gálvez de Guatemala**  
-**Facultad de Ingeniería en Sistemas**  
 **Curso:** Desarrollo Web  
 **Docente:** Ing. Melvín Cali  
-
 **Estudiante:** Maryori Elizabeth Acifuina Juárez  
 **Carné:** 7690 23 6640  
 
 ---
 
-## 1. Descripción
+## Descripción
 
-Esta práctica consiste en la implementación de un **Catalog Service** utilizando **Spring Boot**, encargado de administrar el catálogo de productos de una tienda mediante una API REST.
+Esta práctica implementa un microservicio de catálogo de productos utilizando **Spring Boot y MongoDB**.
 
-El servicio permite realizar operaciones de:
+Para el desarrollo se tomó como referencia la estructura del Catalog Service proporcionada por el docente. A partir de dicha base se realizó la adaptación de la capa de persistencia originalmente implementada con PostgreSQL y Spring Data JPA para trabajar con una base de datos no relacional MongoDB.
 
-- Creación de productos.
-- Consulta de productos.
-- Consulta de un producto por identificador.
-- Actualización de productos.
-- Eliminación de productos.
-- Paginación y ordenamiento.
-- Filtrado y búsqueda de productos.
-
-La información se almacena en una base de datos **PostgreSQL** y el esquema de la base de datos se administra mediante **Flyway**.
+La aplicación permite crear, consultar, actualizar, listar y eliminar productos mediante una API REST.
 
 ---
 
-## 2. Base utilizada
-
-Para el desarrollo de esta práctica se tomó como referencia la estructura de Catalog Service proporcionada por el docente durante el curso.
-
-A partir de dicha estructura se realizó una implementación dentro de la carpeta personal:
-
-```text
-practice4/macifuinaj/
-```
-
-La aplicación fue adaptada, configurada y validada de forma independiente para esta entrega.
-
----
-
-## 3. Tecnologías utilizadas
+## Tecnologías utilizadas
 
 - Java 25
 - Spring Boot
-- Spring Data JPA
-- PostgreSQL
-- Flyway
+- Spring Web MVC
+- Spring Data MongoDB
+- MongoDB 8
 - Maven
 - Docker
 - Docker Compose
@@ -59,9 +35,9 @@ La aplicación fue adaptada, configurada y validada de forma independiente para 
 
 ---
 
-## 4. Arquitectura
+## Arquitectura
 
-El proyecto utiliza una organización por capas:
+La aplicación mantiene una separación por capas:
 
 ```text
 Cliente / Swagger
@@ -75,116 +51,76 @@ ProductService
        v
 ProductServiceImpl
        |
-       v
-ProductRepository
+       +---- ProductRepository
+       |
+       +---- MongoTemplate
        |
        v
-PostgreSQL
+MongoDB
 ```
 
-Cada capa posee una responsabilidad específica.
-
-### Controller
-
-`ProductController` recibe las solicitudes HTTP y expone los endpoints REST del catálogo.
-
-### Service
-
-`ProductService` define las operaciones disponibles para la administración de productos.
-
-`ProductServiceImpl` contiene la lógica necesaria para ejecutar dichas operaciones.
-
-### Repository
-
-`ProductRepository` utiliza Spring Data JPA para realizar las operaciones de persistencia sobre PostgreSQL.
-
-### DTO
-
-Los datos recibidos y enviados por la API se manejan mediante DTOs, evitando exponer directamente la entidad de persistencia.
-
-Se utilizan:
-
-```text
-ProductRequest
-ProductResponse
-ProductSummaryResponse
-```
-
-### Mapper
-
-`ProductMapper` se encarga de transformar los datos entre entidades y DTOs.
+El controlador gestiona las solicitudes HTTP, el servicio contiene las reglas de negocio y la capa de persistencia utiliza Spring Data MongoDB.
 
 ---
 
-## 5. Estructura principal
+## Persistencia con MongoDB
+
+Los productos se almacenan como documentos dentro de la colección:
 
 ```text
-practice4/macifuinaj/
-|
-├── Dockerfile
-├── compose.yml
-├── pom.xml
-├── README.md
-|
-└── src/
-    ├── main/
-    │   ├── java/
-    │   │   └── com/macifuinaj/catalog/
-    │   │       ├── CatalogApplication.java
-    │   │       ├── catalog/
-    │   │       │   ├── controller/
-    │   │       │   ├── dto/
-    │   │       │   ├── entity/
-    │   │       │   ├── mapper/
-    │   │       │   ├── repository/
-    │   │       │   └── service/
-    │   │       ├── common/
-    │   │       │   └── exception/
-    │   │       └── config/
-    │   │
-    │   └── resources/
-    │       ├── application.yml
-    │       ├── application-dev.yml
-    │       ├── application-test.yml
-    │       └── db/migration/
-    │           └── V1__create_products.sql
-    │
-    └── test/
-        └── java/
-            └── com/macifuinaj/catalog/
+products
+```
+
+La clase `Product` utiliza:
+
+```java
+@Document(collection = "products")
+```
+
+MongoDB genera automáticamente el identificador del producto al momento de almacenarlo.
+
+Ejemplo de identificador generado:
+
+```text
+6aa4a5446c04214a597bfcfa
+```
+
+Los campos `sku` y `slug` cuentan con índices únicos para evitar duplicados.
+
+El precio se almacena utilizando el tipo `Decimal128` de MongoDB para conservar precisión decimal.
+
+También se utiliza el versionado optimista mediante `@Version`.
+
+---
+
+## Modelo de producto
+
+Cada documento contiene información como:
+
+```text
+id
+sku
+name
+slug
+description
+price
+currency
+status
+createdAt
+updatedAt
+version
+```
+
+Se utiliza MongoDB Auditing para registrar automáticamente las fechas de creación y actualización mediante:
+
+```java
+@CreatedDate
+@LastModifiedDate
 ```
 
 ---
 
-## 6. Modelo de producto
-
-El catálogo administra productos con información como:
-
-- SKU
-- Nombre
-- Slug
-- Descripción
-- Precio
-- Moneda
-- Estado
-
-Los estados disponibles para un producto son:
-
-```text
-DRAFT
-ACTIVE
-INACTIVE
-```
-
----
-
-## 7. Endpoints
-
-La API utiliza como ruta base:
-
-```text
-/api/v1/products
-```
+## Endpoints
 
 ### Crear producto
 
@@ -192,24 +128,18 @@ La API utiliza como ruta base:
 POST /api/v1/products
 ```
 
-Ejemplo:
+Ejemplo de cuerpo:
 
 ```json
 {
-  "sku": "LAP-001",
+  "sku": "LAP-MONGO-001",
   "name": "Laptop Lenovo",
-  "slug": "laptop-lenovo",
-  "description": "Laptop para oficina y estudio",
+  "slug": "laptop-lenovo-mongo",
+  "description": "Producto almacenado en MongoDB",
   "price": 4500.00,
   "currency": "GTQ",
   "status": "ACTIVE"
 }
-```
-
-Respuesta esperada:
-
-```text
-201 Created
 ```
 
 ---
@@ -220,22 +150,21 @@ Respuesta esperada:
 GET /api/v1/products
 ```
 
-Permite utilizar paginación:
+El endpoint soporta paginación y filtros opcionales por:
 
 ```text
-?page=0&size=10
+status
+sku
+search
+page
+size
+sort
 ```
 
-También permite ordenamiento:
+Ejemplo:
 
-```text
-?page=0&size=10&sort=name,asc
-```
-
-Respuesta esperada:
-
-```text
-200 OK
+```http
+GET /api/v1/products?page=0&size=10&sort=name,asc
 ```
 
 ---
@@ -246,30 +175,12 @@ Respuesta esperada:
 GET /api/v1/products/{id}
 ```
 
-Respuesta esperada cuando existe:
-
-```text
-200 OK
-```
-
-Si el producto no existe:
-
-```text
-404 Not Found
-```
-
 ---
 
 ### Actualizar producto
 
 ```http
 PUT /api/v1/products/{id}
-```
-
-Respuesta esperada:
-
-```text
-200 OK
 ```
 
 ---
@@ -280,55 +191,51 @@ Respuesta esperada:
 DELETE /api/v1/products/{id}
 ```
 
-Respuesta esperada:
+---
+
+## Búsqueda y filtros
+
+La versión original utilizaba `Specification` de Spring Data JPA para construir filtros dinámicos.
+
+En la implementación con MongoDB se utiliza:
 
 ```text
-204 No Content
+MongoTemplate
+Query
+Criteria
 ```
+
+Esto permite mantener filtros por estado, SKU y búsqueda libre sobre los campos `name` y `description`.
+
+La búsqueda de texto se realiza de forma no sensible a mayúsculas y minúsculas.
 
 ---
 
-## 8. Base de datos y migraciones
+## Ejecución con Docker
 
-El servicio utiliza **PostgreSQL** como motor de base de datos.
-
-La estructura inicial se crea mediante Flyway utilizando:
+Desde la carpeta:
 
 ```text
-src/main/resources/db/migration/V1__create_products.sql
+practice4/macifuinaj
 ```
 
-Hibernate se utiliza para validar el modelo existente, mientras que Flyway mantiene el control de las migraciones.
+se puede levantar el proyecto utilizando:
 
-La configuración utilizada mantiene:
-
-```yaml
-ddl-auto: validate
+```powershell
+docker compose up --build -d
 ```
 
----
+Para verificar los contenedores:
 
-## 9. Ejecución con Docker
-
-Desde:
-
-```text
-practice4/macifuinaj/
+```powershell
+docker compose ps
 ```
 
-ejecutar:
-
-```bash
-docker compose up --build
-```
-
-Se levantan los contenedores correspondientes al servicio y PostgreSQL.
-
-Los contenedores de esta implementación fueron identificados como:
+Los contenedores utilizados son:
 
 ```text
 macifuinaj-catalog-service
-macifuinaj-catalog-postgres
+macifuinaj-catalog-mongodb
 ```
 
 La aplicación queda disponible en:
@@ -337,125 +244,212 @@ La aplicación queda disponible en:
 http://localhost:8080
 ```
 
+MongoDB se expone localmente en:
+
+```text
+localhost:27017
+```
+
 ---
 
-## 10. Swagger
+## Configuración de MongoDB
 
-La documentación de la API puede consultarse desde:
+Dentro de Docker Compose el Catalog Service se conecta a MongoDB mediante:
+
+```text
+mongodb://mongodb:27017/catalog
+```
+
+La configuración se proporciona mediante la variable:
+
+```text
+MONGODB_URI
+```
+
+MongoDB utiliza un volumen persistente:
+
+```text
+mongodb-data
+```
+
+---
+
+## Swagger
+
+La documentación interactiva de la API puede consultarse en:
 
 ```text
 http://localhost:8080/swagger-ui.html
 ```
 
-La documentación OpenAPI fue personalizada para identificar esta implementación como:
+Desde Swagger se pueden probar las operaciones CRUD del catálogo.
+
+También se configuró correctamente la paginación de Spring mediante `@ParameterObject`, permitiendo que Swagger represente los parámetros:
 
 ```text
-Catalog Service API - Maryori Acifuina
+page
+size
+sort
 ```
 
-Desde Swagger es posible probar directamente todas las operaciones CRUD.
+de forma adecuada.
 
 ---
 
-## 11. Actuator
+## Actuator
 
-La información de la aplicación puede consultarse mediante:
+El estado del servicio puede verificarse mediante:
+
+```text
+http://localhost:8080/actuator/health
+```
+
+Una ejecución correcta devuelve:
+
+```text
+UP
+```
+
+También se encuentra habilitado:
 
 ```text
 http://localhost:8080/actuator/info
 ```
 
-La aplicación se identifica como:
-
-```text
-catalog-service-macifuinaj
-```
-
 ---
 
-## 12. Corrección realizada en Swagger
+## Verificación directa en MongoDB
 
-Durante las pruebas del endpoint paginado se detectó que Swagger documentaba incorrectamente el parámetro `Pageable`, generando valores inválidos para el campo de ordenamiento.
+Además de probar la API, se verificó directamente la información almacenada dentro de MongoDB.
 
-Inicialmente Swagger enviaba un valor similar a:
+El contenido de la colección `products` puede consultarse ejecutando:
 
-```json
+```powershell
+docker exec macifuinaj-catalog-mongodb mongosh catalog --quiet --eval "db.products.find().pretty()"
+```
+
+Ejemplo de documento almacenado:
+
+```javascript
 {
-  "page": 0,
-  "size": 1,
-  "sort": [
-    "string"
-  ]
+  _id: ObjectId('6aa4a5446c04214a597bfcfa'),
+  sku: 'LAP-MONGO-001',
+  name: 'Laptop Lenovo',
+  slug: 'laptop-lenovo-mongo',
+  description: 'Producto almacenado en MongoDB',
+  price: Decimal128('4500'),
+  currency: 'GTQ',
+  status: 'ACTIVE',
+  createdAt: ISODate(...),
+  updatedAt: ISODate(...),
+  version: Long('0')
 }
 ```
 
-Spring Data intentaba interpretar dicho valor como una propiedad de la entidad, provocando una respuesta:
-
-```text
-500 Internal Server Error
-```
-
-Para corregir la documentación del parámetro se agregó:
-
-```java
-@ParameterObject Pageable pageable
-```
-
-utilizando:
-
-```java
-import org.springdoc.core.annotations.ParameterObject;
-```
-
-Después de esta modificación Swagger permite enviar correctamente parámetros como:
-
-```text
-page=0
-size=10
-sort=name,asc
-```
-
-y el endpoint responde correctamente con:
-
-```text
-200 OK
-```
+Esto permite comprobar que la información se encuentra persistida como documentos dentro de MongoDB.
 
 ---
 
-## 13. Pruebas realizadas
+## Pruebas automatizadas
 
-Se verificó manualmente el CRUD completo mediante Swagger.
+Se realizaron pruebas unitarias y de integración para diferentes capas de la aplicación.
 
-| Operación | Endpoint | Resultado |
-|---|---|---|
-| Crear | `POST /api/v1/products` | `201 Created` |
-| Listar | `GET /api/v1/products` | `200 OK` |
-| Consultar | `GET /api/v1/products/{id}` | `200 OK` |
-| Actualizar | `PUT /api/v1/products/{id}` | `200 OK` |
-| Eliminar | `DELETE /api/v1/products/{id}` | `204 No Content` |
-| Consultar eliminado | `GET /api/v1/products/{id}` | `404 Not Found` |
+### ProductControllerTest
 
-También se verificó que los productos creados fueran almacenados correctamente en PostgreSQL y posteriormente recuperados mediante la API.
+Prueba los endpoints REST utilizando `MockMvc`.
+
+Se validan escenarios como:
+
+- Creación correcta.
+- Validaciones incorrectas.
+- Producto duplicado.
+- Consulta por ID.
+- Producto inexistente.
+- Listado.
+- Actualización.
+- Eliminación.
 
 ---
 
-## 14. Pruebas automatizadas
+### ProductServiceTest
 
-El proyecto contiene pruebas para:
+Prueba las reglas de negocio utilizando Mockito.
+
+Entre las validaciones realizadas se encuentran:
+
+- Creación de productos.
+- SKU duplicado.
+- Slug duplicado.
+- Consulta de productos inexistentes.
+- Actualización.
+- Eliminación.
+
+---
+
+### ProductRepositoryTest
+
+Utiliza un contenedor real de MongoDB mediante Testcontainers.
+
+Se verifica:
+
+- Almacenamiento de documentos.
+- Generación automática del identificador.
+- Búsqueda por SKU.
+- Búsqueda por slug.
+- Fechas de auditoría.
+- Versionado del documento.
+
+---
+
+### ProductIntegrationTest
+
+Realiza una prueba completa del flujo:
 
 ```text
-ProductController
-ProductService
-ProductRepository
-ProductIntegrationTest
+HTTP
+ ↓
+Controller
+ ↓
+Service
+ ↓
+Repository
+ ↓
+MongoDB
 ```
 
-También se utiliza **Testcontainers** para realizar pruebas de integración utilizando PostgreSQL dentro de Docker.
+También valida que los productos sean almacenados realmente en MongoDB.
 
-Debido a que Maven no se encuentra instalado directamente en el equipo utilizado para la práctica, las pruebas se ejecutaron mediante una imagen oficial de Maven dentro de Docker.
+---
 
-Ejemplo:
+## Testcontainers
+
+Las pruebas de persistencia e integración utilizan un contenedor MongoDB creado mediante Testcontainers.
+
+La clase:
+
+```text
+AbstractMongoIntegrationTest
+```
+
+utiliza:
+
+```java
+MongoDBContainer
+```
+
+junto con:
+
+```java
+@ServiceConnection
+```
+
+para proporcionar automáticamente a Spring Boot la conexión a MongoDB durante las pruebas.
+
+---
+
+## Ejecución de pruebas
+
+Como Maven se ejecutó mediante Docker, las pruebas pueden ejecutarse con:
 
 ```powershell
 docker run --rm `
@@ -467,50 +461,80 @@ docker run --rm `
   mvn test
 ```
 
-Resultado obtenido:
+La ejecución finalizó correctamente con:
 
 ```text
 BUILD SUCCESS
-Failures: 0
-Errors: 0
 ```
 
----
-
-## 15. Adaptaciones realizadas
-
-Sobre la estructura utilizada como referencia para la práctica se realizaron las siguientes adaptaciones:
-
-- Creación de una implementación propia dentro de `practice4/macifuinaj`.
-- Cambio del package base a:
-
-```text
-com.macifuinaj.catalog
-```
-
-- Actualización de los packages tanto del código principal como de las pruebas.
-- Personalización de la información del proyecto en Maven.
-- Personalización de la metadata de Spring Boot.
-- Personalización de la documentación OpenAPI.
-- Personalización de los nombres de los contenedores Docker.
-- Corrección de la representación de `Pageable` en Swagger mediante `@ParameterObject`.
-- Validación manual del CRUD completo.
-- Verificación de persistencia en PostgreSQL.
-- Ejecución satisfactoria de las pruebas automatizadas.
-- Validación de la ejecución completa mediante Docker Compose.
+Las pruebas unitarias y de integración fueron completadas sin errores.
 
 ---
 
-## 16. Resultado
+## Adaptaciones realizadas
 
-Se obtuvo un Catalog Service funcional capaz de administrar productos mediante una API REST desarrollada con Spring Boot.
+A partir del ejemplo proporcionado por el docente para PostgreSQL se realizaron las siguientes modificaciones:
 
-La aplicación funciona de forma integrada con PostgreSQL, Flyway, Spring Data JPA, Swagger, Docker y Testcontainers.
-
-Las operaciones CRUD y las pruebas automatizadas fueron ejecutadas correctamente.
+- Sustitución de PostgreSQL por MongoDB.
+- Sustitución de Spring Data JPA por Spring Data MongoDB.
+- Eliminación de Hibernate.
+- Eliminación de Flyway.
+- Eliminación de las migraciones SQL.
+- Conversión de `Product` de entidad JPA a documento MongoDB.
+- Uso de `@Document` para la colección `products`.
+- Cambio de identificadores UUID a identificadores MongoDB representados mediante `String`.
+- Generación automática del identificador por MongoDB.
+- Sustitución de `JpaRepository` por `MongoRepository`.
+- Eliminación de `JpaSpecificationExecutor`.
+- Implementación de filtros mediante `MongoTemplate`, `Query` y `Criteria`.
+- Configuración de índices únicos para SKU y slug.
+- Uso de `Decimal128` para los precios.
+- Habilitación de MongoDB Auditing.
+- Configuración de MongoDB mediante Docker Compose.
+- Implementación de un healthcheck para MongoDB.
+- Adaptación de las pruebas unitarias.
+- Adaptación de las pruebas de integración a MongoDB.
+- Uso de `MongoDBContainer` con Testcontainers.
+- Verificación directa de los documentos mediante `mongosh`.
 
 ---
 
-**Maryori Elizabeth Acifuina Juárez**  
-**7690 23 6640**  
-**Desarrollo Web — 2026**
+## Diferencias principales respecto al ejemplo original
+
+| Ejemplo original | Implementación de la práctica |
+|---|---|
+| PostgreSQL | MongoDB |
+| Spring Data JPA | Spring Data MongoDB |
+| `@Entity` | `@Document` |
+| `JpaRepository` | `MongoRepository` |
+| UUID | ObjectId representado como `String` |
+| `Specification` | `MongoTemplate` + `Criteria` |
+| Flyway | No requerido |
+| Migraciones SQL | No requeridas |
+| PostgreSQLContainer | MongoDBContainer |
+| Tablas | Colecciones y documentos |
+
+---
+
+## Resultado
+
+El Catalog Service funciona mediante una API REST desarrollada con Spring Boot y utiliza MongoDB como sistema de persistencia no relacional.
+
+Se verificó correctamente:
+
+- Levantamiento de MongoDB mediante Docker.
+- Levantamiento del Catalog Service.
+- Estado `UP` mediante Actuator.
+- Creación de productos.
+- Generación automática de identificadores.
+- Consulta de productos.
+- Persistencia directa en MongoDB.
+- Paginación.
+- Filtros de búsqueda.
+- Validación de productos duplicados.
+- Swagger.
+- Pruebas unitarias.
+- Pruebas de integración con Testcontainers.
+- Ejecución final con `BUILD SUCCESS`.
+
+---

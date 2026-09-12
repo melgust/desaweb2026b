@@ -1,7 +1,8 @@
 package com.macifuinaj.catalog;
 
 import com.macifuinaj.catalog.catalog.repository.ProductRepository;
-import com.macifuinaj.catalog.support.AbstractPostgresIntegrationTest;
+import com.macifuinaj.catalog.support.AbstractMongoIntegrationTest;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.Map;
@@ -19,13 +21,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Full-stack integration test: HTTP -> Controller -> Service -> Repository ->
- * PostgreSQL (Testcontainers). Also verifies Flyway migrations run and that the
- * API is reachable without any Authorization header.
+ * Full-stack integration test:
+ * HTTP -> Controller -> Service -> Repository -> MongoDB (Testcontainers).
+ *
+ * Verifies the Catalog Service against a real MongoDB container
+ * and confirms that the API is reachable without authentication.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-class ProductIntegrationTest extends AbstractPostgresIntegrationTest {
+class ProductIntegrationTest extends AbstractMongoIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -49,20 +53,27 @@ class ProductIntegrationTest extends AbstractPostgresIntegrationTest {
                 "description", "A phone",
                 "price", 999.99,
                 "currency", "USD",
-                "status", "ACTIVE");
+                "status", "ACTIVE"
+        );
     }
 
     @Test
     void fullCrudFlowWorksWithoutAuthentication() throws Exception {
+
         // CREATE - no Authorization header supplied.
         String created = mockMvc.perform(post("/api/v1/products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(body("SKU-INT", "slug-int"))))
+                        .content(objectMapper.writeValueAsString(
+                                body("SKU-INT", "slug-int"))))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
-                .andReturn().getResponse().getContentAsString();
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
 
-        String id = objectMapper.readTree(created).get("id").asText();
+        String id = objectMapper.readTree(created)
+                .get("id")
+                .asText();
 
         // READ
         mockMvc.perform(get("/api/v1/products/{id}", id))
@@ -81,19 +92,23 @@ class ProductIntegrationTest extends AbstractPostgresIntegrationTest {
 
     @Test
     void duplicateSkuReturnsConflict() throws Exception {
+
         mockMvc.perform(post("/api/v1/products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(body("DUP", "slug-dup-1"))))
+                        .content(objectMapper.writeValueAsString(
+                                body("DUP", "slug-dup-1"))))
                 .andExpect(status().isCreated());
 
         mockMvc.perform(post("/api/v1/products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(body("DUP", "slug-dup-2"))))
+                        .content(objectMapper.writeValueAsString(
+                                body("DUP", "slug-dup-2"))))
                 .andExpect(status().isConflict());
     }
 
     @Test
     void listEndpointIsReachableWithoutAuthorizationHeader() throws Exception {
+
         mockMvc.perform(get("/api/v1/products"))
                 .andExpect(status().isOk());
     }

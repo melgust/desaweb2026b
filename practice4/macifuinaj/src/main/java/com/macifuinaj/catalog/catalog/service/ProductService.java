@@ -7,8 +7,6 @@ import com.macifuinaj.catalog.catalog.entity.ProductStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.UUID;
-
 /**
  * Business operations for the product catalog.
  */
@@ -16,7 +14,7 @@ public interface ProductService {
 
     ProductResponse create(ProductRequest request);
 
-    ProductResponse getById(UUID id);
+    ProductResponse getById(String id);
 
     Page<ProductSummaryResponse> findAll(
             ProductStatus status,
@@ -24,7 +22,7 @@ public interface ProductService {
             String search,
             Pageable pageable);
 
-    ProductResponse update(UUID id, ProductRequest request);
+    ProductResponse update(String id, ProductRequest request);
 
-    void delete(UUID id);
+    void delete(String id);
 }
