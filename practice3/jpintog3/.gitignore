@@ -1,0 +1,56 @@
+# ---------------------------------------------------------------------------
+# Keep only source code in the repository. Everything below is generated,
+# downloaded, environment-specific, or temporary and should NOT be committed.
+# ---------------------------------------------------------------------------
+
+# .NET build artifacts
+bin/
+obj/
+out/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+*.dll
+*.pdb
+*.cache
+
+# EF Core / tooling scratch output
+*.mdf
+*.ldf
+migrations-*.sql
+
+# Angular / Node dependencies & build output
+node_modules/
+dist/
+.angular/
+*.tsbuildinfo
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# IDEs & editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs & temp
+*.log
+*.tmp
+tmp/
+
+# Local seeding / scratch helpers (not part of the app source)
+backend/hashgen/
+*.local.sql
