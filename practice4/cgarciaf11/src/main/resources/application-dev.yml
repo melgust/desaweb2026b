@@ -1,15 +1,8 @@
 spring:
-  datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/catalog}
-    username: ${DATABASE_USERNAME:catalog}
-    password: ${DATABASE_PASSWORD:catalog}
-  jpa:
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+  data:
+    mongodb:
+      uri: mongodb://catalog:catalog@localhost:27017/catalog?authSource=admin
 
 logging:
   level:
-    org.hibernate.SQL: DEBUG
-    org.springframework.web: DEBUG
+    org.springframework.data.mongodb: DEBUG
