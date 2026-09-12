@@ -1,7 +1,7 @@
 package com.example.catalog;
 
 import com.example.catalog.catalog.repository.ProductRepository;
-import com.example.catalog.support.AbstractPostgresIntegrationTest;
+import com.example.catalog.support.AbstractMongoIntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-class ProductIntegrationTest extends AbstractPostgresIntegrationTest {
+class ProductIntegrationTest extends AbstractMongoIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

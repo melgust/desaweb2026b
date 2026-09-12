@@ -1,26 +1,12 @@
 spring:
   application:
     name: catalog-service
-  datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/catalog}
-    username: ${DATABASE_USERNAME:catalog}
-    password: ${DATABASE_PASSWORD:catalog}
-  jpa:
-    hibernate:
-      # Flyway owns the schema. Hibernate only validates the mapping.
-      ddl-auto: validate
-    open-in-view: false
-    properties:
-      hibernate:
-        jdbc:
-          time_zone: UTC
-  flyway:
-    enabled: true
-    locations: classpath:db/migration
-    baseline-on-migrate: false
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/catalog}
 
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${SERVER_PORT:8081}
 
 management:
   endpoints:
@@ -40,7 +26,7 @@ management:
 info:
   app:
     name: catalog-service
-    description: Catalog microservice for an online store
+    description: "Microservicio de Catálogo en MongoDB - Laboratorio de Desarrollo Web (4to Año)"
     security: "DISABLED (no OAuth2/OIDC/JWT, no API Gateway) - current stage"
 
 springdoc:

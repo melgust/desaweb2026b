@@ -2,11 +2,10 @@ package com.example.catalog.catalog.repository;
 
 import com.example.catalog.catalog.entity.Product;
 import com.example.catalog.catalog.entity.ProductStatus;
-import com.example.catalog.support.AbstractPostgresIntegrationTest;
+import com.example.catalog.support.AbstractMongoIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -17,9 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Repository slice test running against a real PostgreSQL container. Flyway
  * builds the schema; Hibernate validates against it. H2 is never used.
  */
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class ProductRepositoryTest extends AbstractPostgresIntegrationTest {
+@DataMongoTest
+class ProductRepositoryTest extends AbstractMongoIntegrationTest {
 
     @Autowired
     private ProductRepository productRepository;
@@ -52,7 +50,7 @@ class ProductRepositoryTest extends AbstractPostgresIntegrationTest {
 
     @Test
     void assignsAuditTimestampsAndVersionOnSave() {
-        Product saved = productRepository.saveAndFlush(newProduct("SKU-B", "slug-b"));
+        Product saved = productRepository.save(newProduct("SKU-B", "slug-b"));
 
         assertThat(saved.getCreatedAt()).isNotNull();
         assertThat(saved.getUpdatedAt()).isNotNull();

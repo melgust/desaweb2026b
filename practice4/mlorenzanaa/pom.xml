@@ -15,11 +15,13 @@
     <artifactId>catalog-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>catalog-service</name>
-    <description>Catalog microservice for an online store</description>
+    <description>Microservicio de Catálogo en MongoDB - Laboratorio de Desarrollo Web (4to Año de Ingeniería)</description>
 
     <properties>
-        <java.version>25</java.version>
+        <java.version>22</java.version>
         <springdoc.version>2.8.9</springdoc.version>
+        <start-class>com.example.catalog.CatalogApplication</start-class>
+        <exec.mainClass>com.example.catalog.CatalogApplication</exec.mainClass>
     </properties>
 
     <dependencies>
@@ -29,10 +31,10 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- JPA / Hibernate -->
+        <!-- MongoDB -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
 
         <!-- Jakarta Bean Validation -->
@@ -47,26 +49,7 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- Flyway -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-flyway</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-database-postgresql</artifactId>
-        </dependency>
 
-        <!-- PostgreSQL driver -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
 
         <!-- OpenAPI / Swagger UI -->
         <dependency>
@@ -88,11 +71,7 @@
             <artifactId>spring-boot-webmvc-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-data-jpa-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-testcontainers</artifactId>
@@ -105,7 +84,8 @@
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers-postgresql</artifactId>
+            <artifactId>mongodb</artifactId>
+            <version>1.20.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

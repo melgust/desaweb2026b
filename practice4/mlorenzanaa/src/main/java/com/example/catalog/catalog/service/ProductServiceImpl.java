@@ -9,10 +9,12 @@ import com.example.catalog.catalog.mapper.ProductMapper;
 import com.example.catalog.catalog.repository.ProductRepository;
 import com.example.catalog.common.exception.DuplicateProductException;
 import com.example.catalog.common.exception.ProductNotFoundException;
-import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -31,10 +33,12 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final MongoTemplate mongoTemplate;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, MongoTemplate mongoTemplate) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
+        this.mongoTemplate = mongoTemplate;
     }
 
     @Override
@@ -68,9 +72,27 @@ public class ProductServiceImpl implements ProductService {
             String search,
             Pageable pageable) {
 
-        Specification<Product> spec = buildSpecification(status, sku, search);
-        return productRepository.findAll(spec, pageable)
-                .map(productMapper::toSummaryResponse);
+        Query query = new Query();
+        if (status != null) {
+            query.addCriteria(Criteria.where("status").is(status));
+        }
+        if (StringUtils.hasText(sku)) {
+            query.addCriteria(Criteria.where("sku").is(sku));
+        }
+        if (StringUtils.hasText(search)) {
+            Criteria searchCriteria = new Criteria().orOperator(
+                    Criteria.where("name").regex(search, "i"),
+                    Criteria.where("description").regex(search, "i")
+            );
+            query.addCriteria(searchCriteria);
+        }
+
+        long count = mongoTemplate.count(query, Product.class);
+        query.with(pageable);
+        List<Product> products = mongoTemplate.find(query, Product.class);
+        Page<Product> page = new PageImpl<>(products, pageable, count);
+
+        return page.map(productMapper::toSummaryResponse);
     }
 
     @Override
@@ -100,30 +122,4 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(id);
     }
 
-    /**
-     * Builds a dynamic filter combining the optional status, sku and free-text
-     * search parameters. Search matches against name or description
-     * (case-insensitive).
-     */
-    private Specification<Product> buildSpecification(ProductStatus status, String sku, String search) {
-        return (root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-
-            if (status != null) {
-                predicates.add(cb.equal(root.get("status"), status));
-            }
-            if (StringUtils.hasText(sku)) {
-                predicates.add(cb.equal(root.get("sku"), sku));
-            }
-            if (StringUtils.hasText(search)) {
-                String like = "%" + search.toLowerCase() + "%";
-                predicates.add(cb.or(
-                        cb.like(cb.lower(root.get("name")), like),
-                        cb.like(cb.lower(root.get("description")), like)
-                ));
-            }
-
-            return cb.and(predicates.toArray(Predicate[]::new));
-        };
-    }
 }

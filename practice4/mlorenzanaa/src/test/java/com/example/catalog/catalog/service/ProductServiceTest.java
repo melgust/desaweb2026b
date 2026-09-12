@@ -32,6 +32,9 @@ class ProductServiceTest {
     @Mock
     private ProductRepository productRepository;
 
+    @Mock
+    private org.springframework.data.mongodb.core.MongoTemplate mongoTemplate;
+
     // Use the real mapper so response mapping is exercised too.
     private final ProductMapper productMapper = new ProductMapper();
 
@@ -45,7 +48,7 @@ class ProductServiceTest {
 
     private ProductServiceImpl service() {
         if (productService == null) {
-            productService = new ProductServiceImpl(productRepository, productMapper);
+            productService = new ProductServiceImpl(productRepository, productMapper, mongoTemplate);
         }
         return productService;
     }
