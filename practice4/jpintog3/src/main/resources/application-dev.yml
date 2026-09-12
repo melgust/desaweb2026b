@@ -1,0 +1,11 @@
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://catalog:catalog@localhost:27017/catalog?authSource=admin}
+      auto-index-creation: true
+      uuid-representation: standard
+
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    org.springframework.web: DEBUG
