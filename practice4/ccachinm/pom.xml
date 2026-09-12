@@ -15,7 +15,7 @@
     <artifactId>catalog-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>catalog-service</name>
-    <description>Catalog microservice for an online store</description>
+    <description>Microservicio de Catálogo en MongoDB - Laboratorio de Desarrollo Web (4to Año de Ingeniería)</description>
 
     <properties>
         <java.version>22</java.version>

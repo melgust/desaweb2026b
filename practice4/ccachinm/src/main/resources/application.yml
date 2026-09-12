@@ -26,7 +26,7 @@ management:
 info:
   app:
     name: catalog-service
-    description: Catalog microservice for an online store
+    description: "Microservicio de Catálogo en MongoDB - Laboratorio de Desarrollo Web (4to Año)"
     security: "DISABLED (no OAuth2/OIDC/JWT, no API Gateway) - current stage"
 
 springdoc:
