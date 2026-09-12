@@ -1,0 +1,3 @@
+# The MongoDB URI is supplied dynamically by Testcontainers
+# (see AbstractMongoIntegrationTest / @ServiceConnection). MongoDB is used
+# for tests as well.
