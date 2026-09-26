@@ -1,0 +1,35 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: catalog-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: catalog
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  catalog-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: catalog-service
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      SERVER_PORT: 8080
+      SPRING_DATA_MONGODB_HOST: catalog-mongodb
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_DATABASE: catalog
+    ports:
+      - "8080:8080"
+
+volumes:
+  mongo-data:
