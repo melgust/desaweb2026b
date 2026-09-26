@@ -1,0 +1,40 @@
+services:
+  mongodb:
+    image: mongo:8
+    container_name: catalog-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: catalog
+      MONGO_INITDB_ROOT_PASSWORD: catalog
+      MONGO_INITDB_DATABASE: catalog
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  catalog-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: catalog-service
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      SPRING_DATA_MONGODB_HOST: mongodb
+      SPRING_DATA_MONGODB_PORT: "27017"
+      SPRING_DATA_MONGODB_USERNAME: catalog
+      SPRING_DATA_MONGODB_PASSWORD: catalog
+      SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
+      SPRING_DATA_MONGODB_DATABASE: catalog
+      SERVER_PORT: "8080"
+    ports:
+      - "8080:8080"
+
+volumes:
+  mongodb-data:

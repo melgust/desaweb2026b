@@ -1,0 +1,7 @@
+# The defaults in application.yml already point to localhost:27017 with the
+# catalog/catalog credentials, matching `docker compose up -d mongodb`, so
+# nothing needs to be overridden here for local development.
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    org.springframework.web: DEBUG
