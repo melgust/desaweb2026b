@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+
+  php:
+
+    build: .
+
+    container_name: practice2
+
+    ports:
+      - "8080:80"
+
+    volumes:
+      - .:/var/www/html
